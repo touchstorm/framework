@@ -1,7 +1,6 @@
 {
   "name": "vootapp/framework",
   "description": "Chronos Framework Core. Cron management system.",
-  "type": "project",
   "license": "MIT",
   "authors": [
     {
