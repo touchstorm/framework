@@ -36,7 +36,7 @@ class Watcher extends BaseTaskMaster implements TaskMasterContract
             }
 
             echo 'Initializing: ' . $task->getService() . PHP_EOL;
-            $command = 'nohup php ' . getenv('APP_BASE') . '/running.php ' . $task->getService() . ' >/dev/null 2>&1 &';
+            $command = 'nohup php ' . getenv('APP_BASE') . '/dispatch/running.php ' . $task->getService() . ' >/dev/null 2>&1 &';
             //exec($command);
             echo $command . PHP_EOL;
         }

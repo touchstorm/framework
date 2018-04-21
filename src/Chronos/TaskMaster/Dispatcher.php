@@ -48,7 +48,7 @@ class Dispatcher extends BaseTaskMaster implements TaskMasterContract
 
             $this->dispatched[] = $task;
 
-            $command = 'nohup php ' . getenv('APP_BASE') . '/scheduled.php ' . $task->getService() . ' >/dev/null 2>&1 &';
+            $command = 'nohup php ' . getenv('APP_BASE') . '/dispatch/scheduled.php ' . $task->getService() . ' >/dev/null 2>&1 &';
             exec($command);
             echo $command . PHP_EOL;
         }

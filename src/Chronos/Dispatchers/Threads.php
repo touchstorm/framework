@@ -168,7 +168,7 @@ class Threads
         }
 
         // Define the executable command
-        $threadPath = "php " . $base_dir . "/thread.php";
+        $threadPath = "php " . $base_dir . "/dispatch/thread.php";
         $threadVectors = implode(' ', $vectors);
         $threadOutput = $log_dir . '/' . $this->repository->getLogFile();
 
