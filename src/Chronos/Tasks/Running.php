@@ -1,6 +1,6 @@
 <?php
 
-namespace Chronos\Application\Tasks;
+namespace Chronos\Tasks;
 
 class Running extends Task
 {

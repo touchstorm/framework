@@ -1,6 +1,6 @@
 <?php
 
-namespace Chronos\Application\Queues\Contracts;
+namespace Chronos\Queues\Contracts;
 
 interface QueueContract
 {

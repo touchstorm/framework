@@ -1,6 +1,6 @@
 <?php
 
-namespace Chronos\Application\Services;
+namespace Chronos\Services;
 
 use Auryn\Injector;
 

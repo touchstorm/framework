@@ -1,6 +1,6 @@
 <?php
 
-namespace Chronos\Application\Repositories\Contracts;
+namespace Chronos\Repositories\Contracts;
 
 /**
  * Interface QueueRepositoryContract

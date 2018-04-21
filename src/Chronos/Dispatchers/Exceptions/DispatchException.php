@@ -1,6 +1,6 @@
 <?php
 
-namespace Chronos\Application\Dispatchers\Exceptions;
+namespace Chronos\Dispatchers\Exceptions;
 
 use Exception;
 

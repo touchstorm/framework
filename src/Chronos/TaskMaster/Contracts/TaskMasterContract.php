@@ -1,6 +1,6 @@
 <?php
 
-namespace Chronos\Application\TaskMaster\Contracts;
+namespace Chronos\TaskMaster\Contracts;
 
 interface TaskMasterContract
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Chronos\Application\Controllers\Contracts;
+namespace Chronos\Controllers\Contracts;
 
 interface ThreadedContract
 {

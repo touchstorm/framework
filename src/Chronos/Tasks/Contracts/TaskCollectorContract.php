@@ -1,6 +1,6 @@
 <?php
 
-namespace Chronos\Application\Tasks\Contracts;
+namespace Chronos\Tasks\Contracts;
 
 interface TaskCollectorContract
 {

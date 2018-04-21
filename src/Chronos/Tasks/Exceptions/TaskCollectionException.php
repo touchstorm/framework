@@ -1,6 +1,6 @@
 <?php
 
-namespace Chronos\Application\Tasks\Exceptions;
+namespace Chronos\Tasks\Exceptions;
 
 class TaskCollectionException extends \Exception
 {

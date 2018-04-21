@@ -1,6 +1,6 @@
 <?php
 
-namespace Chronos\Application\Dispatchers;
+namespace Chronos\Dispatchers;
 
 use Chronos\Application\Repositories\Contracts\QueueRepositoryContract;
 use Chronos\Application\Queues\Contracts\QueueContract;

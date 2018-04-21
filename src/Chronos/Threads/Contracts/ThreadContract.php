@@ -1,6 +1,6 @@
 <?php
 
-namespace Chronos\Application\Threads\Contracts;
+namespace Chronos\Threads\Contracts;
 
 interface ThreadContract
 {

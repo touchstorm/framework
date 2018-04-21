@@ -1,6 +1,6 @@
 <?php
 
-namespace Chronos\Application\Queues;
+namespace Chronos\Queues;
 
 use Illuminate\Database\Eloquent\Model;
 

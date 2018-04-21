@@ -1,6 +1,6 @@
 <?php
 
-namespace Chronos\Application\Repositories;
+namespace Chronos\Repositories;
 
 use Chronos\Application\Queues\Contracts\QueueContract;
 use Chronos\Application\Queues\Queue;

@@ -1,8 +1,8 @@
 <?php
 
-namespace Chronos\Application\TaskMaster;
+namespace Chronos\TaskMaster;
 
-use Chronos\Application\Tasks\TaskCollector;
+use Chronos\Tasks\TaskCollector;
 
 class BaseTaskMaster
 {

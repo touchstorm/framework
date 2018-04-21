@@ -1,9 +1,8 @@
 <?php
 
-namespace Chronos\Application\Tasks;
+namespace Chronos\Tasks;
 
-use Chronos\Application\Tasks\Exceptions\TaskCollectionException;
-use Closure;
+use Chronos\Tasks\Exceptions\TaskCollectionException;
 
 /**
  * Class TaskCollector
