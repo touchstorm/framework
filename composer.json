@@ -8,7 +8,6 @@
       "email": "seomike@gmail.com"
     }
   ],
-  "minimum-stability": "stable",
   "require": {
     "rdlowrey/auryn": "^1.4",
     "illuminate/database": "^5.6",
