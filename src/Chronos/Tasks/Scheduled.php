@@ -7,7 +7,7 @@ use DateTime;
 
 /**
  * Class Scheduled
- * @package Chronos\Application\Tasks
+ * @package Chronos\Tasks
  */
 class Scheduled extends Task
 {

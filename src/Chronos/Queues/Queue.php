@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Queue
- * @package Chronos\Application\Queues
+ * @package Chronos\Queues
  */
 class Queue extends Model
 {

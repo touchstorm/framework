@@ -1,12 +1,12 @@
 <?php
 
-namespace Chronos\Application\TaskMaster;
+namespace Chronos\TaskMaster;
 
 use Chronos\TaskMaster\Contracts\TaskMasterContract;
 
 /**
  * Class Dispatcher
- * @package Chronos\Application\TaskMaster
+ * @package Chronos\TaskMaster
  */
 class Dispatcher extends BaseTaskMaster implements TaskMasterContract
 {
@@ -22,7 +22,7 @@ class Dispatcher extends BaseTaskMaster implements TaskMasterContract
 
         /**
          * @var string $name
-         * @var \Chronos\Application\Tasks\Scheduled $task
+         * @var \Chronos\Tasks\Scheduled $task
          */
         foreach ($this->taskCollector->getRoutes() as $name => $task) {
 

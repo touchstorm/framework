@@ -4,19 +4,19 @@ namespace Chronos\Repositories\Contracts;
 
 /**
  * Interface QueueRepositoryContract
- * @package Chronos\Application\Repositories\Contracts
+ * @package Chronos\Repositories\Contracts
  */
 interface QueueRepositoryContract
 {
     /**
      * @param $id
-     * @return \Chronos\Application\Queues\Queue
+     * @return \Chronos\Queues\Queue
      */
     function item($id);
 
     /**
      * Get next Queue
-     * @return \Chronos\Application\Queues\Queue
+     * @return \Chronos\Queues\Queue
      */
     function next();
 

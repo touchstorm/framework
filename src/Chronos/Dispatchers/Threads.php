@@ -2,13 +2,13 @@
 
 namespace Chronos\Dispatchers;
 
-use Chronos\Application\Repositories\Contracts\QueueRepositoryContract;
-use Chronos\Application\Queues\Contracts\QueueContract;
-use Chronos\Application\Queues\Queue;
+use Chronos\Repositories\Contracts\QueueRepositoryContract;
+use Chronos\Queues\Contracts\QueueContract;
+use Chronos\Queues\Queue;
 
 /**
  * Class Threads
- * @package Chronos\Application\Dispatchers
+ * @package Chronos\Dispatchers
  */
 class Threads
 {

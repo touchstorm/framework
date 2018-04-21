@@ -6,7 +6,7 @@ use Chronos\Tasks\Exceptions\TaskCollectionException;
 
 /**
  * Class TaskCollector
- * @package Chronos\Application\Tasks
+ * @package Chronos\Tasks
  */
 class TaskCollector
 {

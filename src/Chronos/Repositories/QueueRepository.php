@@ -2,8 +2,8 @@
 
 namespace Chronos\Repositories;
 
-use Chronos\Application\Queues\Contracts\QueueContract;
-use Chronos\Application\Queues\Queue;
+use Chronos\Queues\Contracts\QueueContract;
+use Chronos\Queues\Queue;
 use Closure;
 use DateTime;
 use Illuminate\Database\Eloquent\Collection;
@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class QueueRepository
- * @package Chronos\Application\Repositories
+ * @package Chronos\Repositories
  */
 class QueueRepository
 {

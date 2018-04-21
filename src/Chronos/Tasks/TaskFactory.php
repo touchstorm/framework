@@ -4,7 +4,7 @@ namespace Chronos\Tasks;
 
 /**
  * Class TaskFactory
- * @package Chronos\Application\Tasks
+ * @package Chronos\Tasks
  */
 class TaskFactory
 {
