@@ -19,9 +19,9 @@ abstract class ThreadedService
      * Threaded services require a thread() method implementation
      * All dependency needed to execute a thread will be
      * bound in this method.
-     * @param Injector $apps
+     * @param Injector $app
      * @param $id
      * @return Injector
      */
-    abstract public function thread(Injector $apps, $id);
+    abstract public function thread(Injector $app, $id);
 }
