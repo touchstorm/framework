@@ -37,27 +37,35 @@ class Dispatcher extends BaseTaskMaster implements TaskMasterContract
                 continue;
             }
 
+            // If there is a one-off command fire and continue
             if ($command = $task->getCommand()) {
                 $this->dispatched[] = $task;
 
+                // Launch command
                 exec($command, $output);
-
-                echo print_r($output, true) . PHP_EOL;
                 continue;
             }
 
+            // Dispatched container
             $this->dispatched[] = $task;
 
+            // Set up the command
             $command = 'nohup php ' . getenv('APP_BASE') . '/dispatch/scheduled.php ' . $task->getService() . ' >/dev/null 2>&1 &';
+
+            // Fire
             exec($command);
-            echo $command . PHP_EOL;
+
+            // trigger taskStartEvent()
         }
 
+        // Output reports
         $this->dormant();
-
         $this->dispatched();
     }
 
+    /**
+     * Output dormant tasks
+     */
     protected function dormant()
     {
         echo '------------------------------------------------------------' . PHP_EOL;
@@ -71,7 +79,9 @@ class Dispatcher extends BaseTaskMaster implements TaskMasterContract
         echo PHP_EOL;
     }
 
-
+    /**
+     * Output dispatched tasks
+     */
     protected function dispatched()
     {
         echo '------------------------------------------------------------' . PHP_EOL;
