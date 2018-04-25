@@ -97,7 +97,7 @@ class TaskCollector
      * Get routes from the collector
      * @return Route[]
      */
-    public function getRoutes()
+    public function getTasks()
     {
         return $this->collection;
     }
@@ -107,7 +107,7 @@ class TaskCollector
      * @param $name
      * @return Route
      */
-    public function getRoute($name)
+    public function getTask($name)
     {
         return $this->collection[$name];
     }

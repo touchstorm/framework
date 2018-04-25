@@ -23,7 +23,7 @@ class Watcher extends BaseTaskMaster implements TaskMasterContract
          * @var string $name
          * @var \Chronos\Tasks\Running $task
          */
-        foreach ($this->taskCollector->getRoutes() as $name => $task) {
+        foreach ($this->taskCollector->getTasks() as $name => $task) {
 
             // Skip all but running tasks, skip
             if ($task->getType() != 'running') {

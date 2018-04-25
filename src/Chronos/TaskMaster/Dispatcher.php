@@ -24,7 +24,7 @@ class Dispatcher extends BaseTaskMaster implements TaskMasterContract
          * @var string $name
          * @var \Chronos\Tasks\Scheduled $task
          */
-        foreach ($this->taskCollector->getRoutes() as $name => $task) {
+        foreach ($this->taskCollector->getTasks() as $name => $task) {
 
             // If not a scheduled task, skip
             if ($task->getType() != 'scheduled') {
