@@ -15,10 +15,10 @@ class Dispatcher extends BaseTaskMaster implements TaskMasterContract
      */
     public function dispatch()
     {
-        echo '////////////////////////////////////////////////////////////' . PHP_EOL;
-        echo ' Scheduled ' . CURRENT_TIME . PHP_EOL;
-        echo '////////////////////////////////////////////////////////////' . PHP_EOL;
-        echo PHP_EOL;
+        $this->log('////////////////////////////////////////////////////////////');
+        $this->log(' Scheduled ' . CURRENT_TIME);
+        $this->log('////////////////////////////////////////////////////////////');
+        $this->log('');
 
         /**
          * @var string $name
@@ -33,16 +33,22 @@ class Dispatcher extends BaseTaskMaster implements TaskMasterContract
 
             // If it is currently running or not available, skip
             if ($this->isRunning($task->getName()) || !$task->isAvailable()) {
-                $this->dormant[] = $task;
+                $this->dormant[$task->getName()] = $task;
                 continue;
             }
 
             // If there is a one-off command fire and continue
             if ($command = $task->getCommand()) {
-                $this->dispatched[] = $task;
+                $this->dispatched[$task->getName()] = $task;
 
                 // Launch command
                 exec($command, $output);
+
+                // Add log to outputs
+                $this->outputs[$task->getName()] = $output;
+
+                $output = [];
+
                 continue;
             }
 
@@ -68,15 +74,15 @@ class Dispatcher extends BaseTaskMaster implements TaskMasterContract
      */
     protected function dormant()
     {
-        echo '------------------------------------------------------------' . PHP_EOL;
-        echo ' DORMANT ' . CURRENT_TIME . PHP_EOL;
-        echo '------------------------------------------------------------' . PHP_EOL;
+        $this->log('------------------------------------------------------------');
+        $this->log(' DORMANT ' . CURRENT_TIME);
+        $this->log('------------------------------------------------------------');
 
-        foreach ($this->dormant as $task) {
-            echo ' > ' . $task . PHP_EOL;
+        foreach ($this->dormantTasks() as $task) {
+            $this->log(' > ' . $task);
         }
 
-        echo PHP_EOL;
+        $this->log('');
     }
 
     /**
@@ -84,17 +90,14 @@ class Dispatcher extends BaseTaskMaster implements TaskMasterContract
      */
     protected function dispatched()
     {
-        echo '------------------------------------------------------------' . PHP_EOL;
-        echo ' DISPATCHED ' . CURRENT_TIME . PHP_EOL;
-        echo '------------------------------------------------------------' . PHP_EOL;
+        $this->log('------------------------------------------------------------');
+        $this->log(' DISPATCHED ' . CURRENT_TIME);
+        $this->log('------------------------------------------------------------');
 
-        foreach ($this->dispatched as $task) {
-            echo ' > ' . $task . PHP_EOL;
+        foreach ($this->dispatchedTasks() as $task) {
+            $this->log(' > ' . $task);
         }
 
-        echo PHP_EOL;
-
+        $this->log('');
     }
-
-
 }

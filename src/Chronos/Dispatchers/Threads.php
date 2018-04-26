@@ -91,7 +91,7 @@ class Threads
     public function __construct(QueueRepositoryContract $repository)
     {
         // Output
-        $this->output('Initializing...');
+        $this->log('Initializing...');
 
         // Set the injected repository
         $this->repository = $repository;
@@ -108,10 +108,10 @@ class Threads
      */
     public function handle($options = [])
     {
-        $this->output("Handling...");
+        $this->log("Handling...");
 
         // Temp reset
-        $this->output("Reset to tomorrow");
+        $this->log("Reset to tomorrow");
         $this->repository->reset('*', [
             'available_at' => (new \DateTime('yesterday'))
         ]);
@@ -176,14 +176,14 @@ class Threads
         $threadCommand = $threadPath . ' ' . $threadVectors . ' >> ' . $threadOutput;
 
         // Output
-        $this->output($threadCommand);
+        $this->log($threadCommand);
 
         // Open the process
         $process = proc_open($threadCommand, $this->descriptors, $pipes, null, null);
 
         // Process failed to open
         if (!$process) {
-            $this->output('Process failed to open');
+            $this->log('Process failed to open');
             return;
         }
 
@@ -213,7 +213,7 @@ class Threads
 
         // Pause for the processes to finish, then continue
         while ($this->processing()) {
-            $this->output('Processing...', true);
+            $this->log('Processing...', false);
             $this->processReduce();
         }
     }
@@ -226,7 +226,7 @@ class Threads
     protected function governor()
     {
         while (($processing = count($this->processes)) >= $this->maxThreads) {
-            $this->output('Governing threads (' . $processing . ') processes', true);
+            $this->log('Governing threads (' . $processing . ') processes', false);
             $this->processReduce();
         }
     }
@@ -287,7 +287,7 @@ class Threads
     {
         // While disabled always loop
         while ($this->disabled) {
-            $this->output($this->name() . ' is disabled...');
+            $this->log($this->name() . ' is disabled...');
             sleep(10);
             continue;
         }
@@ -309,11 +309,11 @@ class Threads
             // Since we're sleeping lets try
             // and fill the batch and wake up
             if ($this->repository->fill()) {
-                $this->output($this->name() . " batch filled!");
+                $this->log($this->name() . " batch filled!");
                 return;
             }
 
-            $this->output($this->name() . " cron is sleeping...");
+            $this->log($this->name() . " cron is sleeping...");
             sleep(5);
             continue;
         }
@@ -365,14 +365,18 @@ class Threads
     // Reporting methods
     ////////////////////////////////////
 
-    protected function output($msg, $carriage = false)
+    /**
+     * Log output
+     * @param $msg
+     * @param bool $return
+     */
+    protected function log($msg, $return = true)
     {
         if (!$this->verbose) {
             return;
         }
 
-        echo $msg;
-        echo ($carriage) ? "\r" : "\n";
+        echo $msg . (($return) ? "\n" : "\r");
     }
 
 }

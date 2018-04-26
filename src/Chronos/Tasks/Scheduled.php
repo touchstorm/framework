@@ -44,6 +44,13 @@ class Scheduled extends Task
         'friday' => 5,
         'saturday' => 6,
         'sunday' => 7,
+        'mon' => 1,
+        'tues' => 2,
+        'wed' => 3,
+        'thur' => 4,
+        'fri' => 5,
+        'sat' => 6,
+        'sun' => 7,
     ];
 
     /**
@@ -105,6 +112,8 @@ class Scheduled extends Task
 
         }, $days);
 
+        $days = array_unique($days);
+
         return $this->updateRunTime('dayOfWeek', implode(',', $days));
     }
 
@@ -116,18 +125,18 @@ class Scheduled extends Task
      */
     public function hourly($hour = 0)
     {
-        return $this->schedule($hour . ' * * * *');
+        return $this->schedule('* ' . $hour . ' * * *');
     }
 
     /**
      * Daily
      * - Default is midnight on monday
-     * @param int $day 0 - 7  (Sunday = 0/7)
+     * @param string * everyday
      * @return Scheduled
      */
-    public function daily($day = 0)
+    public function daily()
     {
-        return $this->schedule('0 0 * * ' . $day);
+        return $this->schedule('0 0 * * *');
     }
 
     /**
@@ -138,7 +147,18 @@ class Scheduled extends Task
      */
     public function weekly($day = 1)
     {
-        $day = (is_string($day)) ? $this->daysOfWeek[$day] : $day;
+        if (is_string($day)) {
+
+            // If day is a string range 0-7
+            if (!isset($this->daysOfWeek[$day])) {
+                return $this->updateRunTime('dayOfWeek', $day)->at('00:00');
+            }
+
+            // Date is a string like monday, mon, tuesday, tues etc
+            return $this->updateRunTime('dayOfWeek', $this->daysOfWeek[$day])->at('00:00');
+        }
+
+        // Default integer
         return $this->updateRunTime('dayOfWeek', $day)->at('00:00');
     }
 
@@ -165,7 +185,6 @@ class Scheduled extends Task
         return $this->schedule('0 0 ' . $day . ' ' . $month . ' *');
     }
 
-
     /**
      * At
      * - Convert a time string into a cron expression
@@ -189,7 +208,7 @@ class Scheduled extends Task
      */
     public function on($date)
     {
-        $expression = (new DateTime($date))->format('i G j n w');
+        $expression = (new DateTime($date))->format('i G j n *');
 
         // ! DateTime format does not support a single digit minute
         // Convert the minutes from 00 to 0

@@ -65,8 +65,8 @@ class TaskCollector
         }
 
         // Assume all scheduled tasks run daily at midnight
-        if(!isset($options['at'])) {
-            $options['at'] = function($task) {
+        if (!isset($options['at'])) {
+            $options['at'] = function ($task) {
                 return $task->daily();
             };
         }
@@ -103,13 +103,17 @@ class TaskCollector
     }
 
     /**
-     * Get a named route from the collector
-     * @param $name
-     * @return Route
+     * Get a named task from the collector
+     * @param mixed $task
+     * @return Task
      */
-    public function getTask($name)
+    public function getTask($task)
     {
-        return $this->collection[$name];
+        if ($task instanceof Task) {
+            return $this->collection[$task->getName()];
+        }
+
+        return $this->collection[$task];
     }
 
     /**

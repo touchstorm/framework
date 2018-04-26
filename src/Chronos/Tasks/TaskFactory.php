@@ -13,6 +13,7 @@ class TaskFactory
      * @param $name
      * @param array $parameters
      * @return Running
+     * @throws Exceptions\TaskCollectionException
      */
     public function running($name, $parameters = [])
     {
