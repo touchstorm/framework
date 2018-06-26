@@ -37,6 +37,12 @@ class BaseTaskMaster
     protected $taskCollector;
 
     /**
+     * @var array $commands
+     * - Array of commands that were dispatched.
+     */
+    protected $commands = [];
+
+    /**
      * @var bool $verbose
      * - Allow the system to log
      */

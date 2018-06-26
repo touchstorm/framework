@@ -43,6 +43,10 @@ class TaskFactory
             $options = array_merge(['type' => 'scheduled'], $options);
         }
 
+        if (!isset($options['command'])) {
+            $options['dispatchCommand'] = 'php ' . getenv('APP_BASE') . ' ' . $options['uses'];
+        }
+
         // When the task is scheduled to run
         $when = $options['at'];
 

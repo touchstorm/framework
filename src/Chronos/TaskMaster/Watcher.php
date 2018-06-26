@@ -15,9 +15,9 @@ class Watcher extends BaseTaskMaster implements TaskMasterContract
      */
     public function dispatch()
     {
-        echo '////////////////////////////////////////////////////////////' . PHP_EOL;
-        echo ' Watcher' . PHP_EOL;
-        echo '////////////////////////////////////////////////////////////' . PHP_EOL;
+        $this->log('////////////////////////////////////////////////////////////');
+        $this->log(' Watcher ' . CURRENT_TIME);
+        $this->log('////////////////////////////////////////////////////////////');
 
         /**
          * @var string $name
@@ -37,6 +37,9 @@ class Watcher extends BaseTaskMaster implements TaskMasterContract
 
             // Create the command
             $command = 'nohup php ' . getenv('APP_BASE') . '/dispatch/running.php ' . $task->getService() . ' >/dev/null 2>&1 &';
+
+            // Add command to
+            $this->commands[] = $command;
 
             // Execute
             exec($command);

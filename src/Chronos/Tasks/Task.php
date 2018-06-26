@@ -25,7 +25,7 @@ class Task
      * @var array $allowed
      * - Allowed parameters for the task
      */
-    protected $allowed = ['name', 'service', 'type', 'command'];
+    protected $allowed = ['name', 'service', 'type', 'command', 'dispatchCommand'];
 
     /**
      * @var array $aliases
@@ -46,6 +46,12 @@ class Task
      * @var mixed $command
      */
     protected $command = null;
+
+    /**
+     * Command to run via controller
+     * @var mixed $command
+     */
+    protected $dispatchCommand = null;
 
     /**
      * Task constructor.
@@ -128,6 +134,6 @@ class Task
      */
     public function getCommand()
     {
-        return $this->command;
+        return ($this->command) ?: $this->dispatchCommand;
     }
 }
