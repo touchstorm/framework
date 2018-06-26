@@ -10,7 +10,7 @@
   ],
   "require": {
     "rdlowrey/auryn": "^1.4",
-    "illuminate/database": "^5.6",
+    "illuminate/database": "^5.5",
     "dragonmantank/cron-expression": "^2.1"
   },
   "require-dev": {
