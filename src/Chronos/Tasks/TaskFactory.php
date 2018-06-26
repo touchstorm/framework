@@ -39,10 +39,12 @@ class TaskFactory
      */
     public function scheduled($name, $options = [])
     {
+        // Set options
         if (is_array($options)) {
             $options = array_merge(['type' => 'scheduled'], $options);
         }
 
+        // Controller commands
         if (!isset($options['command'])) {
             $options['dispatchCommand'] = 'nohup php ' . getenv('APP_BASE') . '/dispatch/scheduled.php ' . $options['uses'] . ' >/dev/null 2>&1 &';
         }
