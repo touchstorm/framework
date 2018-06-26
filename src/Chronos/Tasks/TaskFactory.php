@@ -44,7 +44,7 @@ class TaskFactory
         }
 
         if (!isset($options['command'])) {
-            $options['dispatchCommand'] = 'php ' . getenv('APP_BASE') . ' ' . $options['uses'];
+            $options['dispatchCommand'] = 'nohup php ' . getenv('APP_BASE') . '/dispatch/scheduled.php ' . $options['uses'] . ' >/dev/null 2>&1 &';
         }
 
         // When the task is scheduled to run
