@@ -32,7 +32,7 @@ class Dispatcher extends BaseTaskMaster implements TaskMasterContract
             }
 
             // If it is currently running or not available, skip
-            if ($this->isRunning($task->getName()) || !$task->isAvailable()) {
+            if ($this->isRunning($task->getService()) || !$task->isAvailable()) {
                 $this->dormant[$task->getName()] = $task;
                 continue;
             }
