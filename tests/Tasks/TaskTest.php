@@ -76,9 +76,15 @@ class TaskTest extends TestCase
             ],
             [
                 'when' => function (Scheduled $task) {
-                    return $task->hourly('0-23');
+                    return $task->hourly('0-59');
                 },
-                'expected' => '* 0-23 * * *',
+                'expected' => '0-59 * * * *',
+            ],
+            [
+                'when' => function (Scheduled $task) {
+                    return $task->hourly('5');
+                },
+                'expected' => '5 * * * *',
             ],
             [
                 'when' => function (Scheduled $task) {

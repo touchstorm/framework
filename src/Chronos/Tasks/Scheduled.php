@@ -125,7 +125,12 @@ class Scheduled extends Task
      */
     public function hourly($minute = 0)
     {
+        if (is_string($minute)) {
+            return $this->schedule($minute . ' * * * *');
+        }
+
         $minute = ($minute > 59) ? 59 : $minute;
+        $minute = ($minute < 0) ? 0 : $minute;
         return $this->schedule($minute . ' * * * *');
     }
 
