@@ -75,13 +75,12 @@ class BaseTaskMaster
             $commands[] = "ps aux | grep -i '" . $task->getService() . "' | grep -v grep | awk '{print $2}'";
         }
 
-        $this->log($commands);
-
         foreach ($commands as $command) {
 
             exec($command, $process);
 
             if (!empty($process)) {
+                $this->log($process);
                 return true;
             }
         }

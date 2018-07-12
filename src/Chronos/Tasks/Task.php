@@ -128,7 +128,7 @@ class Task
             return false;
         }
 
-        return $this->type == $type;
+        return !!$this->type == $type;
     }
 
     /**
