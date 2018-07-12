@@ -50,7 +50,7 @@ class ThreadedServiceTest extends TestCase
     {
         $service = new FooBarService();
 
-        // Pass container into runng and bind FooTest contract to BarTest Concretion
+        // Pass container into running and bind FooTest contract to BarTest Concretion
         $container = $service->running(new Injector());
         $this->assertInstanceOf(BarTest::class, $container->make(FooTest::class));
         $this->assertSame('Bar', $container->execute([FooTest::class, 'hello']));

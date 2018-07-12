@@ -14,7 +14,6 @@ class TaskFactoryTest extends TestCase
         $factory = new TaskFactory();
 
         $arguments = [
-            'uses' => 'testService',
             'command' => 'ls -la',
             'at' => function (\Chronos\Tasks\Scheduled $task) {
                 return $task->everyMinute();
@@ -24,8 +23,7 @@ class TaskFactoryTest extends TestCase
         $scheduled = $factory->scheduled('testScheduled', $arguments);
 
         $this->assertSame('testScheduled', $scheduled->getName());
-        $this->assertSame($arguments['uses'], $scheduled->getService());
-        $this->assertSame($arguments['command'], $scheduled->getCommand());
+        $this->assertSame($arguments['command'], $scheduled->getCommand()[0]);
         $this->assertSame('scheduled', $scheduled->getType());
 
         // Defaults to every minute when created in the factory

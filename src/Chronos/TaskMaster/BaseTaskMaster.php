@@ -59,20 +59,35 @@ class BaseTaskMaster
 
     /**
      * Check if task is running
-     * @param $name
+     * @param Task $task
      * @return bool
      */
-    public function isRunning($name)
+    public function isRunning(Task $task)
     {
-        $process = [];
+        $process = $commands = [];
 
         // Check the current processes that are running for the file
-        $command = "ps aux | grep -i '" . $name . "' | grep -v grep | awk '{print $2}'";
+        if ($name = $task->getName()) {
+            $commands[] = "ps aux | grep -i '" . $task->getName() . "' | grep -v grep | awk '{print $2}'";
+        }
 
-        exec($command, $process);
+        if ($service = $task->getService()) {
+            $commands[] = "ps aux | grep -i '" . $task->getService() . "' | grep -v grep | awk '{print $2}'";
+        }
+
+        $this->log($commands);
+
+        foreach ($commands as $command) {
+
+            exec($command, $process);
+
+            if (!empty($process)) {
+                return true;
+            }
+        }
 
         // Command not found running
-        return !empty($process);
+        return false;
     }
 
     /**
@@ -87,11 +102,19 @@ class BaseTaskMaster
     /**
      * Get specific dispatched task
      * @param Task $task
+     * @param string $type
      * @return array
      */
-    public function dispatchedTask(Task $task)
+    public function dispatchedTask(Task $task, $type = 'command')
     {
-        return $this->dispatched[$task->getName()] ?? [];
+        foreach ($this->dispatched[$task->getName()] as $dispatchType => $dispatched) {
+
+            if ($dispatchType == $type) {
+                return $dispatched;
+            }
+        }
+
+        return [];
     }
 
     /**
@@ -125,11 +148,12 @@ class BaseTaskMaster
     /**
      * Get the log for a specific task
      * @param Task $task
+     * @param string $type
      * @return array|mixed
      */
-    public function output(Task $task)
+    public function output(Task $task, $type = 'command')
     {
-        return $this->outputs[$task->getName()] ?? [];
+        return $this->outputs[$task->getName()][$type] ?? [];
     }
 
     /**
@@ -152,6 +176,40 @@ class BaseTaskMaster
     }
 
     /**
+     * Collect a dormant task into its array container
+     * @param Task $task
+     */
+    public function collectDormantTask(Task $task)
+    {
+        $this->dormant[$task->getName()] = $task;
+    }
+
+    /**
+     * Collect a dispatched task into its array container
+     * @param Task $task
+     * @param string $type
+     * @param string $command
+     */
+    public function collectDispatchedTask(Task $task, $type = 'command', string $command)
+    {
+        $this->dispatched[$task->getName()][$type][] = [
+            'command' => $command,
+            'task' => $task
+        ];
+    }
+
+    /**
+     * Collect a dormant task into its array container
+     * @param Task $task
+     * @param string $type
+     * @param array $output
+     */
+    public function collectOutputs(Task $task, $type = 'command', Array $output)
+    {
+        $this->outputs[$task->getName()][$type][] = $output;
+    }
+
+    /**
      * Output to the screen
      * @param $msg
      * @param bool $return
@@ -160,6 +218,10 @@ class BaseTaskMaster
     {
         if (!$this->verbose) {
             return;
+        }
+
+        if (is_array($msg)) {
+            $msg = print_r($msg, true);
         }
 
         echo $msg . (($return) ? "\n" : "\r");

@@ -53,10 +53,10 @@ class TaskCollector
      * Create and collect a new scheduled route
      * @param $name
      * @param $options
-     * @return TaskCollector|void
+     * @return Scheduled|void
      * @throws TaskCollectionException
      */
-    public function scheduled($name, $options)
+    public function scheduled($name, $options = [])
     {
         // Server specific
         if (!$this->server($options)) {
@@ -75,7 +75,7 @@ class TaskCollector
 
         $this->addTask($name, $task);
 
-        return $this;
+        return $task;
     }
 
     /**

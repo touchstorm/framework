@@ -22,7 +22,7 @@ class TaskTest extends TestCase
         $task = new Scheduled($name, $arguments);
 
         $this->assertSame($arguments['uses'], $task->getService());
-        $this->assertSame($arguments['command'], $task->getCommand());
+        $this->assertNotEquals($arguments['command'], $task->getCommand()[0]);
         $this->assertSame($arguments['type'], $task->getType());
 
         // Defaults to every minute on raw Scheduled task

@@ -119,13 +119,14 @@ class Scheduled extends Task
 
     /**
      * Hourly
-     * - default midnight
-     * @param int $hour 0 - 23
+     * - default top of the hour :00
+     * @param int $minute
      * @return Scheduled
      */
-    public function hourly($hour = 0)
+    public function hourly($minute = 0)
     {
-        return $this->schedule('* ' . $hour . ' * * *');
+        $minute = ($minute > 59) ? 59 : $minute;
+        return $this->schedule($minute . ' * * * *');
     }
 
     /**
@@ -243,6 +244,6 @@ class Scheduled extends Task
      */
     public function __toString()
     {
-        return $this->getName() . "\t| Scheduled: " . $this->runs . "\t| Command: " . $this->getCommand();
+        return $this->getName() . "\t| Scheduled: " . $this->runs . "\t| Command: " . $this->getCommand()[0];
     }
 }

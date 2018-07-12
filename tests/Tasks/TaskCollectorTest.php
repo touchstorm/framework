@@ -76,6 +76,6 @@ class TaskCollectorTest extends TestCase
 
         $this->assertInstanceOf(\Chronos\Tasks\Task::class, $task);
         $this->assertSame('scheduledTaskTest', $task->getName());
-        $this->assertSame('ls -la', $task->getCommand());
+        $this->assertSame('ls -la', $task->getCommand()[0]);
     }
 }

@@ -26,12 +26,12 @@ class Watcher extends BaseTaskMaster implements TaskMasterContract
         foreach ($this->taskCollector->getTasks() as $name => $task) {
 
             // Skip all but running tasks, skip
-            if ($task->getType() != 'running') {
+            if ($task->isTask('running')) {
                 continue;
             }
 
             // If task is already operating on the system, skip
-            if ($this->isRunning($task->getService())) {
+            if ($this->isRunning($task)) {
                 continue;
             }
 

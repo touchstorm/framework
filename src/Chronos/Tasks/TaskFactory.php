@@ -32,7 +32,9 @@ class TaskFactory
      * - Monthly
      * - Daily
      * - Hourly
+     * - Weekly
      * - By Minute
+     * - By Date (one off)
      * @param $name
      * @param array $options
      * @return Scheduled
@@ -45,8 +47,17 @@ class TaskFactory
         }
 
         // Controller commands
-        if (!isset($options['command'])) {
-            $options['dispatchCommand'] = 'nohup php ' . getenv('APP_BASE') . '/dispatch/scheduled.php ' . $options['uses'] . ' >/dev/null 2>&1 &';
+        if (!isset($options['command']) && isset($options['uses'])) {
+            $options['controlCommand'] = 'php ' . getenv('APP_BASE') . '/dispatch/scheduled.php ' . $options['uses'];
+        }
+
+        if (isset($options['command']) && !isset($options['uses'])) {
+            // This is a one-off command
+            $options['async'] = (isset($options['async'])) ? $options['async'] : false;
+        }
+
+        if (!isset($options['command']) && !isset($options['uses'])) {
+            $options['command'] = 'echo Wyld Stallyn Rules!';
         }
 
         // When the task is scheduled to run

@@ -3,6 +3,7 @@
 namespace Chronos\TaskMaster;
 
 use Chronos\TaskMaster\Contracts\TaskMasterContract;
+use Chronos\Tasks\Task;
 
 /**
  * Class Dispatcher
@@ -27,39 +28,28 @@ class Dispatcher extends BaseTaskMaster implements TaskMasterContract
         foreach ($this->taskCollector->getTasks() as $name => $task) {
 
             // If not a scheduled task, skip
-            if ($task->getType() != 'scheduled') {
+            if (!$task->isTask('scheduled')) {
                 continue;
             }
 
             // If it is currently running or not available, skip
-            if ($this->isRunning($task->getService()) || !$task->isAvailable()) {
-                $this->dormant[$task->getName()] = $task;
+            if ($this->isRunning($task) || !$task->isAvailable()) {
+                $this->collectDormantTask($task);
                 continue;
             }
 
-            // If there is a one-off command fire and continue
-            if ($command = $task->getCommand()) {
-                $this->dispatched[$task->getName()] = $task;
-
-                // Launch command
-                exec($command, $output);
-
-                // Add log to outputs
-                $this->outputs[$task->getName()] = $output;
-
-                $output = [];
-
-                continue;
+            // Pre dispatch commands
+            if ($task->hasBeforeCommands()) {
+                $this->execute($task->getBeforeCommands(), $task, 'before');
             }
 
-            // Dispatched container
-            $this->dispatched[] = $task;
+            // Execute the task's main command
+            $this->execute($task->getCommand(), $task);
 
-            // Set up the command
-            $command = 'nohup php ' . getenv('APP_BASE') . '/dispatch/scheduled.php ' . $task->getService() . ' >/dev/null 2>&1 &';
-
-            // Fire
-            exec($command);
+            // Post dispatch commands
+            if ($task->hasAfterCommands()) {
+                $this->execute($task->getAfterCommands(), $task, 'after');
+            }
 
             // trigger taskStartEvent()
         }
@@ -67,6 +57,37 @@ class Dispatcher extends BaseTaskMaster implements TaskMasterContract
         // Output reports
         $this->dormant();
         $this->dispatched();
+    }
+
+    /**
+     * Detect which type of command
+     * - bash/command line
+     * - controller/method
+     * and execute
+     * @param $commands
+     * @param Task $task
+     * @param string $type
+     */
+    protected function execute($commands, Task $task, $type = 'command')
+    {
+        if (!is_array($commands)) {
+            return;
+        }
+
+        foreach ($commands as $command) {
+
+            $this->collectDispatchedTask($task, $type, $command);
+
+            $output = [];
+
+            exec($command, $output);
+
+            $output = !empty($output) ? $output : ['asynchronous'];
+
+            $this->collectOutputs($task, $type, $output);
+        }
+
+        return;
     }
 
     /**
@@ -94,8 +115,25 @@ class Dispatcher extends BaseTaskMaster implements TaskMasterContract
         $this->log(' DISPATCHED ' . CURRENT_TIME);
         $this->log('------------------------------------------------------------');
 
-        foreach ($this->dispatchedTasks() as $task) {
-            $this->log(' > ' . $task);
+        // Display before
+        foreach ($this->dispatchedTasks() as $name => $dispatches) {
+
+            $this->log(' > ' . $name);
+
+            foreach ($dispatches as $type => $dispatched) {
+
+                foreach ($dispatched as $index => $dispatch) {
+
+                    if ($type == 'command') {
+                        $this->log("    > " . $type . ' ' . $dispatch['task']);
+                        continue;
+                    }
+
+                    $this->log("    > " . $type . ' dispatch command: ' . $dispatch['command']);
+                }
+            }
+
+            $this->log('------------------------------------------------------------');
         }
 
         $this->log('');
