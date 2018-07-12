@@ -80,7 +80,6 @@ class BaseTaskMaster
             exec($command, $process);
 
             if (!empty($process)) {
-                $this->log($process);
                 return true;
             }
         }
