@@ -3,6 +3,7 @@
 namespace Chronos\TaskMaster;
 
 use Chronos\TaskMaster\Contracts\TaskMasterContract;
+use Chronos\Tasks\Task;
 
 /**
  * Class Watcher
