@@ -243,12 +243,4 @@ class Scheduled extends Task
 
         return $this->schedule(implode(' ', $runs));
     }
-
-    /**
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->getName() . "\t| Scheduled: " . $this->runs . "\t| Command: " . $this->getCommand()[0];
-    }
 }

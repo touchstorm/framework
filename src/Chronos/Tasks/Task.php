@@ -273,4 +273,12 @@ class Task
     {
         return ($this->asynchronous && $async) ? 'nohup ' . $command . ' > /dev/null 2>&1 &' : $command;
     }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getName() . "\t| Scheduled: " . $this->runs . "\t| Command: " . $this->getCommand()[0];
+    }
 }
