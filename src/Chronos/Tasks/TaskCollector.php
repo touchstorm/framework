@@ -34,6 +34,7 @@ class TaskCollector
      * Create and collect a new running route
      * @param $name
      * @param $options
+     * @return Running|void
      * @throws TaskCollectionException
      */
     public function running($name, $options)
@@ -47,6 +48,8 @@ class TaskCollector
         $task = $this->taskFactory->running($name, $options);
 
         $this->addTask($name, $task);
+
+        return $task;
     }
 
     /**

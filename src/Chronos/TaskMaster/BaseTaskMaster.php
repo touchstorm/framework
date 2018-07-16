@@ -18,6 +18,12 @@ class BaseTaskMaster
     protected $dispatched = [];
 
     /**
+     * @var array $dispatched
+     * - Container of tasks that are currently running
+     */
+    protected $running = [];
+
+    /**
      * @var array $dormant
      * - Container of tasks that remained dormant
      */
@@ -116,6 +122,30 @@ class BaseTaskMaster
     }
 
     /**
+     * Array of dispatched tasks
+     * @return array
+     */
+    public function runningTasks()
+    {
+        return $this->dispatched;
+    }
+
+    /**
+     * Get specific dispatched task
+     * @param Task $task
+     * @param string $type
+     * @return array
+     */
+    public function runningTask(Task $task, $type = 'command')
+    {
+        foreach ($this->dispatched[$task->getName()] as $running) {
+            return $running;
+        }
+
+        return [];
+    }
+
+    /**
      * Array of dormant tasks waiting to fire
      * @return array
      */
@@ -180,6 +210,15 @@ class BaseTaskMaster
     public function collectDormantTask(Task $task)
     {
         $this->dormant[$task->getName()] = $task;
+    }
+
+    /**
+     * Collect a running tasks into its array container
+     * @param Task $task
+     */
+    public function collectRunningTask(Task $task)
+    {
+        $this->running[$task->getName()] = $task;
     }
 
     /**

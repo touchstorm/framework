@@ -11,17 +11,25 @@ class TaskFactory
     /**
      * Create a running task
      * @param $name
-     * @param array $parameters
+     * @param array $options
      * @return Running
      * @throws Exceptions\TaskCollectionException
      */
-    public function running($name, $parameters = [])
+    public function running($name, $options = [])
     {
-        if (is_array($parameters)) {
-            $parameters = array_merge(['type' => 'running'], $parameters);
+        if (is_array($options)) {
+            $options = array_merge(['type' => 'running'], $options);
         }
 
-        return new Running($name, $parameters);
+        // Service/Repository/Controller commands
+        if (isset($options['uses'])) {
+            $options['controlCommand'] = 'php ' . getenv('APP_BASE') . '/dispatch/running.php ' . $options['uses'];
+        }
+
+        // All running commands are asynchronous
+        $options['async'] = true;
+
+        return new Running($name, $options);
     }
 
     /**
