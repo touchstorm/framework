@@ -2,6 +2,8 @@
 
 namespace Chronos\Tasks;
 
+use LucidFrame\Console\ConsoleTable;
+
 /**
  * Class Task
  * @package Chronos\Tasks
@@ -213,6 +215,15 @@ class Task
     }
 
     /**
+     * Get when the Task scheduled to run.
+     * @return null|string
+     */
+    public function getRuns()
+    {
+        return (!$this->runs) ? 'running' : $this->runs;
+    }
+
+    /**
      * One off tasks to run before
      * scheduled task execution
      * @return string|array|null
@@ -278,6 +289,20 @@ class Task
     protected function makeCommand($command, $async = true)
     {
         return ($this->asynchronous && $async) ? 'nohup ' . $command . ' > /dev/null 2>&1 &' : $command;
+    }
+
+    /**
+     * Returns the Task data in an array format
+     * @return array
+     */
+    public function toArray()
+    {
+        return [
+            'name' => $this->getName(),
+            'type' => $this->getType(),
+            'schedule' => $this->getRuns(),
+            'command' => $this->getCommand()
+        ];
     }
 
     /**

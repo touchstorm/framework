@@ -81,12 +81,28 @@ class Watcher extends BaseTaskMaster implements TaskMasterContract
      */
     protected function running()
     {
-        $this->log('------------------------------------------------------------');
-        $this->log(' RUNNING ' . CURRENT_TIME);
-        $this->log('------------------------------------------------------------');
+        $this->log('RUNNING ');
+
+        $table = new ConsoleTable();
+        $table->addHeader('Tasks')->addHeader('type')->addHeader('Schedule')->addHeader('Command');
 
         foreach ($this->runningTasks() as $task) {
-            $this->log(' > ' . $task);
+            $arr = $task->toArray();
+
+            $table = $table->addRow()
+                ->addColumn($arr['name'])
+                ->addColumn($arr['type'])
+                ->addColumn($arr['schedule'])
+                ->addColumn($arr['command'][0]);
+        }
+
+        if ($this->verbose) {
+
+            if (empty($this->runningTasks())) {
+                $table = $table->addRow(['None', '-', '-', '-']);
+            }
+
+            $table->display();
         }
 
         $this->log('');
@@ -97,29 +113,34 @@ class Watcher extends BaseTaskMaster implements TaskMasterContract
      */
     protected function dispatched()
     {
-        $this->log('------------------------------------------------------------');
-        $this->log(' DISPATCHED ' . CURRENT_TIME);
-        $this->log('------------------------------------------------------------');
+        $this->log('DISPATCHED Tasks');
+
+        $table = new ConsoleTable();
+        $table->addHeader('Tasks')->addHeader('type')->addHeader('Schedule')->addHeader('Command');
 
         // Display before
         foreach ($this->dispatchedTasks() as $name => $dispatches) {
-
-            $this->log(' > ' . $name);
 
             foreach ($dispatches as $type => $dispatched) {
 
                 foreach ($dispatched as $index => $dispatch) {
 
-                    if ($type == 'command') {
-                        $this->log("    > " . $type . ' ' . $dispatch['task']);
-                        continue;
-                    }
+                    $arr = $dispatch['task']->toArray();
 
-                    $this->log("    > " . $type . ' dispatch command: ' . $dispatch['command']);
+                    $table = $table->addRow()
+                        ->addColumn($arr['name'])
+                        ->addColumn($type)
+                        ->addColumn($arr['schedule'])
+                        ->addColumn($dispatch['command']);
+
                 }
             }
 
-            $this->log('------------------------------------------------------------');
+            $table = $table->addBorderLine();
+        }
+
+        if ($this->verbose && !empty($this->dispatchedTasks())) {
+            $table->display();
         }
 
         $this->log('');
