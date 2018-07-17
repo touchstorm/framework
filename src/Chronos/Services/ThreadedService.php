@@ -60,7 +60,7 @@ abstract class ThreadedService
 
         // Load any service providers
         foreach ($this->providers[$method] as $provider) {
-            $this->app = $this->app->execute([$provider, 'register'], [':app', $this->app]);
+            $this->app = $this->app->execute([$provider, 'register'], [':app' => $this->app]);
         }
 
         // Call the specified method running | thread
