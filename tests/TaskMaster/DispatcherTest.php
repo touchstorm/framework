@@ -213,7 +213,6 @@ class DispatcherTest extends TestCase
 
         // New up the dispatcher
         $dispatcher = new Dispatcher($collection);
-        $dispatcher->verbose = true;
 
         // Extract the task
         $task = $collection->getTask('testScheduledBeforeAndAfter');
