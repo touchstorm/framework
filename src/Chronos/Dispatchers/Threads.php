@@ -110,12 +110,6 @@ class Threads
     {
         $this->log("Handling...");
 
-        // Temp reset
-        $this->log("Reset to tomorrow");
-        $this->repository->reset('*', [
-            'available_at' => (new \DateTime('yesterday'))
-        ]);
-
         // Always Running
         while (true) {
 
