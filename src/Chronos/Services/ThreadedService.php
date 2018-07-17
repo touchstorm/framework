@@ -3,6 +3,7 @@
 namespace Chronos\Services;
 
 use Auryn\Injector;
+use Chronos\Repositories\Contracts\QueueRepositoryContract;
 
 abstract class ThreadedService
 {
@@ -24,4 +25,16 @@ abstract class ThreadedService
      * @return Injector
      */
     abstract public function thread(Injector $app, $id);
+
+    /**
+     * @param Injector $app
+     * @return Injector
+     * @throws ConfigException
+     * @throws \Auryn\ConfigException
+     */
+    protected function bindQueueRepository(Injector $app)
+    {
+        return $app->alias(QueueRepositoryContract::class, $this->repository);
+    }
+
 }

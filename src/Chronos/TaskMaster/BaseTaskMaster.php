@@ -122,12 +122,12 @@ class BaseTaskMaster
     }
 
     /**
-     * Array of dispatched tasks
+     * Array of running tasks
      * @return array
      */
     public function runningTasks()
     {
-        return $this->dispatched;
+        return $this->running;
     }
 
     /**

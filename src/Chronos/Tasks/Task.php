@@ -74,6 +74,12 @@ class Task
     protected $asynchronous = true;
 
     /**
+     * When the cron is due to run
+     * @var null | string $runs
+     */
+    public $runs = null;
+
+    /**
      * Task constructor.
      * @param $name
      * @param array $arguments
@@ -279,6 +285,6 @@ class Task
      */
     public function __toString()
     {
-        return $this->getName() . "\t| Scheduled: " . $this->runs . "\t| Command: " . $this->getCommand()[0];
+        return $this->getName() . "\t| Scheduled: " . ((!$this->runs) ? 'running' : $this->runs) . "\t| Command: " . $this->getCommand()[0];
     }
 }
