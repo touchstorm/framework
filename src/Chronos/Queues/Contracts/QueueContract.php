@@ -8,5 +8,7 @@ interface QueueContract
 
     function reschedule($date);
 
+    function completed($reschedule, $date);
+
     function remove();
 }

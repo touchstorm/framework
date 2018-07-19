@@ -2,6 +2,7 @@
 
 namespace Chronos\Queues;
 
+use Carbon\Carbon;
 use DateTime;
 use Illuminate\Database\Eloquent\Model;
 
@@ -25,7 +26,8 @@ class Queue extends Model
     protected $fillable = [
         'in_use',
         'priority',
-        'available_at'
+        'available_at',
+        'completed_at'
     ];
 
     /**
@@ -56,6 +58,21 @@ class Queue extends Model
                 'available_at' => $date->format('Y-m-d H:i:s'),
                 'in_use' => 0
             ]);
+    }
+
+    /**
+     * Complete the queue item & reschedule (optional)
+     * @param bool $reschedule
+     * @param null $date
+     */
+    public function completed($reschedule = true, $date = null)
+    {
+        $this->where('id', $this->getAttribute('id'))
+            ->update(['completed_at' => Carbon::now()]);
+
+        if ($reschedule) {
+            $this->reschedule($date);
+        }
     }
 
     /**
