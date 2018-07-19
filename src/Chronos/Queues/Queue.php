@@ -47,13 +47,13 @@ class Queue extends Model
     {
         // Default is always +24 hours
         if (!$date instanceof DateTime) {
-            $date = new DateTime('+24 hours');
+            $date = new DateTime(((is_null($date)) ? '+24 hours' : $date));
         }
 
         // Update the queue
         $this->where('id', $this->getAttribute('id'))
             ->update([
-                'available_at' => (new DateTime($date))->format('Y-m-d H:i:s'),
+                'available_at' => $date->format('Y-m-d H:i:s'),
                 'in_use' => 0
             ]);
     }
