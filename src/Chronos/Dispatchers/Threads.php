@@ -132,6 +132,9 @@ class Threads
 
                 // Execute and track thread
                 $this->executeThread($queue, $options);
+
+                // Pause between threads
+                $this->pause();
             }
 
             // Wait until batch is empty
@@ -223,6 +226,20 @@ class Threads
             $this->log('Governing threads (' . $processing . ') processes', false);
             $this->processReduce();
         }
+    }
+
+    /**
+     * Pause between thread executions
+     */
+    protected function pause()
+    {
+        $pause = $this->repository->getPause();
+
+        if ($pause == 0) {
+            return;
+        }
+
+        usleep($pause);
     }
 
     /**

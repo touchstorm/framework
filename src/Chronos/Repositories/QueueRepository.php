@@ -22,6 +22,16 @@ class QueueRepository
     protected $maxThreads = 1;
 
     /**
+     * Pause between threads
+     * in microseconds.
+     * Usage cases:
+     * - Swamping the processors when multiple threads are running
+     * - Burning through quota per sec caps on threaded API calls
+     * @var int
+     */
+    protected $pause = 0;
+
+    /**
      * @var Model $queue
      * - The queue is an instance of Laravel's Model class
      */
@@ -222,33 +232,20 @@ class QueueRepository
     }
 
     /**
-     * reschedule
-     * - Reschedule the future crawl
-     * @param QueueContract|Queue $item
-     * @param DateTime|null $date
-     */
-    public function reschedule(QueueContract $item, $date = null)
-    {
-        // Default is always +24 hours
-        if (!$date instanceof DateTime) {
-            $date = new DateTime('+24 hours');
-        }
-
-        // Update the queue
-        $this->queue
-            ->where('id', $item->id)
-            ->update([
-                'available_at' => $date,
-                'in_use' => 0
-            ]);
-    }
-
-    /**
      * getMaxThreads
      * @return int
      */
     public function getMaxThreads()
     {
         return $this->maxThreads;
+    }
+
+    /**
+     * Get pause time
+     * @return int
+     */
+    public function getPause()
+    {
+        return $this->pause;
     }
 }
