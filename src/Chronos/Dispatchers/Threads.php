@@ -239,6 +239,8 @@ class Threads
             return;
         }
 
+        $this->log('Pausing for ' . $pause . ' microseconds...');
+
         usleep($pause);
     }
 
@@ -265,14 +267,6 @@ class Threads
 
             // Close the process out
             proc_close($this->processes[$resources[$i]]);
-
-            // TODO Move rescheduling to the individual thread
-            // TODO
-            // Get the Queue item out of the processes container
-            // $queue = $this->processIds[$status['pid']];
-
-            // Reschedule the queue item
-            // $this->repository->reschedule($queue);
 
             // Reduce the containers
             unset($this->processes[$resources[$i]]);
