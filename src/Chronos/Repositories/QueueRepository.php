@@ -92,6 +92,7 @@ class QueueRepository
             ->where('in_use', 0)
             ->where('available_at', '<', (new \DateTime('now')))
             ->orWhere('available_at', null)
+            ->where('completed_at', null)
             ->orderBy('available_at', 'ASC')
             ->limit($this->maxThreads);
 
