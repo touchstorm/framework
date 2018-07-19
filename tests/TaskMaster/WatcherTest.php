@@ -6,7 +6,9 @@ use Chronos\Tasks\TaskCollector;
 use Chronos\Tasks\TaskFactory;
 use PHPUnit\Framework\TestCase;
 
-define('CURRENT_TIME', (new DateTime)->format('Y-m-d H:i:s'));
+if (!defined('CURRENT_TIME')) {
+    define('CURRENT_TIME', (new DateTime)->format('Y-m-d H:i:s'));
+}
 
 class WatcherTest extends TestCase
 {
@@ -19,7 +21,6 @@ class WatcherTest extends TestCase
      * @covers Dispatcher::dispatchedTask();
      * @covers Dispatcher::isRunning()
      * @covers Dispatcher::getTask()
-     * @throws \Chronos\Tasks\Exceptions\TaskCollectionException
      */
     public function testWatcher()
     {

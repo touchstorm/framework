@@ -25,18 +25,29 @@ class BazTest implements FooTest
     }
 }
 
+class FooRepository
+{
+
+}
+
 class FooBarService extends ThreadedService
 {
-    public function running(Injector $app)
+    protected $repository = '\\FooRepository';
+
+    protected $providers = [
+        'running' => [],
+        'thread' => []
+    ];
+
+    public function running()
     {
-        $app->alias(FooTest::class, BarTest::class);
-        return $app;
+        $this->app->alias(FooTest::class, BarTest::class);
     }
 
-    public function thread(Injector $app, $id)
+    public function thread($id)
     {
-        $app->alias(FooTest::class, BazTest::class);
-        return $app;
+        $this->app->defineParam('argument', $id);
+        $this->app->alias(FooTest::class, BazTest::class);
     }
 }
 
@@ -48,15 +59,17 @@ class ThreadedServiceTest extends TestCase
      */
     public function testThreadedServiceContainer()
     {
-        $service = new FooBarService();
 
         // Pass container into running and bind FooTest contract to BarTest Concretion
-        $container = $service->running(new Injector());
+        $container = (new FooBarService(new Injector()))->dispatch('running');
         $this->assertInstanceOf(BarTest::class, $container->make(FooTest::class));
         $this->assertSame('Bar', $container->execute([FooTest::class, 'hello']));
 
         // Pass container into thread and bind FooTest contract to BazTest Concretion
-        $container = $service->thread($container, 1);
+        /**
+         * @var Injector $container
+         */
+        $container = (new FooBarService(new Injector()))->dispatch('thread', 1);
         $this->assertInstanceOf(BazTest::class, $container->make(FooTest::class));
         $this->assertSame('Baz', $container->execute([FooTest::class, 'hello']));
     }

@@ -6,8 +6,9 @@ use Chronos\Tasks\TaskCollector;
 use Chronos\Tasks\TaskFactory;
 use PHPUnit\Framework\TestCase;
 
-define('CURRENT_TIME', (new DateTime)->format('Y-m-d H:i:s'));
-
+if (!defined('CURRENT_TIME')) {
+    define('CURRENT_TIME', (new DateTime)->format('Y-m-d H:i:s'));
+}
 class DispatcherTest extends TestCase
 {
     /**

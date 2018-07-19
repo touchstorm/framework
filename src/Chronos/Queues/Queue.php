@@ -2,6 +2,7 @@
 
 namespace Chronos\Queues;
 
+use DateTime;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -36,4 +37,33 @@ class Queue extends Model
     {
         return [$this->getAttribute('id')];
     }
+
+    /**
+     * Reschedule the queue item for its next run
+     * default +24 hours from now.
+     * @param $date
+     */
+    public function reschedule($date = null)
+    {
+        // Default is always +24 hours
+        if (!$date instanceof DateTime) {
+            $date = new DateTime('+24 hours');
+        }
+
+        // Update the queue
+        $this->where('id', $this->getAttribute('id'))
+            ->update([
+                'available_at' => (new DateTime($date))->format('Y-m-d H:i:s'),
+                'in_use' => 0
+            ]);
+    }
+
+    /**
+     * Self delete from queue.
+     */
+    public function remove()
+    {
+        $this->delete();
+    }
+
 }
