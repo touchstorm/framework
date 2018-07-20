@@ -4,6 +4,7 @@ namespace Chronos\Services;
 
 use Auryn\Injector;
 use Chronos\Repositories\Contracts\QueueRepositoryContract;
+use Chronos\Services\Exceptions\ThreadedServiceException;
 
 abstract class ThreadedService
 {
@@ -23,7 +24,6 @@ abstract class ThreadedService
      * Threaded services require a running() method implementation
      * All dependency needed to execute a the thread dispatcher will be
      * bound in this method.
-     * @return Injector
      */
     abstract public function running();
 
@@ -31,42 +31,105 @@ abstract class ThreadedService
      * Threaded services require a thread() method implementation
      * All dependency needed to execute a thread will be
      * bound in this method.
-     * @param $id
-     * @return Injector
      */
-    abstract public function thread($id);
+    abstract public function thread();
 
     /**
      * @return void
      * @throws \Auryn\ConfigException
+     * @throws ThreadedServiceException
      */
     protected function bindQueueRepository()
     {
+        if (!isset($this->repository)) {
+            throw new ThreadedServiceException('Repository not found. Please add a repository attribute to your thread service.', 100);
+        }
+
         $this->app = $this->app->alias(QueueRepositoryContract::class, $this->repository);
+    }
+
+    /**
+     * @param $id
+     * @throws \Auryn\ConfigException
+     * @throws \Auryn\InjectionException
+     */
+    protected function bindThread($id)
+    {
+        // Resolve Queue repository
+        $repository = $this->app->make(QueueRepositoryContract::class);
+
+        // Fetch the Queue Item from the database (row of data to be processed)
+        $queueItem = $repository->item($id);
+
+        // Share the queue item to be used in the thread
+        $this->app->share($queueItem);
+
+        // Extract the class name
+        $name = $this->parseClassName($queueItem->class);
+
+        // Define a thread
+        $thread = '\\App\\Console\\Controllers\\Threads\\' . $name;
+        $this->app->define($thread, [
+            ':queueItem' => $queueItem
+        ]);
+
+        // alias the polymorphic thread
+        $this->app->alias('Thread', $thread);
     }
 
     /**
      * Loads the service providers
      * @param $method
-     * @param null $arguments
+     * @param null $id
      * @return mixed
      * @throws \Auryn\InjectionException
+     * @throws \Auryn\ConfigException
      */
-    public function dispatch($method, $arguments = null)
+    public function register($method, $id = null)
     {
         if (!in_array($method, ['running', 'thread'])) {
             return $this->app;
         }
 
-        // Load any service providers
-        foreach ($this->providers[$method] as $provider) {
-            $this->app = $this->app->execute([$provider, 'register'], [':app' => $this->app]);
+        // Bind service providers
+        $this->bindProviders($method);
+
+        // Make queue -> thread bindings
+        if ($method == 'thread') {
+            $this->bindThread($id);
         }
 
         // Call the specified method running | thread
-        call_user_func([$this, $method], $arguments);
+        call_user_func([$this, $method], $id);
 
         // Return the container
         return $this->app;
+    }
+
+    /**
+     * Bind method specific server providers
+     * @param $method
+     * @throws \Auryn\InjectionException
+     */
+    protected function bindProviders($method)
+    {
+        // Return, if there are no providers declared
+        if (!isset($this->providers[$method])) {
+            return;
+        }
+
+        // Load declared service providers
+        foreach ($this->providers[$method] as $provider) {
+            $this->app = $this->app->execute([$provider, 'register'], [':app' => $this->app]);
+        }
+    }
+
+    /**
+     * @param $class
+     * @return mixed
+     */
+    protected function parseClassName($class)
+    {
+        return str_replace('::class', '', $class);
     }
 }
