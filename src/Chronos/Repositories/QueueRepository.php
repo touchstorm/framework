@@ -101,7 +101,7 @@ class QueueRepository
         $batch = $this->queue
             ->where('in_use', 0)
             ->where('available_at', '<', (new \DateTime('now')))
-            ->orWhere('available_at', null)
+            ->orWhereNull('available_at')
             ->orderBy('available_at', 'DESC')
             ->limit($this->maxThreads);
 
