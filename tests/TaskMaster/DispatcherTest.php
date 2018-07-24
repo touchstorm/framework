@@ -9,6 +9,7 @@ use PHPUnit\Framework\TestCase;
 if (!defined('CURRENT_TIME')) {
     define('CURRENT_TIME', (new DateTime)->format('Y-m-d H:i:s'));
 }
+
 class DispatcherTest extends TestCase
 {
     /**
@@ -111,7 +112,7 @@ class DispatcherTest extends TestCase
         $dispatcher->dispatch();
 
         // IS RUNNING AS A PROCESS!!
-        $this->assertTrue($dispatcher->isRunning($task));
+        $this->assertTrue((bool)$dispatcher->isRunning($task));
 
         // Task in dispatched container
         $this->assertNotEmpty($dispatcher->dispatchedTasks());

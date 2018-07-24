@@ -61,37 +61,6 @@ class Dispatcher extends BaseTaskMaster implements TaskMasterContract
     }
 
     /**
-     * Detect which type of command
-     * - bash/command line
-     * - controller/method
-     * and execute
-     * @param $commands
-     * @param Task $task
-     * @param string $type
-     */
-    protected function execute($commands, Task $task, $type = 'command')
-    {
-        if (!is_array($commands)) {
-            return;
-        }
-
-        foreach ($commands as $command) {
-
-            $this->collectDispatchedTask($task, $type, $command);
-
-            $output = [];
-
-            exec($command, $output);
-
-            $output = !empty($output) ? $output : ['asynchronous'];
-
-            $this->collectOutputs($task, $type, $output);
-        }
-
-        return;
-    }
-
-    /**
      * Output dormant tasks
      */
     protected function dormant()

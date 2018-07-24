@@ -64,6 +64,37 @@ class BaseTaskMaster
     }
 
     /**
+     * Detect which type of command
+     * - bash/command line
+     * - controller/method
+     * and execute
+     * @param $commands
+     * @param Task $task
+     * @param string $type
+     */
+    protected function execute($commands, Task $task, $type = 'command')
+    {
+        if (!is_array($commands)) {
+            return;
+        }
+
+        foreach ($commands as $command) {
+
+            $this->collectDispatchedTask($task, $type, $command);
+
+            $output = [];
+
+            exec($command, $output);
+
+            $output = !empty($output) ? $output : ['asynchronous'];
+
+            $this->collectOutputs($task, $type, $output);
+        }
+
+        return;
+    }
+
+    /**
      * Check if task is running
      * @param Task $task
      * @return bool
@@ -86,12 +117,12 @@ class BaseTaskMaster
             exec($command, $process);
 
             if (!empty($process)) {
-                return true;
+                return (int)$process[0];
             }
         }
 
         // Command not found running
-        return false;
+        return 0;
     }
 
     /**
