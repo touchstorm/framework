@@ -100,8 +100,10 @@ class QueueRepository
         // Fill the batch from the queue
         $batch = $this->queue
             ->where('in_use', 0)
-            ->where('available_at', '<', (new \DateTime('now')))
-            ->orWhereNull('available_at')
+            ->where(function ($query) {
+                $query->where('available_at', '<', new \DateTime('now'))
+                    ->orWhereNull('available_at');
+            })
             ->orderBy('available_at', 'DESC')
             ->limit($this->maxThreads);
 
