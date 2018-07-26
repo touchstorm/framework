@@ -13,20 +13,14 @@ abstract class ServiceProvider
     protected $app;
 
     /**
-     * ServiceProvider constructor.
-     * @param Injector $app
-     */
-    public function __construct(Injector $app)
-    {
-        $this->app = $app;
-    }
-
-    /**
      * Loads the service providers
+     * @param Injector $app
      * @return mixed
      */
-    public function registrar()
+    public function registrar(Injector $app)
     {
+        $this->app = $app;
+
         // Call the specified method running | thread
         call_user_func([$this, 'register']);
 
