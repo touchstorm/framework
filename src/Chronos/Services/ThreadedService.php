@@ -120,7 +120,7 @@ abstract class ThreadedService
 
         // Load declared service providers
         foreach ($this->providers[$method] as $provider) {
-            $this->app = $this->app->execute([$provider, 'register'], [':app' => $this->app]);
+            $this->app = $this->app->execute([$provider, 'registrar']);
         }
     }
 
