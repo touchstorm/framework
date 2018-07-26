@@ -23,13 +23,10 @@ abstract class ServiceProvider
 
     /**
      * Loads the service providers
-     * @param Injector $app
      * @return mixed
      */
-    public function registrar(Injector $app)
+    public function registrar()
     {
-        $this->app = $app;
-
         // Call the specified method running | thread
         call_user_func([$this, 'register']);
 
