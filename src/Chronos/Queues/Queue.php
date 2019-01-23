@@ -37,7 +37,16 @@ class Queue extends Model
      */
     public function threadArguments()
     {
-        return [$this->getAttribute('id')];
+        return [
+            'id' => $this->getAttribute('id')
+        ];
+    }
+
+    public function getThreadArgument($key)
+    {
+        $argumentVectors = $this->threadArguments();
+
+        return $argumentVectors[$key] ?? null;
     }
 
     /**

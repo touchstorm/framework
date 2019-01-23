@@ -13,13 +13,19 @@ use Illuminate\Database\Eloquent\Model;
  * Class QueueRepository
  * @package Chronos\Repositories
  */
-class QueueRepository
+class BatchQueueRepository
 {
     /**
      * @var int $maxThreads
      * - Default value for maximum threads to run concurrently
      */
     protected $maxThreads = 1;
+
+    /**
+     * @var int $batchSize
+     * - Default value is 0 which disables this feature
+     */
+    protected $batchSize = 0;
 
     /**
      * Pause between threads
@@ -60,6 +66,7 @@ class QueueRepository
         // Configure Queue
         $this->queue->setConnection($this->connection);
         $this->queue->setTable($this->table);
+        $this->batch = new Collection();
     }
 
     /**
@@ -77,6 +84,19 @@ class QueueRepository
     }
 
     /**
+     * Items
+     * - Retrieve a batch of items out of the queue
+     * @param array $ids
+     * @return Collection | null
+     */
+    public function items(Array $ids = [])
+    {
+        return $this->queue
+            ->whereIn('id', $ids)
+            ->get();
+    }
+
+    /**
      * Next
      * - Pop the next item out of the
      * batch for threading.
@@ -84,6 +104,10 @@ class QueueRepository
      */
     public function next()
     {
+        if ($this->batchSize) {
+            return $this->batch->chunk($this->batchSize)->first();
+        }
+
         return $this->batch->pop();
     }
 
@@ -93,14 +117,20 @@ class QueueRepository
      * using default query arguments.
      * @param $options
      * - Allow for Closure options
-     * @return bool
+     * @return bool | Collection
      */
     public function fill($options = null)
     {
+        // All you to pass a batch to the fill
+        if ($options instanceof Collection) {
+            $this->batch = $options;
+            return;
+        }
+
         // Set a limit. We'll fetch more queues
         // than are needed so we aren't making
         // excess requests to the database
-        $limit = $this->maxThreads * 4;
+        $limit = $this->batchSize * $this->maxThreads;
 
         // Fill the batch from the queue
         $batch = $this->queue
@@ -149,6 +179,19 @@ class QueueRepository
 
         // Update the batch's items to be in use
         $this->queue->whereIn('id', $ids)->update(['in_use' => 1]);
+    }
+
+    /**
+     * reduce
+     * @param array $ids
+     * - Reduce the repositories batch by id array.
+     */
+    public function reduce($ids = [])
+    {
+        $this->batch = $this->batch->filter(function ($queue) use ($ids) {
+            return !in_array($queue->id, $ids);
+        });
+
     }
 
     /**

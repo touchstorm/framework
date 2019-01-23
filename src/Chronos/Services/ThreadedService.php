@@ -78,6 +78,35 @@ abstract class ThreadedService
     }
 
     /**
+     * @param $ids
+     * @throws \Auryn\ConfigException
+     * @throws \Auryn\InjectionException
+     */
+    protected function bindThreadBatch(Array $ids = [])
+    {
+        // Resolve Queue repository
+        $repository = $this->app->make(QueueRepositoryContract::class);
+
+        // Fetch the Queue Item from the database (row of data to be processed)
+        $queue = $repository->item($ids[0]);
+
+        // Share the queue item to be used in the thread
+        $this->app->share($batch);
+
+        // Extract the class name
+        $name = $this->parseClassName($queueItem->class);
+
+        // Define a thread
+        $thread = '\\App\\Console\\Controllers\\Threads\\' . $name;
+        $this->app->define($thread, [
+            ':queueItem' => $queueItem
+        ]);
+
+        // alias the polymorphic thread
+        $this->app->alias('Batch', $thread);
+    }
+
+    /**
      * Loads the service providers
      * @param $method
      * @param null $id

@@ -2,8 +2,6 @@
 
 namespace Chronos\Tasks;
 
-use LucidFrame\Console\ConsoleTable;
-
 /**
  * Class Task
  * @package Chronos\Tasks
@@ -14,27 +12,37 @@ class Task
      * @var string $name
      * - Simple task name
      */
-    protected $name;
+    protected $name = '';
 
     /**
      * @var string $service
      * - The name of the service that
      * will bind the dependencies for this task
      */
-    protected $service;
+    protected $service = '';
+
+
+    /**
+     * @var string $class
+     * - The name of the class.
+     * this is reserved for batched threads.
+     * That are constrained to use a single
+     * controller.
+     */
+    protected $class = '';
 
     /**
      * @var array $allowed
      * - Allowed parameters for the task
      */
-    protected $allowed = ['name', 'service', 'type', 'command', 'controlCommand', 'asynchronous'];
+    protected $allowed = ['name', 'service', 'type', 'command', 'controlCommand', 'asynchronous', 'class'];
 
     /**
      * @var array $aliases
      * - Alias from the task definition.
      * - Set in ~/Task.php
      */
-    protected $aliases = ['uses' => 'service', 'async' => 'asynchronous'];
+    protected $aliases = ['uses' => 'service', 'async' => 'asynchronous', 'class'];
 
     /**
      * @var string $type

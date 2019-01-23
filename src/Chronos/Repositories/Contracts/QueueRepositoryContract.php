@@ -42,4 +42,16 @@ interface QueueRepositoryContract
      * @return mixed
      */
     function isSleeping();
+
+    /**
+     * @return mixed required for threads
+     * to work.
+     */
+    function getMaxThreads();
+
+    /**
+     * @return mixed required for treads
+     * to work.
+     */
+    function getBatchSize();
 }

@@ -15,6 +15,15 @@
         <testsuite suffix="Test.php" name="tasks">
             <directory>./tests/Tasks</directory>
         </testsuite>
+        <testsuite suffix="Test.php" name="dispatch">
+            <directory>./tests/Dispatchers</directory>
+        </testsuite>
+        <testsuite suffix="Test.php" name="unit">
+            <directory>./tests/unit</directory>
+        </testsuite>
+        <testsuite suffix="Test.php" name="feature">
+            <directory>./tests/feature</directory>
+        </testsuite>
     </testsuites>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">

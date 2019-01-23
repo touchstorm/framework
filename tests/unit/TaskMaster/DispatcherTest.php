@@ -171,6 +171,8 @@ class DispatcherTest extends TestCase
         $this->assertSame($task, $dispatcher->dispatchedTask($task)[0]['task']);
     }
 
+
+
     /**
      * @covers Dispatcher::dispatch();
      * @covers Dispatcher::execute()
@@ -360,4 +362,5 @@ class DispatcherTest extends TestCase
         $this->assertSame($after[1], $dispatcher->dispatchedTask($hu, 'after')[1]['command']);
 
     }
+
 }

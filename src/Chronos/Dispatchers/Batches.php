@@ -2,22 +2,29 @@
 
 namespace Chronos\Dispatchers;
 
+use Chronos\Repositories\BatchQueueRepository;
 use Chronos\Repositories\Contracts\QueueRepositoryContract;
-use Chronos\Queues\Contracts\QueueContract;
 use Chronos\Queues\Queue;
-use Chronos\Repositories\QueueRepository;
+use Illuminate\Database\Eloquent\Collection;
 
 /**
- * Class Threads
+ * Class Batches
  * @package Chronos\Dispatchers
  */
-class Threads
+class Batches
 {
     /**
      * @var int $maxThreads
      * - Default value of threads for the system
      */
     protected $maxThreads = 1;
+
+    /**
+     * @var int $batchSize
+     * - Default defined as 0 which disables
+     * the batching.
+     */
+    protected $batchSize = 0;
 
     /**
      * @var array $processes
@@ -68,7 +75,7 @@ class Threads
     protected $disabled = false;
 
     /**
-     * @var QueueRepository $repository
+     * @var BatchQueueRepository $repository
      * - The queue repository feeds the thread dispatcher
      * with the needed queue items.
      */
@@ -76,14 +83,21 @@ class Threads
 
     /**
      * @var bool $emptied
-     * - Continuously run threads as they become
+     * - Default (false) Continuously run threads as they become
      * available in the batch container. (Default)
      *
-     * - Or wait until all processes have completed
+     * - (true) Waits until all processes have completed
      * and the batch is empty before refilling
      * the batch container.
      */
     protected $emptied = false;
+
+    /**
+     * @var bool $dryRun
+     * - IF true then the dispatcher will go through
+     * all the motions but will not execute the command.
+     */
+    protected $dryRun = false;
 
     /**
      * Threads constructor.
@@ -91,11 +105,11 @@ class Threads
      */
     public function __construct(QueueRepositoryContract $repository)
     {
-        // Output
-        $this->log('Initializing...');
-
         // Set the injected repository
         $this->repository = $repository;
+
+        // Set the batch size configuration
+        $this->batchSize = $this->repository->getBatchSize();
 
         // Set max thread configuration
         $this->maxThreads = $this->repository->getMaxThreads();
@@ -125,14 +139,14 @@ class Threads
              * the repository's batch and execute
              * @var Queue $queue
              */
-            while ($queue = $this->repository->next()) {
+            while ($batch = $this->repository->next()) {
 
                 // Govern the amount of threads that
                 // are running based on maxThreads
                 $this->governor();
 
                 // Execute and track thread
-                $this->executeThread($queue, $options);
+                $this->executeThreadBatch($batch, $options);
 
                 // Pause between threads
                 $this->pause();
@@ -141,6 +155,11 @@ class Threads
             // Wait until batch is empty
             // before retrieving the next batch
             $this->untilEmpty();
+
+            // Break on a dry run
+            if ($this->dryRun) {
+                break;
+            }
         }
     }
 
@@ -148,30 +167,13 @@ class Threads
      * Execute the threading process
      * - Send thread off as its own process with arg vectors
      * - Get status and
-     * @param QueueContract $queue
+     * @param Collection $batch
      * @param array $options
      */
-    protected function executeThread(QueueContract $queue, Array $options = [])
+    protected function executeThreadBatch(Collection $batch, Array $options = [])
     {
-        // Set directory variables
-        $base_dir = getenv('APP_BASE');
-        $log_dir = getenv('APP_LOGS');
-
-        // Default argument vectors
-        $vectors = $queue->threadArguments();
-
-        // Add any additional argument vectors
-        if (isset($options['vectors'])) {
-            $vectors = array_merge($vectors, $options['vectors']);
-        }
-
-        // Define the executable command
-        $threadPath = "php " . $base_dir . "/dispatch/thread.php";
-        $threadVectors = implode(' ', $vectors);
-        $threadOutput = $log_dir . '/' . $this->repository->getLogFile();
-
-        // Create full thread command
-        $threadCommand = $threadPath . ' ' . $threadVectors . ' >> ' . $threadOutput;
+        // Create the command string
+        $threadCommand = $this->createBatchCommand($batch, $options);
 
         // Output
         $this->log($threadCommand);
@@ -190,10 +192,67 @@ class Threads
 
         // Add the pid to the process id container
         // which is keyed to the Queue as value
-        $this->processIds[$status['pid']] = $queue;
+        $this->processIds[$status['pid']] = $batch;
 
         // Add the process resource to the container
         $this->processes[] = $process;
+    }
+
+    /**
+     * @param Collection $batch
+     * @param array $options
+     * - Create the string command from
+     * batch and option vectors.
+     * @return string $command
+     */
+    protected function createBatchCommand(Collection $batch, Array $options)
+    {
+        // Set directory variables
+        $base_dir = getenv('APP_BASE');
+        $log_dir = getenv('APP_LOGS');
+
+        $vectors = $ids = [];
+
+        /** @var Queue $queue */
+        foreach ($batch as $queue) {
+
+            // Default argument vectors
+            $ids[] = $queue->getThreadArgument('id');
+        }
+
+        $vectors[] = implode('~', $ids);
+
+        // Add any additional argument vectors
+        if (isset($options['vectors'])) {
+            $vectors = array_merge($vectors, $options['vectors']);
+        }
+
+        // Define the executable command
+        $path = "php " . $base_dir . "/dispatch/thread.php";
+        $argv = implode(' ', $vectors);
+        $output = $log_dir . '/' . $this->repository->getLogFile();
+
+        // Create full thread command
+        $command = $path . ' ' . $argv;
+
+        // Return if we're doing a dry run
+        if ($this->dryRun) {
+
+            // Hijack the command
+            $command = 'echo "testBatch"' . ' ' . $argv;
+
+            // Null out the log file
+            $this->logFile = null;
+
+            // reduce the batch.
+            $this->repository->reduce($ids);
+        }
+
+        if ($this->logFile) {
+            $command . ' >> ' . $output;
+        }
+
+        return $command;
     }
 
 
@@ -308,6 +367,10 @@ class Threads
      */
     public function sleeping()
     {
+        if ($this->dryRun) {
+            return;
+        }
+
         // If done stop crawling
         while ($this->repository->isSleeping()) {
 
@@ -361,12 +424,100 @@ class Threads
     }
 
     /**
+     * Override the default to dry run
+     * the commands.
+     * @param bool $value
+     */
+    public function setDryRun($value = false)
+    {
+        $this->dryRun = $value;
+    }
+
+    /**
+     * Return the dry run value
+     * @return bool
+     */
+    public function getDryRun()
+    {
+        return $this->dryRun;
+    }
+
+    /**
+     * Run each loop until batch is empty
+     * before refilling the batch from the repository
+     * the commands.
+     */
+    public function runUntilEmpty()
+    {
+        $this->setEmptied(true);
+    }
+
+    /**
+     * Set the empty value
+     * @param bool $value
+     */
+    public function setEmptied($value = false)
+    {
+        $this->emptied = $value;
+    }
+
+    /**
+     * Get empty value
+     * @return bool
+     */
+    public function getEmptied()
+    {
+        return $this->emptied;
+    }
+
+    /**
+     * Make the application talk
+     */
+    public function squawk()
+    {
+        $this->setVerbose(true);
+    }
+
+    /**
+     * Set the verbose value
+     * - default (false)
+     * @param bool $value
+     */
+    public function setVerbose($value = false)
+    {
+        $this->verbose = $value;
+    }
+
+    /**
+     * Get the verbose settings
+     * @return bool
+     */
+    public function getVerbose()
+    {
+        return $this->verbose;
+    }
+
+    /**
      * Set cron name
      * @return string
      */
     protected function name()
     {
         return __CLASS__;
+    }
+
+    ////////////////////////////////////
+    // Public getters
+    ////////////////////////////////////
+
+    public function getProcesses()
+    {
+        return $this->processes;
+    }
+
+    public function getProcessIds()
+    {
+        return $this->processIds;
     }
 
     ////////////////////////////////////
