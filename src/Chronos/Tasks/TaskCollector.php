@@ -31,7 +31,7 @@ class TaskCollector
     }
 
     /**
-     * Create and collect a new running route
+     * Create and collect a new running task
      * @param $name
      * @param $options
      * @return Running|void
@@ -46,6 +46,28 @@ class TaskCollector
         }
 
         $task = $this->taskFactory->running($name, $options);
+
+        $this->addTask($name, $task);
+
+        return $task;
+    }
+
+    /**
+     * Create and collect a new batch task
+     * @param $name
+     * @param $options
+     * @return Batch|void
+     * @throws TaskCollectionException
+     */
+    public function batch($name, $options)
+    {
+        // Server specific
+        if (!$this->server($options)) {
+            echo $name . ' is not designated to run on this server.' . PHP_EOL;
+            return;
+        }
+
+        $task = $this->taskFactory->batch($name, $options);
 
         $this->addTask($name, $task);
 
