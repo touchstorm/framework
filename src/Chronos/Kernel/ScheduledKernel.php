@@ -88,10 +88,11 @@ class ScheduledKernel extends Kernel
      * Dispatch the controller command
      * @param $controller
      * @return mixed
+     * @throws \Auryn\InjectionException
      */
     protected function dispatch($controller)
     {
-        return call_user_func([$controller, $this->method]);
+        return $this->app->execute([$controller, $this->method]);
     }
 
     /**

@@ -278,6 +278,24 @@ class BaseTaskMaster
     }
 
     /**
+     * Get output status
+     * @return bool
+     */
+    public function getVerbose()
+    {
+        return $this->verbose;
+    }
+
+    /**
+     * Set output status
+     * @param bool $value
+     */
+    public function setVerbose($value = false)
+    {
+        $this->verbose = $value;
+    }
+
+    /**
      * Output to the screen
      * @param $msg
      * @param bool $return
