@@ -2,46 +2,37 @@
 
 namespace Chronos\Kernel;
 
-use Auryn\Injector;
+use Chronos\Controllers\Controller;
+use Chronos\Exceptions\KernelException;
+use Exception;
 
 class ScheduledKernel extends Kernel
 {
     /**
-     * @var Injector $app
+     * @var string $controller
      */
-    protected $app;
-
     protected $controller;
 
-    protected $method;
-
-    public $timestamp;
-
-    protected $namespace = "\\App\\Console\\Controllers\\";
-
     /**
-     * ScheduledKernel constructor.
-     * @param Injector $app
+     * @var string $method
      */
-    public function __construct(Injector $app)
-    {
-        $this->timestamp = microtime(true);
-        $this->app = $app;
-    }
+    protected $method;
 
     /**
      * Handle the console command
      * @param $input
      * @param null $output
      * @return string
+     * @throws \Auryn\InjectionException
+     * @throws KernelException
      */
     public function handle($input, $output = null)
     {
-        $this->load($input);
+        $this->parseInput($input);
+
+        $controller = $this->resolveController();
 
         try {
-
-            $controller = $this->register();
 
             $response = $this->dispatch($controller);
 
@@ -60,19 +51,32 @@ class ScheduledKernel extends Kernel
      * through to the kernel and extract the
      * controller and method
      * @param array $input
+     * @throws KernelException
      */
-    protected function load(array $input)
+    protected function parseInput(array $input)
     {
-        $vectors = explode('@', $input[1]);
+        $vectors = $this->extractArgumentVectors($input); // TODO resolve this from IoC
+
+        if (!count($vectors) || count($vectors) < 2) {
+            throw new KernelException('Scheduled service arguments are ill formed', 422);
+        }
+
         $this->controller = $vectors[0];
         $this->method = $vectors[1];
+    }
+
+    protected function extractArgumentVectors(array $input)
+    {
+        return explode('@', $input[1]);
     }
 
     /**
      * Register
      * Register any controller specific service providers
+     * @return Controller
+     * @throws \Auryn\InjectionException
      */
-    protected function register()
+    protected function resolveController()
     {
         $controller = $this->app->make($this->namespace . $this->controller);
 
@@ -97,46 +101,11 @@ class ScheduledKernel extends Kernel
 
     /**
      * Console output
-     * @param string $msg
-     * @return string
-     */
-    protected function output(string $msg)
-    {
-        return $msg;
-    }
-
-    /**
-     * Console output
      * @return string
      */
     protected function details()
     {
         return $this->controller . '@' . $this->method . " |\tfinished in " . round(microtime(true) - $this->timestamp, 4) . " secs" . PHP_EOL;
-    }
-
-    /**
-     * Set a namespace
-     * @param string $namespace
-     */
-    public function setNamespace(string $namespace)
-    {
-        $this->namespace = $namespace;
-    }
-
-    /**
-     * @return string $namespace
-     */
-    public function getNamespace()
-    {
-        return $this->namespace;
-    }
-
-    /**
-     * @return Injector
-     */
-    public function getContainer()
-    {
-        return $this->app;
     }
 
     /**

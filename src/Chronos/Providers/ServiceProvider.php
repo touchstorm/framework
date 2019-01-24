@@ -4,7 +4,7 @@ namespace Chronos\Providers;
 
 use Auryn\Injector;
 
-abstract class ServiceProvider
+class ServiceProvider
 {
     /**
      * Application container
