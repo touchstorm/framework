@@ -226,10 +226,10 @@ class BaseTaskMaster
 
     /**
      * * Get tasks off the collector
-     * @param Task $task
+     * @param $task
      * @return \Chronos\Tasks\Route[]
      */
-    public function getTask(Task $task)
+    public function getTask($task)
     {
         return $this->taskCollector->getTask($task);
     }
