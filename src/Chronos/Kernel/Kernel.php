@@ -3,6 +3,7 @@
 namespace Chronos\Kernel;
 
 use Auryn\Injector;
+use Chronos\Foundation\Application;
 
 class Kernel
 {
@@ -17,9 +18,9 @@ class Kernel
 
     /**
      * ScheduledKernel constructor.
-     * @param Injector $app
+     * @param Application $app
      */
-    public function __construct(Injector $app)
+    public function __construct(Application $app)
     {
         $this->timestamp = microtime(true);
         $this->app = $app;

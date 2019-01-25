@@ -102,9 +102,9 @@ class ThreadedServiceTest extends TestCase
      */
     public function testThreadedServiceContainer()
     {
-
+        $dir = getcwd() . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'features' . DIRECTORY_SEPARATOR . 'Foundation';
         // Pass container into running and bind FooTest contract to BarTest Concretion
-        $container = (new FooBarService(new Injector()))->register('running');
+        $container = (new FooBarService(new \Chronos\Foundation\Application($dir)))->register('running');
         $this->assertInstanceOf(BarTest::class, $container->make(FooTest::class));
         $this->assertSame('Bar', $container->execute([FooTest::class, 'hello']));
 
@@ -112,7 +112,7 @@ class ThreadedServiceTest extends TestCase
         /**
          * @var Injector $container
          */
-        $container = (new FooBarService(new Injector()))->register('thread', 1);
+        $container = (new FooBarService(new \Chronos\Foundation\Application($dir)))->register('thread', 1);
         $this->assertInstanceOf(BazTest::class, $container->make(FooTest::class));
         $this->assertSame('Baz', $container->execute([FooTest::class, 'hello']));
     }

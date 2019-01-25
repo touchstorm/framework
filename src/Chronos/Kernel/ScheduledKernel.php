@@ -82,8 +82,7 @@ class ScheduledKernel extends Kernel
 
         // Register the controller's providers
         foreach ($controller->providers as $provider) {
-            // $this->app->register($provider);)
-            $this->app->execute([$provider, 'registrar']);
+             $this->app->register($provider);
         }
 
         return $controller;

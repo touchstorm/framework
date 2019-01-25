@@ -2,7 +2,7 @@
 
 namespace Chronos\Services;
 
-use Auryn\Injector;
+use Chronos\Foundation\Application;
 use Chronos\Repositories\Contracts\QueueRepositoryContract;
 use Chronos\Services\Exceptions\ThreadedServiceException;
 
@@ -10,11 +10,11 @@ abstract class ThreadedService
 {
     /**
      * Application container
-     * @var Injector $app
+     * @var Application $app
      */
     protected $app;
 
-    public function __construct(Injector $app)
+    public function __construct(Application $app)
     {
         $this->app = $app;
         $this->bindQueueRepository();

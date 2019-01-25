@@ -16,10 +16,13 @@ class SomeFeatureController
 
 class ScheduledKernelFeatureTest extends TestCase
 {
+
     public function testKernelConstruct()
     {
+        $dir = getcwd() . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'features' . DIRECTORY_SEPARATOR . 'Foundation';
+
         // Set up the classes
-        $app = new \Auryn\Injector();
+        $app = new \Chronos\Foundation\Application($dir);
         $kernel = new ScheduledKernel($app);
 
         // Set variables

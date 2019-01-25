@@ -3,6 +3,7 @@
 namespace Chronos\Providers;
 
 use Auryn\Injector;
+use Chronos\Foundation\Application;
 
 class ServiceProvider
 {
@@ -14,10 +15,10 @@ class ServiceProvider
 
     /**
      * Loads the service providers
-     * @param Injector $app
+     * @param Application $app
      * @return mixed
      */
-    public function registrar(Injector $app)
+    public function registrar(Application $app)
     {
         $this->app = $app;
 
