@@ -20,6 +20,8 @@ class Application extends Injector
 
         $this->basePath = $basePath;
 
+        $this->defineParam('basePath', $basePath);
+
         // Register the core application service providers
         $this->registerCoreProviders();
 
