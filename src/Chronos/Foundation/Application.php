@@ -20,7 +20,8 @@ class Application extends Injector
 
         $this->basePath = $basePath;
 
-        $this->defineParam('basePath', $basePath);
+        // Define the various paths
+        $this->definePaths();
 
         // Register the core application service providers
         $this->registerCoreProviders();
@@ -145,6 +146,17 @@ class Application extends Injector
     }
 
     /**
+     * Define our internal paths
+     */
+    protected function definePaths()
+    {
+        $this->defineParam('basePath', $this->basePath);
+        $this->defineParam('taskPath', $this->tasksPath());
+        $this->defineParam('testPath', $this->testPath());
+        $this->defineParam('configPath', $this->configPath());
+    }
+
+    /**
      * Task path directory
      * @return string
      */
@@ -160,6 +172,15 @@ class Application extends Injector
     public function testPath()
     {
         return $this->basePath() . DIRECTORY_SEPARATOR . 'test';
+    }
+
+    /**
+     * Task path directory
+     * @return string
+     */
+    public function configPath()
+    {
+        return $this->basePath() . DIRECTORY_SEPARATOR . 'config';
     }
 
     /**
