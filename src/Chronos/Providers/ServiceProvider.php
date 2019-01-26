@@ -2,14 +2,13 @@
 
 namespace Chronos\Providers;
 
-use Auryn\Injector;
 use Chronos\Foundation\Application;
 
 class ServiceProvider
 {
     /**
      * Application container
-     * @var Injector $app
+     * @var Application $app
      */
     protected $app;
 

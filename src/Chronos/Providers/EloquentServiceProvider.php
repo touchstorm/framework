@@ -12,7 +12,7 @@ class EloquentServiceProvider extends ServiceProvider
     public function register()
     {
         $capsule = new Manager;
-        $connections = require_once getenv('APP_BASE') . '/config/connections.php';
+        $connections = require_once $this->app->configPath() . '/connections.php';
 
         // Set connections
         foreach ($connections as $name => $connection) {
