@@ -4,20 +4,31 @@ use Chronos\Kernel\ScheduledKernel;
 use PHPUnit\Framework\TestCase;
 
 
-class SomeFeatureController
+class SomeFeatureProvider extends \Chronos\Providers\ServiceProvider
 {
-    public $providers = [];
-
-    public function someMethod()
+    public function register()
     {
-        return 'hi';
+        $this->app->defineParam('runFoo', 'bar');
     }
+}
+
+class SomeFeatureController extends \Chronos\Controllers\Controller
+{
+    public $providers = [
+        SomeFeatureProvider::class
+    ];
+
+    public function someMethod($runFoo = 'baz')
+    {
+        return $runFoo;
+    }
+
 }
 
 class ScheduledKernelFeatureTest extends TestCase
 {
 
-    public function testKernelConstruct()
+    public function testKernelConstructAndServiceProviderResolution()
     {
         $dir = getcwd() . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'features' . DIRECTORY_SEPARATOR . 'Foundation';
 
@@ -41,7 +52,7 @@ class ScheduledKernelFeatureTest extends TestCase
         $output = $kernel->handle($argv, true);
 
         // Assert
-        $this->assertSame('hi', $output);
+        $this->assertSame('bar', $output); // value being supplied by a service provider defineParam
         $this->assertSame($controller, $kernel->getController());
         $this->assertSame($method, $kernel->getMethod());
         $this->assertInstanceOf(\Auryn\Injector::class, $kernel->getContainer());

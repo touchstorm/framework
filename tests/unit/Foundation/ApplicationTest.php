@@ -3,6 +3,26 @@
 use PHPUnit\Framework\TestCase;
 
 
+class StubServiceProvider extends \Chronos\Providers\ServiceProvider
+{
+    public function register()
+    {
+        $this->app->defineParam('fooValue', 'bar');
+    }
+}
+
+class StubController extends \Chronos\Controllers\Controller
+{
+    public $providers = [
+        'StubServiceProvider'
+    ];
+
+    public function foo($fooValue)
+    {
+        return $fooValue;
+    }
+}
+
 class ApplicationTest extends TestCase
 {
     /**
@@ -47,4 +67,16 @@ class ApplicationTest extends TestCase
         $this->assertSame($this->dir . DIRECTORY_SEPARATOR . 'tasks', $this->app->tasksPath());
         $this->assertSame($this->dir . DIRECTORY_SEPARATOR . 'test', $this->app->testPath());
     }
+
+    public function testMakeMethodWithControllerHook()
+    {
+        $this->app->resolve(StubController::class);
+
+        $value = $this->app->execute('StubController::foo');
+
+        $this->assertSame(StubServiceProvider::class, $this->app->getRegisteredProvider(StubServiceProvider::class));
+        $this->assertSame('bar', $value);
+
+    }
+
 }

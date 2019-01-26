@@ -3,7 +3,6 @@
 use Chronos\Kernel\ScheduledKernel;
 use PHPUnit\Framework\TestCase;
 
-
 class SomeUnitController
 {
     public $providers = [];

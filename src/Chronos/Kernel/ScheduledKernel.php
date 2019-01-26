@@ -78,14 +78,7 @@ class ScheduledKernel extends Kernel
      */
     protected function resolveController()
     {
-        $controller = $this->app->make($this->namespace . $this->controller);
-
-        // Register the controller's providers
-        foreach ($controller->providers as $provider) {
-             $this->app->register($provider);
-        }
-
-        return $controller;
+        return $this->app->resolve($this->namespace . $this->controller);
     }
 
     /**

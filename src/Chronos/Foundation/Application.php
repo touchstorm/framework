@@ -3,8 +3,10 @@
 namespace Chronos\Foundation;
 
 use Auryn\Injector;
+use Chronos\Controllers\Controller;
 use Chronos\Providers\ServiceProvider;
 use Chronos\Tasks\TaskCollector;
+use Closure;
 
 class Application extends Injector
 {
@@ -190,5 +192,42 @@ class Application extends Injector
     public function basePath()
     {
         return $this->basePath;
+    }
+
+    /**
+     * Resolve (hook make)
+     * This wraps the make method and checks for
+     * class types. Depending if it is a sub class
+     * of a parent we can resolve service providers or
+     * do other class specific work before we make()
+     * and return.
+     * @param $name
+     * @param array $args
+     * @param null $callback
+     * @return mixed
+     * @throws \Auryn\InjectionException
+     */
+    public function resolve($name, array $args = [], $callback = null)
+    {
+        // Depending on the class's extended parent
+        // we can run some operations before we call
+        // make and return an instance
+        if (is_subclass_of($name, Controller::class)) {
+
+            // Prepare our sample controller by resolving it's internal service providers
+            $this->prepare($name, function ($controller, Application $app) {
+                // Register the controller's providers
+                foreach ($controller->providers as $provider) {
+                    $app->register($provider);
+                }
+            });
+        }
+
+        // Handle any custom closers
+        if ($callback instanceof Closure) {
+            $callback($name, $this);
+        }
+
+        return $this->make($name, $args);
     }
 }
