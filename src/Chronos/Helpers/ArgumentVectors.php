@@ -15,12 +15,28 @@ class ArgumentVectors
      */
     protected $file = '';
 
+    /**
+     * Arguments detected
+     * @var array $arguments
+     */
     protected $arguments = [];
 
+    /**
+     * Service for running and batches
+     * @var null|string $service
+     */
     protected $service = null;
 
+    /**
+     * Controller for scheduled tasks
+     * @var null|string
+     */
     protected $controller = null;
 
+    /**
+     * Method on controller
+     * @var null
+     */
     protected $method = null;
 
     public function __construct(array $argv)

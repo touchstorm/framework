@@ -102,7 +102,7 @@ class ThreadedServiceTest extends TestCase
      */
     public function testThreadedServiceContainer()
     {
-        $dir = getcwd() . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'features' . DIRECTORY_SEPARATOR . 'Foundation';
+        $dir = getcwd() . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'stubs';
         // Pass container into running and bind FooTest contract to BarTest Concretion
         $container = (new FooBarService(new \Chronos\Foundation\Application($dir)))->register('running');
         $this->assertInstanceOf(BarTest::class, $container->make(FooTest::class));

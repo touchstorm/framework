@@ -2,29 +2,49 @@
 
 namespace Chronos\Kernel;
 
-use Auryn\Injector;
 use Chronos\Foundation\Application;
+use Chronos\Helpers\ArgumentVectors;
 
-class Kernel
+abstract class Kernel
 {
     /**
-     * @var Injector $app
+     * @var Application $app
      */
     protected $app;
 
+    /**
+     * @var string $timestamp
+     */
     public $timestamp;
 
+    /**
+     * @var string $namespace
+     */
     protected $namespace = "\\App\\Console\\Controllers\\";
+
+    /**
+     * @var ArgumentVectors $arguments
+     */
+    protected $arguments;
 
     /**
      * ScheduledKernel constructor.
      * @param Application $app
+     * @param ArgumentVectors $arguments
      */
-    public function __construct(Application $app)
+    public function __construct(Application $app, ArgumentVectors $arguments)
     {
         $this->timestamp = microtime(true);
         $this->app = $app;
+        $this->arguments = $arguments;
+
+        $this->parseConsoleArguments();
     }
+
+    /**
+     * @return void
+     */
+    abstract protected function parseConsoleArguments();
 
     /**
      * Console output
@@ -54,7 +74,7 @@ class Kernel
     }
 
     /**
-     * @return Injector
+     * @return Application
      */
     public function getContainer()
     {

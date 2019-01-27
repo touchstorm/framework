@@ -2,7 +2,6 @@
 
 namespace Chronos\Kernel;
 
-use Chronos\Controllers\Controller;
 use Chronos\Exceptions\KernelException;
 use Exception;
 
@@ -19,22 +18,27 @@ class ScheduledKernel extends Kernel
     protected $method;
 
     /**
+     * Parse Console Arguments
+     * Break down the argument vectors passed
+     * through to the kernel and extract the
+     * controller and method
+     */
+    protected function parseConsoleArguments()
+    {
+        $this->controller = $this->arguments->getController();
+        $this->method = $this->arguments->getMethod();
+    }
+
+    /**
      * Handle the console command
-     * @param $input
      * @param null $output
      * @return string
-     * @throws \Auryn\InjectionException
-     * @throws KernelException
      */
-    public function handle($input, $output = null)
+    public function handle($output = null)
     {
-        $this->parseInput($input);
-
-        $controller = $this->resolveController();
-
         try {
 
-            $response = $this->dispatch($controller);
+            $response = $this->dispatch();
 
             if ($output) {
                 return $this->output($response);
@@ -45,51 +49,19 @@ class ScheduledKernel extends Kernel
         }
     }
 
-    /**
-     * Load
-     * Break down the argument vectors passed
-     * through to the kernel and extract the
-     * controller and method
-     * @param array $input
-     * @throws KernelException
-     */
-    protected function parseInput(array $input)
-    {
-        $vectors = $this->extractArgumentVectors($input); // TODO resolve this from IoC
-
-        if (!count($vectors) || count($vectors) < 2) {
-            throw new KernelException('Scheduled service arguments are ill formed', 422);
-        }
-
-        $this->controller = $vectors[0];
-        $this->method = $vectors[1];
-    }
-
     protected function extractArgumentVectors(array $input)
     {
         return explode('@', $input[1]);
     }
 
     /**
-     * Register
-     * Register any controller specific service providers
-     * @return Controller
-     * @throws \Auryn\InjectionException
-     */
-    protected function resolveController()
-    {
-        return $this->app->resolve($this->namespace . $this->controller);
-    }
-
-    /**
      * Dispatch the controller command
-     * @param $controller
      * @return mixed
      * @throws \Auryn\InjectionException
      */
-    protected function dispatch($controller)
+    protected function dispatch()
     {
-        return $this->app->execute([$controller, $this->method]);
+        return $this->app->resolveAndExecute([$this->namespace . $this->controller, $this->method]);
     }
 
     /**

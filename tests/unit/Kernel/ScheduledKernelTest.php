@@ -1,5 +1,6 @@
 <?php
 
+use Chronos\Helpers\ArgumentVectors;
 use Chronos\Kernel\ScheduledKernel;
 use PHPUnit\Framework\TestCase;
 
@@ -17,10 +18,9 @@ class ScheduledKernelTest extends TestCase
 {
     public function testKernelConstruct()
     {
-        $dir = getcwd() . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'features' . DIRECTORY_SEPARATOR . 'Foundation';
+        $dir = getcwd() . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'stubs';
         // Set up the classes
         $app = new \Chronos\Foundation\Application($dir);
-        $kernel = new ScheduledKernel($app);
 
         // Set variables
         $namespace = '\\';
@@ -30,6 +30,11 @@ class ScheduledKernelTest extends TestCase
             'someDispatcher.php',
             $controller . '@' . $method
         ];
+
+        $kernel = $app->make(ScheduledKernel::class, [
+            ':app' => $app,
+            ':arguments' => new ArgumentVectors($argv)
+        ]);
 
         // Configure the kernel
         $kernel->setNamespace($namespace);

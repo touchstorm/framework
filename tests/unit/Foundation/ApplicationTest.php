@@ -37,7 +37,7 @@ class ApplicationTest extends TestCase
 
     public function setUp()
     {
-        $this->dir = getcwd() . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'unit' . DIRECTORY_SEPARATOR . 'Foundation';
+        $this->dir = getcwd() . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'stubs';
         $this->app = new \Chronos\Foundation\Application($this->dir);
     }
 
@@ -68,11 +68,58 @@ class ApplicationTest extends TestCase
         $this->assertSame($this->dir . DIRECTORY_SEPARATOR . 'test', $this->app->testPath());
     }
 
+    /**
+     * @covers \Chronos\Foundation\Application::resolve
+     * @covers \Chronos\Foundation\Application::execute
+     * @throws \Auryn\InjectionException
+     */
     public function testMakeMethodWithControllerHook()
     {
         $this->app->resolve(StubController::class);
 
         $value = $this->app->execute('StubController::foo');
+
+        $this->assertSame(StubServiceProvider::class, $this->app->getRegisteredProvider(StubServiceProvider::class));
+        $this->assertSame('bar', $value);
+    }
+
+    /**
+     * @covers \Chronos\Foundation\Application::resolveAndMake
+     * @throws \Auryn\InjectionException
+     */
+    public function testResolveAndMake()
+    {
+        $controller = $this->app->resolveAndMake(StubController::class);
+
+        $value = $this->app->execute([$controller, 'foo']);
+
+        $this->assertSame(StubServiceProvider::class, $this->app->getRegisteredProvider(StubServiceProvider::class));
+        $this->assertSame('bar', $value);
+
+    }
+
+    /**
+     * @covers \Chronos\Foundation\Application::resolveAndExecute
+     * @throws \Auryn\InjectionException
+     */
+    public function testResolveAndExecuteFromArray()
+    {
+        $value = $this->app->resolveAndExecute([StubController::class, 'foo']);
+
+        $this->assertSame(StubServiceProvider::class, $this->app->getRegisteredProvider(StubServiceProvider::class));
+        $this->assertSame('bar', $value);
+
+    }
+
+    /**
+     * @covers \Chronos\Foundation\Application::resolveAndExecute
+     * @throws \Auryn\InjectionException
+     */
+    public function testResolveAndExecuteFromClass()
+    {
+        $controller = $this->app->make(StubController::class);
+
+        $value = $this->app->resolveAndExecute([$controller, 'foo']);
 
         $this->assertSame(StubServiceProvider::class, $this->app->getRegisteredProvider(StubServiceProvider::class));
         $this->assertSame('bar', $value);

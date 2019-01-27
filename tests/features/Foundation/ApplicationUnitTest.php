@@ -29,7 +29,7 @@ class ApplicationUnitTest extends TestCase
      */
     public function testApplicationTaskResolve()
     {
-        $dir = getcwd() . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'features' . DIRECTORY_SEPARATOR . 'Foundation';
+        $dir = getcwd() . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'stubs';
 
         // new up and extend application
         // on construct the application will register the tasks
@@ -65,7 +65,7 @@ class ApplicationUnitTest extends TestCase
      */
     public function testApplicationRegisterServiceProvider()
     {
-        $dir = getcwd() . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'features' . DIRECTORY_SEPARATOR . 'Foundation';
+        $dir = getcwd() . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'stubs';
 
         $app = new class($dir) extends Application
         {

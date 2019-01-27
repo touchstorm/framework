@@ -5,6 +5,11 @@ use PHPUnit\Framework\TestCase;
 
 class ArgumentVectorTest extends TestCase
 {
+    /**
+     * @covers \Chronos\Helpers\ArgumentVectors::getArguments
+     * @covers \Chronos\Helpers\ArgumentVectors::getController
+     * @covers \Chronos\Helpers\ArgumentVectors::getMethod
+     */
     public function testArgumentVectorsOnScheduledTask()
     {
         $controller = 'SomeController';
@@ -21,4 +26,6 @@ class ArgumentVectorTest extends TestCase
         $this->assertSame($method, $parser->getMethod());
 
     }
+
+    // need tests for getService()
 }

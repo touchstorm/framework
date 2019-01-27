@@ -10,10 +10,25 @@ use Closure;
 
 class Application extends Injector
 {
+    /**
+     * Application version
+     * @var string $version
+     */
+    protected $version = '2.0';
+
+    // ?
     protected static $instance;
 
+    /**
+     * Base path of the running application
+     * @var null|string
+     */
     protected $basePath = '';
 
+    /**
+     * The service providers loaded in the system
+     * @var array $loadedServiceProviders
+     */
     protected $loadedServiceProviders = [];
 
     public function __construct($basePath = null)
@@ -34,6 +49,7 @@ class Application extends Injector
 
     /**
      * Register Service Providers
+     * Register and store the class name.
      * @param $provider
      * @param bool $reRegister
      * @return bool|mixed
@@ -207,7 +223,7 @@ class Application extends Injector
      * @return mixed
      * @throws \Auryn\InjectionException
      */
-    public function resolve($name, array $args = [], $callback = null)
+    public function resolve($name, $callback = null)
     {
         // Depending on the class's extended parent
         // we can run some operations before we call
@@ -228,6 +244,54 @@ class Application extends Injector
             $callback($name, $this);
         }
 
+        return $name;
+    }
+
+    /**
+     * Resolve and make the class from IoC
+     * @param $name
+     * @param array $args
+     * @param null $callback
+     * @return mixed
+     * @throws \Auryn\InjectionException
+     */
+    public function resolveAndMake($name, array $args = array(), $callback = null)
+    {
+        $name = $this->resolve($name, $callback);
+
         return $this->make($name, $args);
     }
+
+    /**
+     * Resolve providers and then execute
+     * out of the IoC Depending on class type
+     * @param $callableOrMethodStr
+     * @param array $args
+     * @param null $callback
+     * @return mixed
+     * @throws \Auryn\InjectionException
+     */
+    public function resolveAndExecute($callableOrMethodStr, array $args = array(), $callback = null)
+    {
+        if (is_array($callableOrMethodStr)) {
+
+            list($classOrObj, $method) = $callableOrMethodStr;
+
+            $classOrObj = (is_object($classOrObj)) ?
+                $this->resolve(get_class($classOrObj), $callback)
+                :
+                $this->resolve($classOrObj, $callback);
+
+            $callableOrMethodStr = [
+                $classOrObj,
+                $method
+            ];
+
+        } elseif (is_object($callableOrMethodStr)) {
+            $this->resolve(get_class($callableOrMethodStr), $callback);
+        }
+
+        return parent::execute($callableOrMethodStr, $args);
+    }
+
 }
