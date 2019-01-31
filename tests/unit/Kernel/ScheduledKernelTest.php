@@ -27,7 +27,7 @@ class ScheduledKernelTest extends TestCase
         $controller = 'SomeUnitController';
         $method = 'someMethod';
         $argv = [
-            'someDispatcher.php',
+            'scheduled.php',
             $controller . '@' . $method
         ];
 
@@ -40,8 +40,9 @@ class ScheduledKernelTest extends TestCase
         $kernel->setNamespace($namespace);
 
         // Mock the kernel handling a call
-        $kernel->handle($argv, true);
+        $output = $kernel->handle(true);
 
+        $this->assertNotNull($output);
         $this->assertSame($controller, $kernel->getController());
         $this->assertSame($method, $kernel->getMethod());
         $this->assertInstanceOf(\Auryn\Injector::class, $kernel->getContainer());

@@ -60,7 +60,7 @@ class ScheduledKernelFeatureTest extends TestCase
         $controller = 'SomeFeatureController';
         $method = 'someMethod';
         $argv = [
-            'someDispatcher.php',
+            'scheduled.php',
             $controller . '@' . $method
         ];
 

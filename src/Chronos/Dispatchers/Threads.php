@@ -6,6 +6,7 @@ use Chronos\Repositories\Contracts\QueueRepositoryContract;
 use Chronos\Queues\Contracts\QueueContract;
 use Chronos\Queues\Queue;
 use Chronos\Repositories\QueueRepository;
+use Closure;
 
 /**
  * Class Threads
@@ -86,14 +87,18 @@ class Threads
     protected $emptied = false;
 
     /**
+     * @var bool $dryRun
+     * - IF true then the dispatcher will go through
+     * all the motions but will not execute the command.
+     */
+    protected $dryRun = false;
+
+    /**
      * Threads constructor.
      * @param QueueRepositoryContract $repository
      */
     public function __construct(QueueRepositoryContract $repository)
     {
-        // Output
-        $this->log('Initializing...');
-
         // Set the injected repository
         $this->repository = $repository;
 
@@ -109,7 +114,8 @@ class Threads
      */
     public function handle($options = [])
     {
-        $this->log("Handling...");
+
+        $this->configure($options);
 
         // Always Running
         while (true) {
@@ -141,7 +147,35 @@ class Threads
             // Wait until batch is empty
             // before retrieving the next batch
             $this->untilEmpty();
+
+            // Break on a dry run
+            if ($this->dryRun) {
+                break;
+            }
         }
+    }
+
+    protected function configure(array $options)
+    {
+        if (!isset($options['settings'])) {
+            return;
+        }
+
+        foreach ($options['settings'] as $setter => $value) {
+
+            // Parse closure settings and continue
+            if ($value instanceof Closure) {
+                $value($this);
+                continue;
+            }
+
+            // if it is a setter method set and continue
+            if (method_exists($this, $setter)) {
+                call_user_func([$this, $setter], $value);
+                continue;
+            }
+        }
+
     }
 
     /**
@@ -308,6 +342,10 @@ class Threads
      */
     public function sleeping()
     {
+        if ($this->dryRun) {
+            return;
+        }
+
         // If done stop crawling
         while ($this->repository->isSleeping()) {
 
@@ -325,6 +363,89 @@ class Threads
             sleep(5);
             continue;
         }
+    }
+
+    /**
+     * Override the default to dry run
+     * the commands.
+     * @param bool $value
+     */
+    public function setDryRun($value = false)
+    {
+        $this->dryRun = $value;
+    }
+
+    /**
+     * Return the dry run value
+     * @return bool
+     */
+    public function getDryRun()
+    {
+        return $this->dryRun;
+    }
+
+    /**
+     * Run each loop until batch is empty
+     * before refilling the batch from the repository
+     * the commands.
+     */
+    public function runUntilEmpty()
+    {
+        $this->setEmptied(true);
+    }
+
+    /**
+     * Set the empty value
+     * @param bool $value
+     */
+    public function setEmptied($value = false)
+    {
+        $this->emptied = $value;
+    }
+
+    /**
+     * Get empty value
+     * @return bool
+     */
+    public function getEmptied()
+    {
+        return $this->emptied;
+    }
+
+    /**
+     * Make the application talk
+     */
+    public function squawk()
+    {
+        $this->setVerbose(true);
+    }
+
+    /**
+     * Set the verbose value
+     * - default (false)
+     * @param bool $value
+     */
+    public function setVerbose($value = false)
+    {
+        $this->verbose = $value;
+    }
+
+    /**
+     * Get the verbose settings
+     * @return bool
+     */
+    public function getVerbose()
+    {
+        return $this->verbose;
+    }
+
+    /**
+     * Get the repository
+     * @return QueueRepositoryContract|QueueRepository
+     */
+    public function getRepository()
+    {
+        return $this->repository;
     }
 
     ////////////////////////////////////

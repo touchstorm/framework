@@ -25,16 +25,16 @@ class ScheduledKernel extends Kernel
      */
     protected function parseConsoleArguments()
     {
-        $this->controller = $this->arguments->getController();
-        $this->method = $this->arguments->getMethod();
+        $this->controller = $this->arguments->type('scheduled')->controller();
+        $this->method = $this->arguments->type('scheduled')->method();
     }
 
     /**
      * Handle the console command
-     * @param null $output
+     * @param bool $output
      * @return string
      */
-    public function handle($output = null)
+    public function handle($output = false)
     {
         try {
 
@@ -47,11 +47,6 @@ class ScheduledKernel extends Kernel
         } catch (Exception $e) {
             return 'File: ' . $e->getFile() . ' | ' . $e->getLine() . ' | ' . $e->getMessage() . PHP_EOL;
         }
-    }
-
-    protected function extractArgumentVectors(array $input)
-    {
-        return explode('@', $input[1]);
     }
 
     /**

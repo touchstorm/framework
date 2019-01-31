@@ -14,8 +14,6 @@ class ArgumentVectorResolveFromIoCTest extends TestCase
      * shares ArgumentVectors to the IoC it will use the fake globals.
      *
      * @covers \Chronos\Helpers\ArgumentVectors::getArguments
-     * @covers \Chronos\Helpers\ArgumentVectors::getController
-     * @covers \Chronos\Helpers\ArgumentVectors::getMethod
      */
     public function testArgumentVectorsResolved()
     {
@@ -25,7 +23,7 @@ class ArgumentVectorResolveFromIoCTest extends TestCase
         $consoleArgumentVector = $controller . '@' . $method;
 
         $_SERVER['argv'] = [
-            'fooFile.php',
+            'scheduled.php',
             $controller . '@' . $method
         ];
 
@@ -39,10 +37,66 @@ class ArgumentVectorResolveFromIoCTest extends TestCase
         // Assert
         $this->assertNotNull($fullVector);
         $this->assertSame($consoleArgumentVector, $fullVector);
-        $this->assertSame($controller, $parser->getController());
-        $this->assertSame($method, $parser->getMethod());
+    }
+
+    /**
+     * @covers \Chronos\Helpers\ArgumentVectors::type('scheduled')
+     * @covers \Chronos\Helpers\ArgumentVectors::controller
+     * @covers \Chronos\Helpers\ArgumentVectors::scheduled
+     * @throws \Auryn\InjectionException
+     * @throws \Chronos\Exceptions\ArgumentVectorException
+     */
+    public function testScheduledArgumentVectorsResolved()
+    {
+        // Set variables
+        $controller = 'FooController';
+        $method = 'barMethod';
+
+        $_SERVER['argv'] = [
+            'scheduled.php',
+            $controller . '@' . $method
+        ];
+
+        $app = new \Chronos\Foundation\Application(getcwd() . '/tests/stubs');
+
+        // Resolve our character
+        $parser = $app->make(ArgumentVectors::class);
+
+        // Assert
+        $this->assertSame($controller, $parser->type('scheduled')->controller());
+        $this->assertSame($method, $parser->type('scheduled')->method());
+        $this->assertSame($controller, $parser->scheduled()->controller());
+        $this->assertSame($method, $parser->scheduled()->method());
 
     }
 
-    // need tests for getService()
+    /**
+     * @covers \Chronos\Helpers\ArgumentVectors::type('running')
+     * @covers \Chronos\Helpers\ArgumentVectors::running
+     * @covers \Chronos\Helpers\ArgumentVectors::controller
+     * @throws \Auryn\InjectionException
+     * @throws \Chronos\Exceptions\ArgumentVectorException
+     */
+    public function testRunningArgumentVectorsResolved()
+    {
+        // Set variables
+        $service = 'FooService';
+
+        $_SERVER['argv'] = [
+            'running.php',
+            $service
+        ];
+
+        $app = new \Chronos\Foundation\Application(getcwd() . '/tests/stubs');
+
+        // Resolve our character
+        $parser = $app->make(ArgumentVectors::class);
+
+        // Assert
+        $this->assertSame($service, $parser->type('running')->service());
+        $this->assertSame($service, $parser->running()->service());
+
+    }
+
+    // need tests for various kernels()
 }

@@ -69,14 +69,15 @@ class FooRepository extends QueueRepository
     {
         return $this->queue;
     }
-
-
 }
 
 class FooBarService extends ThreadedService
 {
     protected $repository = '\\FooRepository';
 
+    // TODO create mock service providers
+    // alias implementation to a concretion
+    // assert them
     protected $providers = [
         'running' => [],
         'thread' => []
@@ -99,10 +100,15 @@ class ThreadedServiceTest extends TestCase
     /**
      * @covers ThreadedService::running()
      * @covers ThreadedService::thread()
+     * @covers ThreadedService::bindQueueRepository()
+     * @covers ThreadedService::bindProviders()
+     * @covers ThreadedService::bindThread()
+     * @covers ThreadedService::parseClassName()
      */
     public function testThreadedServiceContainer()
     {
         $dir = getcwd() . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'stubs';
+
         // Pass container into running and bind FooTest contract to BarTest Concretion
         $container = (new FooBarService(new \Chronos\Foundation\Application($dir)))->register('running');
         $this->assertInstanceOf(BarTest::class, $container->make(FooTest::class));

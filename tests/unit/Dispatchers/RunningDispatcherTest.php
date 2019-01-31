@@ -2,10 +2,10 @@
 
 use PHPUnit\Framework\TestCase;
 
-class ThreadsDispatcherTest extends TestCase
+class RunningDispatcherTest extends TestCase
 {
     // TODO
-    public function testThreadsDispatcher()
+    public function testRunningDispatcher()
     {
         $this->assertNull(null);
     }

@@ -20,7 +20,7 @@ abstract class Kernel
     /**
      * @var string $namespace
      */
-    protected $namespace = "\\App\\Console\\Controllers\\";
+    protected $namespace = "";
 
     /**
      * @var ArgumentVectors $arguments

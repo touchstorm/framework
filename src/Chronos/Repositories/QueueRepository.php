@@ -97,6 +97,12 @@ class QueueRepository
      */
     public function fill($options = null)
     {
+        // All you to pass a batch to the fill
+        if ($options instanceof Collection) {
+            $this->batch = $options;
+            return;
+        }
+
         // Set a limit. We'll fetch more queues
         // than are needed so we aren't making
         // excess requests to the database
