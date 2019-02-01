@@ -85,8 +85,8 @@ class DispatcherTest extends TestCase
         putenv('APP_SERVER=server1');
 
         $collection->scheduled('scheduledRunningTaskTest', [
-            // Command will log scheduledTaskTest and sleep for 10 seconds
-            'command' => "php -r 'echo \"scheduledRunningTaskTest\"; sleep(10);'",
+            // Command will log scheduledTaskTest and sleep for 2 seconds
+            'command' => "php -r 'echo \"scheduledRunningTaskTest\"; sleep(2);'",
             'at' => function (Scheduled $task) {
                 return $task->everyMinute();
             },

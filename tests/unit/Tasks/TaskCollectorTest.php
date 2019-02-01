@@ -1,6 +1,7 @@
 <?php
 
 use Chronos\Tasks\Scheduled;
+use Chronos\Tasks\Task;
 use Chronos\Tasks\TaskCollector;
 use Chronos\Tasks\TaskFactory;
 use PHPUnit\Framework\TestCase;
@@ -39,10 +40,10 @@ class TaskCollectorTest extends TestCase
         ]);
 
         /**
-         * @var \Chronos\Tasks\Task $task
+         * @var Task $task
          */
         foreach ($tasks->getTasks() as $name => $task) {
-            $this->assertInstanceOf(\Chronos\Tasks\Task::class, $task);
+            $this->assertInstanceOf(Task::class, $task);
             $this->assertSame($name, $task->getName());
         }
     }
@@ -74,7 +75,7 @@ class TaskCollectorTest extends TestCase
         // Coverage
         $task = $tasks->getTask('scheduledTaskTest');
 
-        $this->assertInstanceOf(\Chronos\Tasks\Task::class, $task);
+        $this->assertInstanceOf(Task::class, $task);
         $this->assertSame('scheduledTaskTest', $task->getName());
         $this->assertSame('ls -la', $task->getCommand()[0]);
     }

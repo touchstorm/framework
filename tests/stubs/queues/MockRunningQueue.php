@@ -8,7 +8,18 @@ class MockRunningQueue extends Queue implements QueueContract
     protected $connection = 'sqlite';
     public $class = 'FooClass::class';
 
-    function threadArguments()
+    /**
+     * Mock the find() needed to bring back a
+     * queue
+     * @param $id
+     * @return $this
+     */
+    public function find($id)
+    {
+        return $this;
+    }
+
+    public function threadArguments()
     {
         return [
             $this->getAttribute('id')

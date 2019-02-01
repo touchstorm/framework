@@ -41,7 +41,7 @@ class RunningKernelTest extends TestCase
             'runUntilEmpty' => true,
             'setVerbose' => false,
             'fill' => function ($thread) {
-                $thread->getRepository()->fill(new \Illuminate\Database\Eloquent\Collection(new RunningTestQueue()));
+                $thread->getRepository()->fill(new \Illuminate\Database\Eloquent\Collection(new MockRunningQueue()));
             }
         ];
 

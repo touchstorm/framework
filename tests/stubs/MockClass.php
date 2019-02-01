@@ -1,6 +1,8 @@
 <?php
 
-class MockClass
+require_once 'MockContract.php';
+
+class MockClass implements MockContract
 {
     private $value;
 
@@ -12,5 +14,10 @@ class MockClass
     public function give()
     {
         return $this->value;
+    }
+
+    public function find()
+    {
+        return 'found';
     }
 }

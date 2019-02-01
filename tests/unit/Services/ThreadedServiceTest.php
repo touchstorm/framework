@@ -1,99 +1,13 @@
 <?php
 
 use Auryn\Injector;
-use Chronos\Queues\Contracts\QueueContract;
-use Chronos\Repositories\QueueRepository;
 use Chronos\Services\ThreadedService;
 use PHPUnit\Framework\TestCase;
 
-interface FooTest
-{
-    function hello();
-}
 
-class BarTest implements FooTest
-{
-    function hello()
-    {
-        return 'Bar';
-    }
-}
-
-class BazTest implements FooTest
-{
-    function hello()
-    {
-        return 'Baz';
-    }
-}
-
-class FooQueue implements QueueContract
-{
-
-    public $class = 'SomeClass::class';
-
-    function threadArguments()
-    {
-        return [$this->id];
-    }
-
-    function reschedule($date)
-    {
-
-    }
-
-    function completed($reschedule, $date)
-    {
-
-    }
-
-    function remove()
-    {
-
-    }
-
-    function find($id)
-    {
-        return $this->id;
-    }
-}
-
-class FooRepository extends QueueRepository
-{
-    public function __construct(FooQueue $queue)
-    {
-        $this->queue = $queue;
-    }
-
-    public function item($id)
-    {
-        return $this->queue;
-    }
-}
-
-class FooBarService extends ThreadedService
-{
-    protected $repository = '\\FooRepository';
-
-    // TODO create mock service providers
-    // alias implementation to a concretion
-    // assert them
-    protected $providers = [
-        'running' => [],
-        'thread' => []
-    ];
-
-    public function running()
-    {
-        $this->app->alias(FooTest::class, BarTest::class);
-    }
-
-    public function thread()
-    {
-        // One off binds
-        $this->app->alias(FooTest::class, BazTest::class);
-    }
-}
+require_once getcwd() . '/tests/stubs/MockContract.php';
+require_once getcwd() . '/tests/stubs/MockClass.php';
+require_once getcwd() . '/tests/stubs/services/MockRunningService.php';
 
 class ThreadedServiceTest extends TestCase
 {
@@ -110,17 +24,19 @@ class ThreadedServiceTest extends TestCase
         $dir = getcwd() . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'stubs';
 
         // Pass container into running and bind FooTest contract to BarTest Concretion
-        $container = (new FooBarService(new \Chronos\Foundation\Application($dir)))->register('running');
-        $this->assertInstanceOf(BarTest::class, $container->make(FooTest::class));
-        $this->assertSame('Bar', $container->execute([FooTest::class, 'hello']));
+        $container = (new MockRunningService(new \Chronos\Foundation\Application($dir)))->register('running');
+        $this->assertInstanceOf(MockClass::class, $container->make(MockContract::class));
+        $this->assertSame('found', $container->execute([MockContract::class, 'find']));
 
         // Pass container into thread and bind FooTest contract to BazTest Concretion
         /**
          * @var Injector $container
          */
-        $container = (new FooBarService(new \Chronos\Foundation\Application($dir)))->register('thread', 1);
-        $this->assertInstanceOf(BazTest::class, $container->make(FooTest::class));
-        $this->assertSame('Baz', $container->execute([FooTest::class, 'hello']));
+        $service = new MockRunningService(new \Chronos\Foundation\Application($dir));
+
+        $container = $service->register('thread', 1);
+        $this->assertInstanceOf(MockClass::class, $container->make(MockContract::class));
+        $this->assertSame('found', $container->execute([MockContract::class, 'find']));
     }
 
 }
