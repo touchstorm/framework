@@ -7,8 +7,7 @@ class MockRunningRepository extends QueueRepository implements QueueRepositoryCo
 {
     protected $connection = 'sqlite';
     protected $table = 'queue';
-    protected $batchSize = 4;
-    protected $maxThreads = 2;
+    protected $maxThreads = 10;
 
     /**
      * FooRepository constructor.

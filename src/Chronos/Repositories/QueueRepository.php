@@ -84,7 +84,7 @@ class QueueRepository
      */
     public function next()
     {
-        return $this->batch->pop();
+        return $this->batch->shift();
     }
 
     /**

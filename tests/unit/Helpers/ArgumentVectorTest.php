@@ -89,7 +89,7 @@ class ArgumentVectorTest extends TestCase
             $argument
         ]);
 
-        $this->expectExceptionCode(500);
+        $this->expectExceptionCode(422);
         $this->expectException(ArgumentVectorException::class);
         $this->expectExceptionMessage('Dispatch argument vector mismatch');
 
@@ -112,7 +112,7 @@ class ArgumentVectorTest extends TestCase
             $argument
         ]);
 
-        $this->expectExceptionCode(500);
+        $this->expectExceptionCode(422);
         $this->expectException(ArgumentVectorException::class);
         $this->expectExceptionMessage('Dispatch argument vector mismatch');
 
@@ -136,7 +136,7 @@ class ArgumentVectorTest extends TestCase
             $argument
         ]);
 
-        $this->expectExceptionCode(500);
+        $this->expectExceptionCode(422);
         $this->expectException(ArgumentVectorException::class);
         $this->expectExceptionMessage('Dispatch argument vector mismatch');
 
@@ -159,7 +159,7 @@ class ArgumentVectorTest extends TestCase
             $argument
         ]);
 
-        $this->expectExceptionCode(500);
+        $this->expectExceptionCode(422);
         $this->expectException(ArgumentVectorException::class);
         $this->expectExceptionMessage('Dispatch argument vector mismatch');
 
@@ -182,7 +182,7 @@ class ArgumentVectorTest extends TestCase
             $argument
         ]);
 
-        $this->expectExceptionCode(500);
+        $this->expectExceptionCode(422);
         $this->expectException(ArgumentVectorException::class);
         $this->expectExceptionMessage('Dispatch argument vector mismatch');
 

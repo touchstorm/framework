@@ -148,7 +148,7 @@ class ArgumentVectors
     public function type($type = '')
     {
         if (empty($type)) {
-            throw new ArgumentVectorException('No argument type passed.', 500);
+            throw new ArgumentVectorException('No argument type passed.', 422);
         }
 
         $this->mapArguments($type);
@@ -185,7 +185,7 @@ class ArgumentVectors
             }
         }
 
-        throw new ArgumentVectorException('No argument parser exists for this type', 500);
+        throw new ArgumentVectorException('No argument parser exists for this type', 422);
     }
 
     /**
@@ -316,7 +316,7 @@ class ArgumentVectors
     private function parseScheduledArguments()
     {
         if ($this->file !== 'scheduled.php') {
-            throw new ArgumentVectorException('Dispatch argument vector mismatch', 500);
+            throw new ArgumentVectorException('Dispatch argument vector mismatch. (' . $this->file . ') not recognized.', 422);
         }
 
         $this->controller = $this->argumentExplode();
@@ -329,7 +329,7 @@ class ArgumentVectors
     private function parseRunningArguments()
     {
         if ($this->file !== 'running.php') {
-            throw new ArgumentVectorException('Dispatch argument vector mismatch', 500);
+            throw new ArgumentVectorException('Dispatch argument vector mismatch. (' . $this->file . ') not recognized.', 422);
         }
 
         $this->service = $this->arguments[0];
@@ -341,7 +341,7 @@ class ArgumentVectors
     private function parseRunningThreadArguments()
     {
         if ($this->file !== 'thread.php') {
-            throw new ArgumentVectorException('Dispatch argument vector mismatch', 500);
+            throw new ArgumentVectorException('Dispatch argument vector mismatch. (' . $this->file . ') not recognized.', 422);
         }
 
         $this->queueId = $this->arguments[0];
@@ -354,7 +354,7 @@ class ArgumentVectors
     private function parseBatchArguments()
     {
         if ($this->file !== 'batch.php') {
-            throw new ArgumentVectorException('Dispatch argument vector mismatch', 500);
+            throw new ArgumentVectorException('Dispatch argument vector mismatch. (' . $this->file . ') not recognized.', 422);
         }
 
         $this->service = $this->arguments[0];
@@ -366,7 +366,7 @@ class ArgumentVectors
     private function parseBatchThreadArguments()
     {
         if ($this->file !== 'batchThread.php') {
-            throw new ArgumentVectorException('Dispatch argument vector mismatch', 500);
+            throw new ArgumentVectorException('Dispatch argument vector mismatch. (' . $this->file . ') not recognized.', 422);
         }
 
         $this->batchedQueueId = $this->argumentExplode(0, '~');

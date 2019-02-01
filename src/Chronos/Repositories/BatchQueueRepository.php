@@ -108,7 +108,7 @@ class BatchQueueRepository
             return $this->batch->chunk($this->batchSize)->first();
         }
 
-        return $this->batch->pop();
+        return $this->batch->shift();
     }
 
     /**
@@ -191,7 +191,6 @@ class BatchQueueRepository
         $this->batch = $this->batch->filter(function ($queue) use ($ids) {
             return !in_array($queue->id, $ids);
         });
-
     }
 
     /**

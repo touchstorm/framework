@@ -90,6 +90,34 @@ class DispatchBatchTest extends TestCase
 
     }
 
+    public function testCommandLineFormatting()
+    {
+        // Build a Eloquent collection of
+        // 50 Queues
+        $batch = $this->buildBatch(100);
+
+        // Get the first queue to inject into the repository
+        $queue = $batch->first();
+
+        // Create the repository and inject the queue
+        $repository = new MockBatchRepository($queue);
+
+        $repository->fill($batch);
+
+        // Create the dispatcher
+        $dispatcher = new Batches($repository);
+        $dispatcher->setDryRun(true);
+        $dispatcher->runUntilEmpty();
+        $dispatcher->setVerbose(false);
+
+        // Handle the batched threads. Breaks out on dryRun(true)
+        $dispatcher->handle();
+
+        // Assert all processes completed
+        $this->assertEmpty($dispatcher->getProcessIds());
+        $this->assertEmpty($dispatcher->getProcesses());
+    }
+
     private function buildBatch($items = 50)
     {
         $collection = new Collection();
