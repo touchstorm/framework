@@ -38,6 +38,7 @@ abstract class Kernel
         $this->app = $app;
         $this->arguments = $arguments;
 
+        // Defined on the extended Kernels
         $this->parseConsoleArguments();
     }
 

@@ -1,7 +1,5 @@
 <?php
 
-use Auryn\Injector;
-use Chronos\Foundation\Application;
 use Chronos\Helpers\ArgumentVectors;
 use Chronos\Kernel\RunningKernel;
 use PHPUnit\Framework\TestCase;
@@ -10,16 +8,20 @@ require_once getcwd() . '/tests/stubs/queues/MockRunningQueue.php';
 require_once getcwd() . '/tests/stubs/repositories/MockRunningRepository.php';
 require_once getcwd() . '/tests/stubs/services/MockRunningService.php';
 
-class RunningKernelTest extends TestCase
+class RunningKernelFeatureTest extends TestCase
 {
     /**
      * @covers \Chronos\Kernel\RunningKernel::handle
+     * @throws \Auryn\InjectionException
      */
     public function testRunningKernelConstruct()
     {
+        // create a service
+        // create a repository
+
         $dir = getcwd() . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'stubs';
         // Set up the classes
-        $app = new Application($dir);
+        $app = new \Chronos\Foundation\Application($dir);
 
         // Set variables
         $namespace = '\\';
@@ -30,12 +32,14 @@ class RunningKernelTest extends TestCase
             $service
         ];
 
-        $kernel = new RunningKernel($app, new ArgumentVectors($argv));
+        $kernel = $app->make(RunningKernel::class, [
+            ':app' => $app,
+            ':arguments' => new ArgumentVectors($argv)
+        ]);
 
         // Configure the kernel
         $kernel->setNamespace($namespace);
 
-        // Override options when handling
         $options = [
             'setDryRun' => true,
             'runUntilEmpty' => true,
@@ -49,8 +53,7 @@ class RunningKernelTest extends TestCase
         $kernel->handle(true, $options);
 
         $this->assertSame($service, $kernel->getService());
-        $this->assertInstanceOf(Injector::class, $kernel->getContainer());
-        $this->assertInstanceOf(Application::class, $kernel->getContainer());
+        $this->assertInstanceOf(\Auryn\Injector::class, $kernel->getContainer());
 
     }
 }

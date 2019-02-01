@@ -55,6 +55,13 @@ class BaseTaskMaster
     public $verbose = false;
 
     /**
+     * @var bool $dryRun
+     * - Allow the system to dry run
+     * without really launching a nohup task
+     */
+    protected $dryRun = false;
+
+    /**
      * BaseTaskMaster constructor.
      * @param TaskCollector $taskCollector
      */
@@ -81,6 +88,10 @@ class BaseTaskMaster
         foreach ($commands as $command) {
 
             $this->collectDispatchedTask($task, $type, $command);
+
+            if ($this->dryRun) {
+                continue;
+            }
 
             $output = [];
 
@@ -293,6 +304,50 @@ class BaseTaskMaster
     public function setVerbose($value = false)
     {
         $this->verbose = $value;
+    }
+
+    /**
+     * Get dry run value
+     * @return bool
+     */
+    public function getDryRun()
+    {
+        return $this->dryRun;
+    }
+
+    /**
+     * Set output status
+     * @param bool $value
+     */
+    public function setDryRun($value = false)
+    {
+        $this->dryRun = $value;
+    }
+
+    /**
+     * @param array $options
+     */
+    protected function configure(array $options)
+    {
+        if (!isset($options) || empty($options)) {
+            return;
+        }
+
+        foreach ($options as $setter => $value) {
+
+            // Parse closure settings and continue
+            if ($value instanceof Closure) {
+                $value($this);
+                continue;
+            }
+
+            // if it is a setter method set and continue
+            if (method_exists($this, $setter)) {
+                call_user_func([$this, $setter], $value);
+                continue;
+            }
+        }
+
     }
 
     /**

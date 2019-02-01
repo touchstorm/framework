@@ -1,39 +1,13 @@
 <?php
 
+use Chronos\Foundation\Application;
 use Chronos\Helpers\ArgumentVectors;
 use Chronos\Kernel\ScheduledKernel;
 use PHPUnit\Framework\TestCase;
 
 
-class SomeFeatureProvider extends \Chronos\Providers\ServiceProvider
-{
-    public function register()
-    {
-        $controller = 'SomeFeatureController';
-        $method = 'someMethod';
-        $this->app->define(ArgumentVectors::class, [
-            ':argv' => [
-                'someDispatcher.php',
-                $controller . '@' . $method
-            ]
-        ]);
-
-        $this->app->defineParam('runFoo', 'bar');
-    }
-}
-
-class SomeFeatureController extends \Chronos\Controllers\Controller
-{
-    public $providers = [
-        SomeFeatureProvider::class
-    ];
-
-    public function someMethod($runFoo = 'baz')
-    {
-        return $runFoo;
-    }
-
-}
+require_once getcwd() . '/tests/stubs/providers/MockServiceProvider.php';
+require_once getcwd() . '/tests/stubs/controllers/MockController.php';
 
 class ScheduledKernelFeatureTest extends TestCase
 {
@@ -52,12 +26,12 @@ class ScheduledKernelFeatureTest extends TestCase
         $dir = getcwd() . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'stubs';
 
         // Set up the classes
-        $app = new \Chronos\Foundation\Application($dir);
-        $app->register(SomeFeatureProvider::class, true);
+        $app = new Application($dir);
+        $app->register(MockServiceProvider::class, true);
 
         // Set variables
         $namespace = '\\';
-        $controller = 'SomeFeatureController';
+        $controller = 'MockController';
         $method = 'someMethod';
         $argv = [
             'scheduled.php',

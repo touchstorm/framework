@@ -1,27 +1,10 @@
 <?php
 
+use Chronos\Foundation\Application;
 use PHPUnit\Framework\TestCase;
 
-
-class StubServiceProvider extends \Chronos\Providers\ServiceProvider
-{
-    public function register()
-    {
-        $this->app->defineParam('fooValue', 'bar');
-    }
-}
-
-class StubController extends \Chronos\Controllers\Controller
-{
-    public $providers = [
-        'StubServiceProvider'
-    ];
-
-    public function foo($fooValue)
-    {
-        return $fooValue;
-    }
-}
+require_once getcwd() . '/tests/stubs/repositories/MockRunningRepository.php';
+require_once getcwd() . '/tests/stubs/services/MockRunningService.php';
 
 class ApplicationTest extends TestCase
 {
@@ -31,14 +14,14 @@ class ApplicationTest extends TestCase
     protected $dir = '';
 
     /**
-     * @var \Chronos\Foundation\Application
+     * @var Application
      */
     protected $app;
 
     public function setUp()
     {
         $this->dir = getcwd() . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'stubs';
-        $this->app = new \Chronos\Foundation\Application($this->dir);
+        $this->app = new Application($this->dir);
     }
 
     /**
@@ -75,11 +58,11 @@ class ApplicationTest extends TestCase
      */
     public function testMakeMethodWithControllerHook()
     {
-        $this->app->resolve(StubController::class);
+        $this->app->resolve(MockController::class);
 
-        $value = $this->app->execute('StubController::foo');
+        $value = $this->app->execute('MockController::foo');
 
-        $this->assertSame(StubServiceProvider::class, $this->app->getRegisteredProvider(StubServiceProvider::class));
+        $this->assertSame(MockServiceProvider::class, $this->app->getRegisteredProvider(MockServiceProvider::class));
         $this->assertSame('bar', $value);
     }
 
@@ -89,11 +72,11 @@ class ApplicationTest extends TestCase
      */
     public function testResolveAndMake()
     {
-        $controller = $this->app->resolveAndMake(StubController::class);
+        $controller = $this->app->resolveAndMake(MockController::class);
 
         $value = $this->app->execute([$controller, 'foo']);
 
-        $this->assertSame(StubServiceProvider::class, $this->app->getRegisteredProvider(StubServiceProvider::class));
+        $this->assertSame(MockServiceProvider::class, $this->app->getRegisteredProvider(MockServiceProvider::class));
         $this->assertSame('bar', $value);
 
     }
@@ -104,9 +87,9 @@ class ApplicationTest extends TestCase
      */
     public function testResolveAndExecuteFromArray()
     {
-        $value = $this->app->resolveAndExecute([StubController::class, 'foo']);
+        $value = $this->app->resolveAndExecute([MockController::class, 'foo']);
 
-        $this->assertSame(StubServiceProvider::class, $this->app->getRegisteredProvider(StubServiceProvider::class));
+        $this->assertSame(MockServiceProvider::class, $this->app->getRegisteredProvider(MockServiceProvider::class));
         $this->assertSame('bar', $value);
 
     }
@@ -117,11 +100,11 @@ class ApplicationTest extends TestCase
      */
     public function testResolveAndExecuteFromClass()
     {
-        $controller = $this->app->make(StubController::class);
+        $controller = $this->app->make(MockController::class);
 
         $value = $this->app->resolveAndExecute([$controller, 'foo']);
 
-        $this->assertSame(StubServiceProvider::class, $this->app->getRegisteredProvider(StubServiceProvider::class));
+        $this->assertSame(MockServiceProvider::class, $this->app->getRegisteredProvider(MockServiceProvider::class));
         $this->assertSame('bar', $value);
 
     }

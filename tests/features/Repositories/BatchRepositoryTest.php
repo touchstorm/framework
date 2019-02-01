@@ -1,25 +1,10 @@
 <?php
 
-use Chronos\Dispatchers\Threads;
-use Chronos\Queues\Contracts\QueueContract;
-use Chronos\Queues\Queue;
-use Chronos\Repositories\BatchQueueRepository;
-use Chronos\Repositories\Contracts\QueueRepositoryContract;
 use Illuminate\Database\Eloquent\Collection;
 use PHPUnit\Framework\TestCase;
 
-class MockBatchTestQueue extends Queue implements QueueContract
-{
-    protected $connection = 'sqlite';
-}
-
-class MockBatchTestRepository extends BatchQueueRepository implements QueueRepositoryContract
-{
-    protected $connection = 'sqlite';
-    protected $table = 'queue';
-    protected $batchSize = 4;
-    protected $maxThreads = 2;
-}
+require_once getcwd() . '/tests/stubs/queues/MockBatchQueue.php';
+require_once getcwd() . '/tests/stubs/repositories/MockBatchRepository.php';
 
 class DispatchBatchTaskTest extends TestCase
 {
@@ -35,7 +20,7 @@ class DispatchBatchTaskTest extends TestCase
         $queue = $batch->first();
 
         // Create the repository and inject the queue
-        $repository = new MockBatchTestRepository($queue);
+        $repository = new MockBatchRepository($queue);
 
         $repository->fill($batch);
 
@@ -65,7 +50,7 @@ class DispatchBatchTaskTest extends TestCase
 
     private function createQueue($x = null)
     {
-        $queue = new MockBatchTestQueue();
+        $queue = new MockBatchQueue();
 
         $queue::unguard();
 

@@ -1,5 +1,6 @@
 <?php
 
+use Chronos\Foundation\Application;
 use Chronos\Helpers\ArgumentVectors;
 use PHPUnit\Framework\TestCase;
 
@@ -27,7 +28,7 @@ class ArgumentVectorResolveFromIoCTest extends TestCase
             $controller . '@' . $method
         ];
 
-        $app = new \Chronos\Foundation\Application(getcwd() . '/tests/stubs');
+        $app = new Application(getcwd() . '/tests/stubs');
 
         // Resolve our character
         $parser = $app->make(ArgumentVectors::class);
@@ -57,7 +58,7 @@ class ArgumentVectorResolveFromIoCTest extends TestCase
             $controller . '@' . $method
         ];
 
-        $app = new \Chronos\Foundation\Application(getcwd() . '/tests/stubs');
+        $app = new Application(getcwd() . '/tests/stubs');
 
         // Resolve our character
         $parser = $app->make(ArgumentVectors::class);
@@ -87,7 +88,7 @@ class ArgumentVectorResolveFromIoCTest extends TestCase
             $service
         ];
 
-        $app = new \Chronos\Foundation\Application(getcwd() . '/tests/stubs');
+        $app = new Application(getcwd() . '/tests/stubs');
 
         // Resolve our character
         $parser = $app->make(ArgumentVectors::class);

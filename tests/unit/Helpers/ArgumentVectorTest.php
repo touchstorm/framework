@@ -1,5 +1,7 @@
 <?php
 
+use Chronos\Exceptions\ArgumentVectorException;
+use Chronos\Helpers\ArgumentVectors;
 use PHPUnit\Framework\TestCase;
 
 
@@ -11,11 +13,11 @@ class ArgumentVectorTest extends TestCase
      */
     public function testArgumentVectorsOnScheduledTask()
     {
-        $controller = 'SomeController';
-        $method = 'someMethod';
+        $controller = 'MockController';
+        $method = 'foo';
         $argument = $controller . '@' . $method;
 
-        $parser = new \Chronos\Helpers\ArgumentVectors([
+        $parser = new ArgumentVectors([
             'scheduled.php',
             $argument
         ]);
@@ -29,16 +31,16 @@ class ArgumentVectorTest extends TestCase
      * @covers \Chronos\Helpers\ArgumentVectors::type('scheduled')
      * @covers \Chronos\Helpers\ArgumentVectors::controller
      * @covers \Chronos\Helpers\ArgumentVectors::scheduled
-     * @throws \Chronos\Exceptions\ArgumentVectorException
+     * @throws ArgumentVectorException
      */
     public function testScheduledArgumentVectorsResolved()
     {
         // Set variables
-        $controller = 'FooController';
-        $method = 'barMethod';
+        $controller = 'MockController';
+        $method = 'foo';
         $argument = $controller . '@' . $method;
 
-        $parser = new \Chronos\Helpers\ArgumentVectors([
+        $parser = new ArgumentVectors([
             'scheduled.php',
             $argument
         ]);
@@ -55,14 +57,14 @@ class ArgumentVectorTest extends TestCase
      * @covers \Chronos\Helpers\ArgumentVectors::type('running')
      * @covers \Chronos\Helpers\ArgumentVectors::running
      * @covers \Chronos\Helpers\ArgumentVectors::controller
-     * @throws \Chronos\Exceptions\ArgumentVectorException
+     * @throws ArgumentVectorException
      */
     public function testRunningArgumentVectorsResolved()
     {
         // Set variables
-        $service = 'FooService';
+        $service = 'MockRunningService';
 
-        $parser = new \Chronos\Helpers\ArgumentVectors([
+        $parser = new ArgumentVectors([
             'running.php',
             $service
         ]);
@@ -74,21 +76,21 @@ class ArgumentVectorTest extends TestCase
 
     /**
      * @covers \Chronos\Helpers\ArgumentVectors::parseScheduledArguments
-     * @throws \Chronos\Exceptions\ArgumentVectorException
+     * @throws ArgumentVectorException
      */
     public function testScheduledMismatchException()
     {
-        $controller = 'SomeController';
-        $method = 'someMethod';
+        $controller = 'MockController';
+        $method = 'foo';
         $argument = $controller . '@' . $method;
 
-        $parser = new \Chronos\Helpers\ArgumentVectors([
+        $parser = new ArgumentVectors([
             'foo.php',
             $argument
         ]);
 
         $this->expectExceptionCode(500);
-        $this->expectException(\Chronos\Exceptions\ArgumentVectorException::class);
+        $this->expectException(ArgumentVectorException::class);
         $this->expectExceptionMessage('Dispatch argument vector mismatch');
 
         // Trigger
@@ -97,21 +99,21 @@ class ArgumentVectorTest extends TestCase
 
     /**
      * @covers \Chronos\Helpers\ArgumentVectors::parseRunningArguments
-     * @throws \Chronos\Exceptions\ArgumentVectorException
+     * @throws ArgumentVectorException
      */
     public function testRunningMismatchException()
     {
-        $controller = 'SomeController';
-        $method = 'someMethod';
+        $controller = 'MockController';
+        $method = 'foo';
         $argument = $controller . '@' . $method;
 
-        $parser = new \Chronos\Helpers\ArgumentVectors([
+        $parser = new ArgumentVectors([
             'foo.php',
             $argument
         ]);
 
         $this->expectExceptionCode(500);
-        $this->expectException(\Chronos\Exceptions\ArgumentVectorException::class);
+        $this->expectException(ArgumentVectorException::class);
         $this->expectExceptionMessage('Dispatch argument vector mismatch');
 
         // Trigger
@@ -121,21 +123,21 @@ class ArgumentVectorTest extends TestCase
 
     /**
      * @covers \Chronos\Helpers\ArgumentVectors::parseRunningThreadArguments
-     * @throws \Chronos\Exceptions\ArgumentVectorException
+     * @throws ArgumentVectorException
      */
     public function testRunningThreadMismatchException()
     {
-        $controller = 'SomeController';
-        $method = 'someMethod';
+        $controller = 'MockController';
+        $method = 'foo';
         $argument = $controller . '@' . $method;
 
-        $parser = new \Chronos\Helpers\ArgumentVectors([
+        $parser = new ArgumentVectors([
             'foo.php',
             $argument
         ]);
 
         $this->expectExceptionCode(500);
-        $this->expectException(\Chronos\Exceptions\ArgumentVectorException::class);
+        $this->expectException(ArgumentVectorException::class);
         $this->expectExceptionMessage('Dispatch argument vector mismatch');
 
         // Trigger
@@ -144,21 +146,21 @@ class ArgumentVectorTest extends TestCase
 
     /**
      * @covers \Chronos\Helpers\ArgumentVectors::parseBatchArguments
-     * @throws \Chronos\Exceptions\ArgumentVectorException
+     * @throws ArgumentVectorException
      */
     public function testBatchMismatchException()
     {
-        $controller = 'SomeController';
-        $method = 'someMethod';
+        $controller = 'MockController';
+        $method = 'foo';
         $argument = $controller . '@' . $method;
 
-        $parser = new \Chronos\Helpers\ArgumentVectors([
+        $parser = new ArgumentVectors([
             'foo.php',
             $argument
         ]);
 
         $this->expectExceptionCode(500);
-        $this->expectException(\Chronos\Exceptions\ArgumentVectorException::class);
+        $this->expectException(ArgumentVectorException::class);
         $this->expectExceptionMessage('Dispatch argument vector mismatch');
 
         // Trigger
@@ -167,21 +169,21 @@ class ArgumentVectorTest extends TestCase
 
     /**
      * @covers \Chronos\Helpers\ArgumentVectors::parseBatchThreadArguments
-     * @throws \Chronos\Exceptions\ArgumentVectorException
+     * @throws ArgumentVectorException
      */
     public function testBatchThreadMismatchException()
     {
-        $controller = 'SomeController';
-        $method = 'someMethod';
+        $controller = 'MockController';
+        $method = 'foo';
         $argument = $controller . '@' . $method;
 
-        $parser = new \Chronos\Helpers\ArgumentVectors([
+        $parser = new ArgumentVectors([
             'foo.php',
             $argument
         ]);
 
         $this->expectExceptionCode(500);
-        $this->expectException(\Chronos\Exceptions\ArgumentVectorException::class);
+        $this->expectException(ArgumentVectorException::class);
         $this->expectExceptionMessage('Dispatch argument vector mismatch');
 
         // Trigger

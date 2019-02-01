@@ -14,12 +14,16 @@ class Watcher extends BaseTaskMaster implements TaskMasterContract
 {
     /**
      * Dispatch task to be processed
+     * @param array $options
      */
-    public function dispatch()
+    public function dispatch($options = [])
     {
         $this->log('////////////////////////////////////////////////////////////');
         $this->log(' Watcher ' . CURRENT_TIME);
         $this->log('////////////////////////////////////////////////////////////');
+
+        $this->log(' Configuring ' . CURRENT_TIME);
+        $this->configure($options);
 
         /**
          * @var string $name
@@ -28,7 +32,7 @@ class Watcher extends BaseTaskMaster implements TaskMasterContract
         foreach ($this->taskCollector->getTasks() as $name => $task) {
 
             // Skip all but running tasks, skip
-            if (!$task->isTask('running')) {
+            if ($task->isTask('scheduled')) {
                 continue;
             }
 

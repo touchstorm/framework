@@ -3,7 +3,6 @@
 namespace Chronos\Kernel;
 
 use Chronos\Dispatchers\Threads;
-use Chronos\Services\ThreadedService;
 use Exception;
 
 class RunningKernel extends Kernel
@@ -36,7 +35,6 @@ class RunningKernel extends Kernel
 
             // Create the service
             $service = $this->app->make($this->namespace . $this->service, [':app' => $this->app]);
-
 
             // Register the providers for the running service
             $this->app = $service->register('running');

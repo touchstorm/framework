@@ -1,6 +1,7 @@
 <?php
 
 use Chronos\TaskMaster\Dispatcher;
+use Chronos\TaskMaster\Watcher;
 use Chronos\Tasks\Scheduled;
 use Chronos\Tasks\TaskCollector;
 use Chronos\Tasks\TaskFactory;
@@ -13,22 +14,18 @@ if (!defined('CURRENT_TIME')) {
 class WatcherTest extends TestCase
 {
     /**
-     * @covers Dispatcher::dispatch();
-     * @covers Dispatcher::execute()
-     * @covers Dispatcher::collectDispatchedTask();
-     * @covers Dispatcher::collectOutputs();
-     * @covers Dispatcher::output();
-     * @covers Dispatcher::dispatchedTask();
-     * @covers Dispatcher::isRunning()
-     * @covers Dispatcher::getTask()
+     * @covers Watcher::dispatch();
+     * @covers Watcher::execute()
+     * @covers Watcher::collectDispatchedTask();
+     * @covers Watcher::collectOutputs();
+     * @covers Watcher::output();
+     * @covers Watcher::dispatchedTask();
+     * @covers Watcher::isRunning()
+     * @covers Watcher::getTask()
      */
     public function testWatcher()
     {
         $collection = new TaskCollector(new TaskFactory());
-
-        $this->assertTrue(true);
-
-        return;
 
         $on = [
             'server1'
@@ -37,14 +34,36 @@ class WatcherTest extends TestCase
         putenv('APP_SERVER=server1');
 
         // Set up tasks
-        $collection->running('helloWorld', [
+        $collection->running('runFoo', [
+            'service' => 'RunningService',
             'on' => $on
         ]);
 
-        $collection->scheduled('helloBlank')->everyMinute()->before($before)->after($after);
+        // Set up tasks
+        $collection->batch('batchFoo', [
+            'service' => 'BatchService',
+            'on' => $on
+        ]);
+
+        $collection->scheduled('helloBlank')->everyMinute();
 
         // New up the dispatcher
-        $dispatcher = new Dispatcher($collection);
+        $dispatcher = new Watcher($collection);
 
+        $this->assertFalse($dispatcher->getDryRun());
+
+        $dispatcher->dispatch([
+            'setDryRun' => true
+        ]);
+
+        $runningTask = $dispatcher->getTask('runFoo');
+        $batchTask = $dispatcher->getTask('batchFoo');
+
+        $this->assertSame($collection->getTask('runFoo'), $runningTask);
+        $this->assertSame($collection->getTask('batchFoo'), $batchTask);
+        $this->assertTrue($dispatcher->getDryRun());
+        $this->assertNotNull($dispatcher->dispatchedTasks());
+        $this->assertNotNull($dispatcher->dispatchedTasks());
+        $this->assertCount(2, $dispatcher->dispatchedTasks());
     }
 }

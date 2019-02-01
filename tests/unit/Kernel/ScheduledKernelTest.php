@@ -14,6 +14,8 @@ class SomeUnitController
     }
 }
 
+require_once getcwd() . '/tests/stubs/controllers/MockController.php';
+
 class ScheduledKernelTest extends TestCase
 {
     public function testKernelConstruct()
@@ -24,8 +26,8 @@ class ScheduledKernelTest extends TestCase
 
         // Set variables
         $namespace = '\\';
-        $controller = 'SomeUnitController';
-        $method = 'someMethod';
+        $controller = 'MockController';
+        $method = 'food';
         $argv = [
             'scheduled.php',
             $controller . '@' . $method

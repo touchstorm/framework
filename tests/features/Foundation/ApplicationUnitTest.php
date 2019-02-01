@@ -5,20 +5,7 @@ use Chronos\Tasks\Task;
 use PHPUnit\Framework\TestCase;
 
 
-class AppFoo
-{
-    private $value;
-
-    public function __construct($fooValue = '')
-    {
-        $this->value = $fooValue;
-    }
-
-    public function give()
-    {
-        return $this->value;
-    }
-}
+require_once getcwd() . '/tests/stubs/MockClass.php';
 
 class ApplicationUnitTest extends TestCase
 {
@@ -85,6 +72,6 @@ class ApplicationUnitTest extends TestCase
         $app->register($provider);
 
         // Assert
-        $this->assertSame('bar', ($app->make(AppFoo::class))->give());
+        $this->assertSame('bar', ($app->make(MockClass::class))->give());
     }
 }
