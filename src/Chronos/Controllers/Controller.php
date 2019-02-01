@@ -2,6 +2,12 @@
 
 namespace Chronos\Controllers;
 
+use Chronos\Providers\EloquentServiceProvider;
+
+/**
+ * Class Controller
+ * @package Chronos\Controllers
+ */
 class Controller
 {
     /**
@@ -9,7 +15,7 @@ class Controller
      * @var array
      */
     public $register = [
-        \Chronos\Providers\EloquentServiceProvider::class
+        EloquentServiceProvider::class
     ];
 
     /**

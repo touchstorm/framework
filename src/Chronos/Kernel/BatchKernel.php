@@ -13,6 +13,11 @@ class BatchKernel extends Kernel
     protected $service;
 
     /**
+     * @var null | Batches
+     */
+    protected $threader = null;
+
+    /**
      * Parse Console Arguments
      * Break down the argument vectors passed
      * through to the kernel and extract the
@@ -27,11 +32,10 @@ class BatchKernel extends Kernel
 
     /**
      * Handle the console command
-     * @param null $output
      * @param array $options
      * @return string
      */
-    public function handle($output = null, $options = [])
+    public function handle($options = [])
     {
         try {
 
@@ -63,5 +67,4 @@ class BatchKernel extends Kernel
     {
         return $this->service;
     }
-
 }

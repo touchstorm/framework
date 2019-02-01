@@ -2,6 +2,7 @@
 
 namespace Chronos\Dispatchers;
 
+use Chronos\Dispatchers\Contracts\DispatcherContract;
 use Chronos\Repositories\Contracts\QueueRepositoryContract;
 use Chronos\Queues\Contracts\QueueContract;
 use Chronos\Queues\Queue;
@@ -10,7 +11,7 @@ use Chronos\Queues\Queue;
  * Class Threads
  * @package Chronos\Dispatchers
  */
-class Threads extends Dispatcher
+class Threads extends Dispatcher implements DispatcherContract
 {
     /**
      * Threads constructor.

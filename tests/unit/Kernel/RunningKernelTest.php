@@ -4,6 +4,7 @@ use Auryn\Injector;
 use Chronos\Foundation\Application;
 use Chronos\Helpers\ArgumentVectors;
 use Chronos\Kernel\RunningKernel;
+use Illuminate\Database\Eloquent\Collection;
 use PHPUnit\Framework\TestCase;
 
 require_once getcwd() . '/tests/stubs/queues/MockRunningQueue.php';
@@ -36,14 +37,14 @@ class RunningKernelTest extends TestCase
         $kernel->setNamespace($namespace);
 
         // Override options when handling
-        $options = [
+        $options = array(
             'setDryRun' => true,
             'runUntilEmpty' => true,
             'setVerbose' => false,
             'fill' => function ($thread) {
-                $thread->getRepository()->fill(new \Illuminate\Database\Eloquent\Collection(new MockRunningQueue()));
+                $thread->getRepository()->fill(new Collection(new MockRunningQueue()));
             }
-        ];
+        );
 
         // Mock the kernel handling a call
         $kernel->handle(true, $options);

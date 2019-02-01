@@ -13,7 +13,7 @@ require_once getcwd() . '/tests/stubs/services/MockBatchService.php';
 class BatchesKernelTest extends TestCase
 {
     /**
-     * @covers \Chronos\Kernel\RunningKernel::handle
+     * @covers \Chronos\Kernel\BatchKernel::handle
      */
     public function testRunningKernelConstruct()
     {
@@ -46,11 +46,9 @@ class BatchesKernelTest extends TestCase
         ];
 
         // Mock the kernel handling a call
-        $kernel->handle(true, $options);
+        $kernel->handle($options);
 
         $this->assertSame($service, $kernel->getService());
         $this->assertInstanceOf(Injector::class, $kernel->getContainer());
-        $this->assertInstanceOf(Application::class, $kernel->getContainer());
-
     }
 }

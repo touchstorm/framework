@@ -6,7 +6,7 @@ use Chronos\Queues\Queue;
 class MockRunningQueue extends Queue implements QueueContract
 {
     protected $connection = 'sqlite';
-    public $class = 'FooClass::class';
+    public $class = MockThreadController::class;
 
     /**
      * Mock the find() needed to bring back a

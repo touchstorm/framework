@@ -2,16 +2,16 @@
 
 namespace Chronos\Dispatchers;
 
+use Chronos\Dispatchers\Contracts\DispatcherContract;
 use Chronos\Repositories\Contracts\QueueRepositoryContract;
 use Chronos\Queues\Queue;
-use Closure;
 use Illuminate\Database\Eloquent\Collection;
 
 /**
  * Class Batches
  * @package Chronos\Dispatchers
  */
-class Batches extends Dispatcher
+class Batches extends Dispatcher implements DispatcherContract
 {
     /**
      * @var int $batchSize
