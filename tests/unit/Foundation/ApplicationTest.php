@@ -3,8 +3,8 @@
 use Chronos\Foundation\Application;
 use PHPUnit\Framework\TestCase;
 
-require_once getcwd() . '/tests/stubs/repositories/MockRunningRepository.php';
-require_once getcwd() . '/tests/stubs/services/MockRunningService.php';
+dirname(__FILE__)."/../../stubs/repositories/MockRunningRepository.php";
+dirname(__FILE__)."/../../stubs/services/MockRunningService.php";
 
 class ApplicationTest extends TestCase
 {
@@ -20,7 +20,7 @@ class ApplicationTest extends TestCase
 
     public function setUp()
     {
-        $this->dir = getcwd() . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'stubs';
+        $this->dir = dirname(__FILE__)."/../../stubs/";;
         $this->app = new Application($this->dir);
     }
 

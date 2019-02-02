@@ -2,6 +2,7 @@
 
 use Chronos\Repositories\BatchQueueRepository;
 use Chronos\Repositories\Contracts\QueueRepositoryContract;
+use Illuminate\Database\Eloquent\Collection;
 
 class MockBatchRepository extends BatchQueueRepository implements QueueRepositoryContract
 {
@@ -11,6 +12,13 @@ class MockBatchRepository extends BatchQueueRepository implements QueueRepositor
     protected $maxThreads = 2;
 
     /**
+     * On batched threads this is a static variable not polymorphic
+     * like a normal running thread
+     * @var string $class
+     */
+    protected $class = 'MockBatchThreadController';
+
+    /**
      * FooRepository constructor.
      * @param MockBatchQueue $queue
      */
@@ -18,4 +26,36 @@ class MockBatchRepository extends BatchQueueRepository implements QueueRepositor
     {
         parent::__construct($queue);
     }
+
+    /**
+     * @param array $ids
+     * @return Collection
+     */
+    public function items(array $ids = [])
+    {
+        return $this->mockItems($ids);
+    }
+
+    /**
+     * @param $ids
+     * @return Collection
+     */
+    private function mockItems($ids)
+    {
+        $collection = new Collection();
+
+        foreach ($ids as $id) {
+
+            $queue = clone $this->queue;
+            $queue->fill([
+                'id' => $id
+            ]);
+
+            $collection->push($queue);
+        }
+
+        return $collection;
+    }
+
+
 }

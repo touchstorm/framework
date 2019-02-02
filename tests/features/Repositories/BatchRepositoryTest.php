@@ -3,8 +3,8 @@
 use Illuminate\Database\Eloquent\Collection;
 use PHPUnit\Framework\TestCase;
 
-require_once getcwd() . '/tests/stubs/queues/MockBatchQueue.php';
-require_once getcwd() . '/tests/stubs/repositories/MockBatchRepository.php';
+dirname(__FILE__)."/../../stubs/queues/MockBatchQueue.php";
+dirname(__FILE__)."/../../stubs/repositories/MockBatchRepository.php";
 
 class DispatchBatchTaskTest extends TestCase
 {

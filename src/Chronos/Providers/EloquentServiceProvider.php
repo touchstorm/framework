@@ -7,7 +7,7 @@ use Illuminate\Database\Capsule\Manager;
 class EloquentServiceProvider extends ServiceProvider
 {
     /**
-     * Eloquent service provider
+     * Eloquent getService provider
      */
     public function register()
     {

@@ -5,7 +5,7 @@ use Chronos\Tasks\Task;
 use PHPUnit\Framework\TestCase;
 
 
-require_once getcwd() . '/tests/stubs/MockClass.php';
+require_once dirname(__FILE__)."/../../stubs/MockClass.php";
 
 class ApplicationUnitTest extends TestCase
 {
@@ -16,7 +16,7 @@ class ApplicationUnitTest extends TestCase
      */
     public function testApplicationTaskResolve()
     {
-        $dir = getcwd() . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'stubs';
+        $dir = dirname(__FILE__)."/../../stubs/";;
 
         // new up and extend application
         // on construct the application will register the tasks
@@ -52,7 +52,7 @@ class ApplicationUnitTest extends TestCase
      */
     public function testApplicationRegisterServiceProvider()
     {
-        $dir = getcwd() . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'stubs';
+        $dir = dirname(__FILE__)."/../../stubs/";;
 
         $app = new class($dir) extends Application
         {

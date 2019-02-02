@@ -26,7 +26,7 @@ class Application extends Injector
     protected $basePath = '';
 
     /**
-     * The service providers loaded in the system
+     * The getService providers loaded in the system
      * @var array $loadedServiceProviders
      */
     protected $loadedServiceProviders = [];
@@ -40,7 +40,7 @@ class Application extends Injector
         // Define the various paths
         $this->definePaths();
 
-        // Register the core application service providers
+        // Register the core application getService providers
         $this->registerCoreProviders();
 
         // Register the tasks
@@ -68,7 +68,7 @@ class Application extends Injector
             $provider = $this->make($provider);
         }
 
-        // If registrar method exists on the class
+        // If registrar getMethod exists on the class
         // pass it the container and register it
         if (method_exists($provider, 'registrar')) {
             $provider->registrar($this);
@@ -90,7 +90,7 @@ class Application extends Injector
     }
 
     /**
-     * Get loaded service and resolve it out of the container
+     * Get loaded getService and resolve it out of the container
      * @param $provider
      * @return bool|mixed
      */
@@ -106,7 +106,7 @@ class Application extends Injector
     }
 
     /**
-     * Register all the needed service providers
+     * Register all the needed getService providers
      * @throws \Auryn\InjectionException
      */
     protected function registerCoreProviders()
@@ -136,7 +136,7 @@ class Application extends Injector
     }
 
     /**
-     * Get the registered service providers
+     * Get the registered getService providers
      * @return array
      */
     public function getRegisteredProviders()
@@ -212,13 +212,12 @@ class Application extends Injector
 
     /**
      * Resolve (hook make)
-     * This wraps the make method and checks for
+     * This wraps the make getMethod and checks for
      * class types. Depending if it is a sub class
-     * of a parent we can resolve service providers or
+     * of a parent we can resolve getService providers or
      * do other class specific work before we make()
      * and return.
      * @param $name
-     * @param array $args
      * @param null $callback
      * @return mixed
      * @throws \Auryn\InjectionException
@@ -230,9 +229,9 @@ class Application extends Injector
         // make and return an instance
         if (is_subclass_of($name, Controller::class)) {
 
-            // Prepare our sample controller by resolving it's internal service providers
+            // Prepare our sample getController by resolving it's internal getService providers
             $this->prepare($name, function ($controller, Application $app) {
-                // Register the controller's providers
+                // Register the getController's providers
                 foreach ($controller->providers as $provider) {
                     $app->register($provider);
                 }

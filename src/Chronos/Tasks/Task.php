@@ -27,7 +27,7 @@ class Task
      * - The name of the class.
      * this is reserved for batched threads.
      * That are constrained to use a single
-     * controller.
+     * getController.
      */
     protected $class = '';
 
@@ -58,7 +58,7 @@ class Task
     protected $command = null;
 
     /**
-     * Command to run via controller
+     * Command to run via getController
      * @var mixed $command
      */
     protected $controlCommand = null;

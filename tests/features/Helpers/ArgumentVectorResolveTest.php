@@ -11,7 +11,7 @@ class ArgumentVectorResolveFromIoCTest extends TestCase
      * is resolved from the IoC that it uses the $_SERVER['argv']
      * variables as needed.
      *
-     * We'll override the defaults and when the core service provider
+     * We'll override the defaults and when the core getService provider
      * shares ArgumentVectors to the IoC it will use the fake globals.
      *
      * @covers \Chronos\Helpers\ArgumentVectors::getArguments
@@ -28,7 +28,7 @@ class ArgumentVectorResolveFromIoCTest extends TestCase
             $controller . '@' . $method
         ];
 
-        $app = new Application(getcwd() . '/tests/stubs');
+        $app = new Application(dirname(__FILE__) . "/../../stubs");
 
         // Resolve our character
         $parser = $app->make(ArgumentVectors::class);
@@ -42,7 +42,7 @@ class ArgumentVectorResolveFromIoCTest extends TestCase
 
     /**
      * @covers \Chronos\Helpers\ArgumentVectors::type('scheduled')
-     * @covers \Chronos\Helpers\ArgumentVectors::controller
+     * @covers \Chronos\Helpers\ArgumentVectors::getController
      * @covers \Chronos\Helpers\ArgumentVectors::scheduled
      * @throws \Auryn\InjectionException
      * @throws \Chronos\Exceptions\ArgumentVectorException
@@ -58,23 +58,25 @@ class ArgumentVectorResolveFromIoCTest extends TestCase
             $controller . '@' . $method
         ];
 
-        $app = new Application(getcwd() . '/tests/stubs');
+        $app = new Application(dirname(__FILE__) . "/../../stubs");
 
         // Resolve our character
         $parser = $app->make(ArgumentVectors::class);
 
+        $args = $parser->forScheduled();
+
         // Assert
-        $this->assertSame($controller, $parser->type('scheduled')->controller());
-        $this->assertSame($method, $parser->type('scheduled')->method());
-        $this->assertSame($controller, $parser->scheduled()->controller());
-        $this->assertSame($method, $parser->scheduled()->method());
+        $this->assertSame($controller, $parser->type('scheduled')->getController());
+        $this->assertSame($method, $parser->type('scheduled')->getMethod());
+        $this->assertSame($controller, $args->getController());
+        $this->assertSame($method, $args->getMethod());
 
     }
 
     /**
      * @covers \Chronos\Helpers\ArgumentVectors::type('running')
      * @covers \Chronos\Helpers\ArgumentVectors::running
-     * @covers \Chronos\Helpers\ArgumentVectors::controller
+     * @covers \Chronos\Helpers\ArgumentVectors::getController
      * @throws \Auryn\InjectionException
      * @throws \Chronos\Exceptions\ArgumentVectorException
      */
@@ -88,14 +90,16 @@ class ArgumentVectorResolveFromIoCTest extends TestCase
             $service
         ];
 
-        $app = new Application(getcwd() . '/tests/stubs');
+        $app = new Application(dirname(__FILE__) . "/../../stubs");
 
         // Resolve our character
         $parser = $app->make(ArgumentVectors::class);
 
+        $args = $parser->forRunning();
+
         // Assert
-        $this->assertSame($service, $parser->type('running')->service());
-        $this->assertSame($service, $parser->running()->service());
+        $this->assertSame($service, $parser->type('running')->getService());
+        $this->assertSame($service, $args->getService());
 
     }
 

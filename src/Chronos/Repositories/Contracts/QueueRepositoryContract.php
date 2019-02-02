@@ -15,6 +15,12 @@ interface QueueRepositoryContract
     function item($id);
 
     /**
+     * @param $ids
+     * @return mixed
+     */
+    function items(array $ids);
+
+    /**
      * Get next Queue
      * @return \Chronos\Queues\Queue
      */

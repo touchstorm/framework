@@ -35,13 +35,13 @@ class WatcherTest extends TestCase
 
         // Set up tasks
         $collection->running('runFoo', [
-            'service' => 'RunningService',
+            'getService' => 'RunningService',
             'on' => $on
         ]);
 
         // Set up tasks
         $collection->batch('batchFoo', [
-            'service' => 'BatchService',
+            'getService' => 'BatchService',
             'on' => $on
         ]);
 

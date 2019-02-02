@@ -29,8 +29,9 @@ class ArgumentVectorTest extends TestCase
 
     /**
      * @covers \Chronos\Helpers\ArgumentVectors::type('scheduled')
-     * @covers \Chronos\Helpers\ArgumentVectors::controller
+     * @covers \Chronos\Helpers\ArgumentVectors::getController
      * @covers \Chronos\Helpers\ArgumentVectors::scheduled
+     * @covers \Chronos\Helpers\ArgumentVectors::forScheduled
      * @throws ArgumentVectorException
      */
     public function testScheduledArgumentVectorsResolved()
@@ -45,18 +46,25 @@ class ArgumentVectorTest extends TestCase
             $argument
         ]);
 
+
+        $args = $parser->forScheduled();
+
         // Assert
-        $this->assertSame($controller, $parser->type('scheduled')->controller());
-        $this->assertSame($method, $parser->type('scheduled')->method());
-        $this->assertSame($controller, $parser->scheduled()->controller());
-        $this->assertSame($method, $parser->scheduled()->method());
+        // long form
+        $this->assertSame($controller, $parser->type('scheduled')->getController());
+        $this->assertSame($method, $parser->type('scheduled')->getMethod());
+
+        // Shorthand
+        $this->assertSame($controller, $args->getController());
+        $this->assertSame($method, $args->getMethod());
 
     }
 
     /**
      * @covers \Chronos\Helpers\ArgumentVectors::type('running')
      * @covers \Chronos\Helpers\ArgumentVectors::running
-     * @covers \Chronos\Helpers\ArgumentVectors::controller
+     * @covers \Chronos\Helpers\ArgumentVectors::getController
+     * @covers \Chronos\Helpers\ArgumentVectors::forRunning
      * @throws ArgumentVectorException
      */
     public function testRunningArgumentVectorsResolved()
@@ -69,9 +77,88 @@ class ArgumentVectorTest extends TestCase
             $service
         ]);
 
+        $args = $parser->forRunning();
+
         // Assert
-        $this->assertSame($service, $parser->type('running')->service());
-        $this->assertSame($service, $parser->running()->service());
+        $this->assertSame($service, $parser->type('running')->getService());
+        $this->assertSame($service, $args->getService());
+    }
+
+    /**
+     * @covers \Chronos\Helpers\ArgumentVectors::type('runningThread')
+     * @covers \Chronos\Helpers\ArgumentVectors::getQueueId
+     * @covers \Chronos\Helpers\ArgumentVectors::getService
+     * @covers \Chronos\Helpers\ArgumentVectors::forRunningThread
+     * @throws ArgumentVectorException
+     */
+    public function testRunningThreadArgumentVectorsResolved()
+    {
+        // Set variables
+        $id = 1;
+        $service = 'MockRunningService';
+
+        $parser = new ArgumentVectors([
+            'thread.php',
+            $id,
+            $service
+        ]);
+
+        $args = $parser->forRunningThread();
+
+        // Assert
+        $this->assertSame($service, $parser->type('runningThread')->getService());
+        $this->assertSame($id, $args->getQueueId());
+        $this->assertSame($service, $args->getService());
+    }
+
+    /**
+     * @covers \Chronos\Helpers\ArgumentVectors::type('batchThread')
+     * @covers \Chronos\Helpers\ArgumentVectors::getQueueId
+     * @covers \Chronos\Helpers\ArgumentVectors::getService
+     * @covers \Chronos\Helpers\ArgumentVectors::forRunningThread
+     * @throws ArgumentVectorException
+     */
+    public function testBatchThreadArgumentVectorsResolved()
+    {
+        // Set variables
+        $id = '1~2~3~4';
+        $service = 'MockBatchService';
+
+        $parser = new ArgumentVectors([
+            'batchThread.php',
+            $id,
+            $service
+        ]);
+
+        $args = $parser->forBatchThread();
+
+        // Assert
+        $this->assertSame($service, $parser->type('batchThread')->getService());
+        $this->assertSame($id, $args->getBatchQueueId());
+        $this->assertSame($service, $args->getService());
+    }
+
+    /**
+     * @covers \Chronos\Helpers\ArgumentVectors::type('running')
+     * @covers \Chronos\Helpers\ArgumentVectors::running
+     * @covers \Chronos\Helpers\ArgumentVectors::getController
+     * @throws ArgumentVectorException
+     */
+    public function testBatchArgumentVectorsResolved()
+    {
+        // Set variables
+        $service = 'MockBatchService';
+
+        $parser = new ArgumentVectors([
+            'batch.php',
+            $service
+        ]);
+
+        $args = $parser->forBatch();
+
+        // Assert
+        $this->assertSame($service, $parser->type('batch')->getService());
+        $this->assertSame($service, $args->getService());
     }
 
     /**
@@ -94,7 +181,7 @@ class ArgumentVectorTest extends TestCase
         $this->expectExceptionMessage('Dispatch argument vector mismatch');
 
         // Trigger
-        $parser->scheduled()->controller();
+        $parser->forScheduled()->getController();
     }
 
     /**
@@ -117,7 +204,7 @@ class ArgumentVectorTest extends TestCase
         $this->expectExceptionMessage('Dispatch argument vector mismatch');
 
         // Trigger
-        $parser->running()->service();
+        $parser->forRunning()->getService();
 
     }
 
@@ -141,7 +228,7 @@ class ArgumentVectorTest extends TestCase
         $this->expectExceptionMessage('Dispatch argument vector mismatch');
 
         // Trigger
-        $parser->runningThread()->service();
+        $parser->forRunningThread()->getService();
     }
 
     /**
@@ -164,7 +251,7 @@ class ArgumentVectorTest extends TestCase
         $this->expectExceptionMessage('Dispatch argument vector mismatch');
 
         // Trigger
-        $parser->batch()->queueId();
+        $parser->forBatch()->getQueueId();
     }
 
     /**
@@ -187,7 +274,7 @@ class ArgumentVectorTest extends TestCase
         $this->expectExceptionMessage('Dispatch argument vector mismatch');
 
         // Trigger
-        $parser->batchThread()->service();
+        $parser->forBatchThread()->getService();
     }
 
 }

@@ -4,8 +4,8 @@ use Chronos\Dispatchers\Batches;
 use Illuminate\Database\Eloquent\Collection;
 use PHPUnit\Framework\TestCase;
 
-require_once getcwd() . '/tests/stubs/queues/MockBatchQueue.php';
-require_once getcwd() . '/tests/stubs/repositories/MockBatchRepository.php';
+require_once dirname(__FILE__) . "/../../stubs/queues/MockBatchQueue.php";
+require_once dirname(__FILE__) . "/../../stubs/repositories/MockBatchRepository.php";
 
 class DispatchBatchTest extends TestCase
 {

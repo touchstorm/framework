@@ -7,9 +7,9 @@ use Chronos\Kernel\RunningKernel;
 use Illuminate\Database\Eloquent\Collection;
 use PHPUnit\Framework\TestCase;
 
-require_once getcwd() . '/tests/stubs/queues/MockRunningQueue.php';
-require_once getcwd() . '/tests/stubs/repositories/MockRunningRepository.php';
-require_once getcwd() . '/tests/stubs/services/MockRunningService.php';
+dirname(__FILE__)."/../../stubs/queues/MockRunningQueue.php";
+dirname(__FILE__)."/../../stubs/repositories/MockRunningRepository.php";
+dirname(__FILE__)."/../../stubs/services/MockRunningService.php";
 
 class RunningKernelTest extends TestCase
 {
@@ -18,7 +18,7 @@ class RunningKernelTest extends TestCase
      */
     public function testRunningKernelConstruct()
     {
-        $dir = getcwd() . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'stubs';
+        $dir = dirname(__FILE__)."/../../stubs/";;
         // Set up the classes
         $app = new Application($dir);
 

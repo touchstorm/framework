@@ -21,12 +21,14 @@ class ScheduledKernel extends Kernel
      * Parse Console Arguments
      * Break down the argument vectors passed
      * through to the kernel and extract the
-     * controller and method
+     * getController and getMethod
      */
     protected function parseConsoleArguments()
     {
-        $this->controller = $this->arguments->type('scheduled')->controller();
-        $this->method = $this->arguments->type('scheduled')->method();
+        $args = $this->arguments->forScheduled();
+
+        $this->controller = $args->getController();
+        $this->method = $args->getMethod();
     }
 
     /**
@@ -50,7 +52,7 @@ class ScheduledKernel extends Kernel
     }
 
     /**
-     * Dispatch the controller command
+     * Dispatch the getController command
      * @return mixed
      * @throws \Auryn\InjectionException
      */
@@ -69,7 +71,7 @@ class ScheduledKernel extends Kernel
     }
 
     /**
-     * @return string $controller
+     * @return string $getController
      */
     public function getController()
     {
@@ -77,7 +79,7 @@ class ScheduledKernel extends Kernel
     }
 
     /**
-     * @return string $method
+     * @return string $getMethod
      */
     public function getMethod()
     {

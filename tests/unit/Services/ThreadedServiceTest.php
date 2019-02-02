@@ -5,9 +5,9 @@ use Chronos\Services\ThreadedService;
 use PHPUnit\Framework\TestCase;
 
 
-require_once getcwd() . '/tests/stubs/MockContract.php';
-require_once getcwd() . '/tests/stubs/MockClass.php';
-require_once getcwd() . '/tests/stubs/services/MockRunningService.php';
+require_once dirname(__FILE__)."/../../stubs/MockContract.php";
+require_once dirname(__FILE__)."/../../stubs/MockClass.php";
+require_once dirname(__FILE__)."/../../stubs/services/MockRunningService.php";
 
 class ThreadedServiceTest extends TestCase
 {
@@ -21,7 +21,7 @@ class ThreadedServiceTest extends TestCase
      */
     public function testThreadedServiceContainer()
     {
-        $dir = getcwd() . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'stubs';
+        $dir = dirname(__FILE__)."/../../stubs/";;
 
         // Pass container into running and bind FooTest contract to BarTest Concretion
         $container = (new MockRunningService(new \Chronos\Foundation\Application($dir)))->register('running');

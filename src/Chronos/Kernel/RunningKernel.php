@@ -16,11 +16,11 @@ class RunningKernel extends Kernel
      * Parse Console Arguments
      * Break down the argument vectors passed
      * through to the kernel and extract the
-     * controller and method
+     * getController and getMethod
      */
     protected function parseConsoleArguments()
     {
-        $this->service = $this->arguments->running()->service();
+        $this->service = $this->arguments->forRunning()->getService();
     }
 
     /**
@@ -33,10 +33,10 @@ class RunningKernel extends Kernel
     {
         try {
 
-            // Create the service
+            // Create the getService
             $service = $this->app->make($this->namespace . $this->service, [':app' => $this->app]);
 
-            // Register the providers for the running service
+            // Register the providers for the running getService
             $this->app = $service->register('running');
 
             // Now that our dependencies are bound into the

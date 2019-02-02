@@ -1,20 +1,21 @@
 <?php
 
-use Chronos\Repositories\Contracts\QueueRepositoryContract;
-use Chronos\Repositories\QueueRepository;
+use Chronos\Repositories\BatchQueueRepository;
+use Chronos\Repositories\Contracts\QueueBatch;
 
-class MockRunningRepository extends QueueRepository implements QueueRepositoryContract
+class MockRunningRepository extends BatchQueueRepository implements QueueBatch
 {
     protected $connection = 'sqlite';
     protected $table = 'queue';
     protected $maxThreads = 10;
 
     /**
-     * FooRepository constructor.
+     * MockRunningRepository constructor.
      * @param MockRunningQueue $queue
      */
     public function __construct(MockRunningQueue $queue)
     {
         parent::__construct($queue);
     }
+
 }

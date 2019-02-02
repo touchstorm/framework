@@ -6,9 +6,9 @@ use Chronos\Kernel\BatchKernel;
 use Illuminate\Database\Eloquent\Collection;
 use PHPUnit\Framework\TestCase;
 
-require_once getcwd() . '/tests/stubs/queues/MockRunningQueue.php';
-require_once getcwd() . '/tests/stubs/repositories/MockRunningRepository.php';
-require_once getcwd() . '/tests/stubs/services/MockBatchService.php';
+//dirname(__FILE__)."/../../stubs/queues/MockRunningQueue.php";
+//dirname(__FILE__)."/../../stubs/repositories/MockRunningRepository.php";
+//dirname(__FILE__)."/../../stubs/services/MockBatchService.php";
 
 class BatchKernelFeatureTest extends TestCase
 {
@@ -24,7 +24,7 @@ class BatchKernelFeatureTest extends TestCase
     public function testBatchKernelConstruct()
     {
         // Set up the container
-        $dir = getcwd() . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'stubs';
+        $dir = dirname(__FILE__)."/../../stubs/";
         $app = new Application($dir);
         $app->share($app);
 

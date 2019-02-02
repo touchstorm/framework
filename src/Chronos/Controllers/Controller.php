@@ -11,7 +11,7 @@ use Chronos\Providers\EloquentServiceProvider;
 class Controller
 {
     /**
-     * Channel specific service provider register
+     * Channel specific getService provider register
      * @var array
      */
     public $register = [
@@ -19,7 +19,7 @@ class Controller
     ];
 
     /**
-     * Channel Specific service providers
+     * Channel Specific getService providers
      * after registered providers are loaded.
      * @var array
      */

@@ -60,7 +60,7 @@ class ArgumentVectors
     protected $controller = null;
 
     /**
-     * Method on controller
+     * Method on getController
      * @var null
      */
     protected $method = null;
@@ -93,7 +93,7 @@ class ArgumentVectors
      * @return ArgumentVectors
      * @throws ArgumentVectorException
      */
-    public function scheduled()
+    public function forScheduled()
     {
         return $this->type('scheduled');
     }
@@ -103,7 +103,7 @@ class ArgumentVectors
      * @return ArgumentVectors
      * @throws ArgumentVectorException
      */
-    public function running()
+    public function forRunning()
     {
         return $this->type('running');
     }
@@ -113,7 +113,7 @@ class ArgumentVectors
      * @return ArgumentVectors
      * @throws ArgumentVectorException
      */
-    public function batch()
+    public function forBatch()
     {
         return $this->type('batch');
     }
@@ -123,7 +123,7 @@ class ArgumentVectors
      * @return ArgumentVectors
      * @throws ArgumentVectorException
      */
-    public function runningThread()
+    public function forRunningThread()
     {
         return $this->type('runningThread');
     }
@@ -133,7 +133,7 @@ class ArgumentVectors
      * @return ArgumentVectors
      * @throws ArgumentVectorException
      */
-    public function batchThread()
+    public function forBatchThread()
     {
         return $this->type('batchThread');
     }
@@ -189,40 +189,49 @@ class ArgumentVectors
     }
 
     /**
-     * Get controller
+     * Get getController
      * @return void
      */
-    public function controller()
+    public function getController()
     {
         return $this->controller ?? $this->setController();
     }
 
     /**
-     * Get method
+     * Get getMethod
      * @return string
      */
-    public function method()
+    public function getMethod()
     {
         return $this->method ?? $this->setMethod();
     }
 
     /**
-     * Get controller
+     * Get getController
      * @return void
      */
-    public function service()
+    public function getService()
     {
         return $this->service ?? $this->setService();
     }
 
-    public function queueId()
+    /**
+     * Get Queue id
+     * @return int|null|string
+     */
+    public function getQueueId()
     {
         return $this->queueId ?? $this->setQueueId();
     }
 
-    public function batchQueueId()
+    /**
+     * Get Batch Queue id
+     * tilda separated string of ids
+     * @return null|string
+     */
+    public function getBatchQueueId()
     {
-        return $this->batchedQueueId ?? $this->setQueueId();
+        return $this->batchedQueueId ?? $this->setBatchedQueueId();
     }
 
     /**
@@ -266,7 +275,7 @@ class ArgumentVectors
     }
 
     /**
-     * Set the controller
+     * Set the getController
      * @return string
      */
     protected function setController()
@@ -275,7 +284,7 @@ class ArgumentVectors
     }
 
     /**
-     * Set the method
+     * Set the getMethod
      * @return string
      */
     protected function setMethod()
@@ -284,7 +293,7 @@ class ArgumentVectors
     }
 
     /**
-     * Set the controller
+     * Set the getController
      * @return string
      */
     protected function setQueueId()
@@ -293,16 +302,16 @@ class ArgumentVectors
     }
 
     /**
-     * Set the controller
+     * Set the getController
      * @return string
      */
     protected function setBatchedQueueId()
     {
-        return $this->queueId;
+        return $this->batchedQueueId;
     }
 
     /**
-     * Set the method
+     * Set the getMethod
      * @return string
      */
     protected function setService()
@@ -369,7 +378,7 @@ class ArgumentVectors
             throw new ArgumentVectorException('Dispatch argument vector mismatch. (' . $this->file . ') not recognized.', 422);
         }
 
-        $this->batchedQueueId = $this->argumentExplode(0, '~');
+        $this->batchedQueueId = $this->arguments[0];
         $this->service = $this->arguments[1];
     }
 }

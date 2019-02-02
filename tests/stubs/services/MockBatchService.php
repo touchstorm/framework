@@ -1,12 +1,21 @@
 <?php
 
-use Chronos\Services\ThreadedService;
+use Chronos\Services\BatchThreadedService;
 
-class MockBatchService extends ThreadedService
+class MockBatchService extends BatchThreadedService
 {
-    protected $repository = MockBatchRepository::class;
+    protected $providers = [
+        'batch' => [
+            MockServiceProvider::class
+        ],
+        'thread' => [
+            MockServiceProvider::class
+        ]
+    ];
 
-    public function running()
+    protected $repository = '\\MockBatchRepository';
+
+    public function batch()
     {
         $this->app->alias(MockContract::class, MockClass::class);
     }

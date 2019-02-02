@@ -1,12 +1,13 @@
 <?php
 
+use Chronos\Foundation\Application;
 use Chronos\Helpers\ArgumentVectors;
 use Chronos\Kernel\RunningKernel;
 use PHPUnit\Framework\TestCase;
 
-require_once getcwd() . '/tests/stubs/queues/MockRunningQueue.php';
-require_once getcwd() . '/tests/stubs/repositories/MockRunningRepository.php';
-require_once getcwd() . '/tests/stubs/services/MockRunningService.php';
+dirname(__FILE__)."/../../stubs/queues/MockRunningQueue.php";
+dirname(__FILE__)."/../../stubs/repositories/MockRunningRepository.php";
+dirname(__FILE__)."/../../stubs/services/MockRunningService.php";
 
 class RunningKernelFeatureTest extends TestCase
 {
@@ -16,12 +17,10 @@ class RunningKernelFeatureTest extends TestCase
      */
     public function testRunningKernelConstruct()
     {
-        // create a service
-        // create a repository
 
-        $dir = getcwd() . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'stubs';
+        $dir = dirname(__FILE__)."/../../stubs/";;
         // Set up the classes
-        $app = new \Chronos\Foundation\Application($dir);
+        $app = new Application($dir);
 
         // Set variables
         $namespace = '\\';

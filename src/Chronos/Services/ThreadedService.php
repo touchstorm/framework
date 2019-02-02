@@ -21,16 +21,16 @@ abstract class ThreadedService
     }
 
     /**
-     * Threaded services require a running() method implementation
+     * Threaded services require a running() getMethod implementation
      * All dependency needed to execute a the thread dispatcher will be
-     * bound in this method.
+     * bound in this getMethod.
      */
     abstract public function running();
 
     /**
-     * Threaded services require a thread() method implementation
+     * Threaded services require a thread() getMethod implementation
      * All dependency needed to execute a thread will be
-     * bound in this method.
+     * bound in this getMethod.
      */
     abstract public function thread();
 
@@ -42,7 +42,7 @@ abstract class ThreadedService
     protected function bindQueueRepository()
     {
         if (!isset($this->repository)) {
-            throw new ThreadedServiceException('Repository not found. Please add a repository attribute to your thread service.', 100);
+            throw new ThreadedServiceException('Repository not found. Please add a repository attribute to your thread getService.', 100);
         }
 
         $this->app = $this->app->alias(QueueRepositoryContract::class, $this->repository);
@@ -107,7 +107,7 @@ abstract class ThreadedService
     }
 
     /**
-     * Loads the service providers
+     * Loads the getService providers
      * @param $method
      * @param null $id
      * @return mixed
@@ -120,7 +120,7 @@ abstract class ThreadedService
             return $this->app;
         }
 
-        // Bind service providers
+        // Bind getService providers
         $this->bindProviders($method);
 
         // Make queue -> thread bindings
@@ -128,7 +128,7 @@ abstract class ThreadedService
             $this->bindThread($id);
         }
 
-        // Call the specified method running | thread
+        // Call the specified getMethod running | thread
         call_user_func([$this, $method], $id);
 
         // Return the container
@@ -136,7 +136,7 @@ abstract class ThreadedService
     }
 
     /**
-     * Bind method specific server providers
+     * Bind getMethod specific server providers
      * @param $method
      * @throws \Auryn\InjectionException
      */
@@ -147,7 +147,7 @@ abstract class ThreadedService
             return;
         }
 
-        // Load declared service providers
+        // Load declared getService providers
         foreach ($this->providers[$method] as $provider) {
             $this->app->register($provider);
         }

@@ -4,6 +4,9 @@ use Chronos\Dispatchers\Threads;
 use Illuminate\Database\Eloquent\Collection;
 use PHPUnit\Framework\TestCase;
 
+require_once dirname(__FILE__) . "/../../stubs/queues/MockRunningQueue.php";
+require_once dirname(__FILE__) . "/../../stubs/repositories/MockRunningRepository.php";
+
 class RunningDispatcherTest extends TestCase
 {
     /**

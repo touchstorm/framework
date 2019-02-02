@@ -14,13 +14,13 @@ class SomeUnitController
     }
 }
 
-require_once getcwd() . '/tests/stubs/controllers/MockController.php';
+dirname(__FILE__)."/../../stubs/controllers/MockController.php";
 
 class ScheduledKernelTest extends TestCase
 {
     public function testKernelConstruct()
     {
-        $dir = getcwd() . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'stubs';
+        $dir = dirname(__FILE__)."/../../stubs/";;
         // Set up the classes
         $app = new \Chronos\Foundation\Application($dir);
 

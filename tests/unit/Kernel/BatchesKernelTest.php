@@ -6,9 +6,9 @@ use Chronos\Helpers\ArgumentVectors;
 use Chronos\Kernel\BatchKernel;
 use PHPUnit\Framework\TestCase;
 
-require_once getcwd() . '/tests/stubs/queues/MockBatchQueue.php';
-require_once getcwd() . '/tests/stubs/repositories/MockBatchRepository.php';
-require_once getcwd() . '/tests/stubs/services/MockBatchService.php';
+dirname(__FILE__)."/../../stubs/queues/MockBatchQueue.php";
+dirname(__FILE__)."/../../stubs/repositories/MockBatchRepository.php";
+dirname(__FILE__)."/../../stubs/services/MockBatchService.php";
 
 class BatchesKernelTest extends TestCase
 {
@@ -17,7 +17,7 @@ class BatchesKernelTest extends TestCase
      */
     public function testRunningKernelConstruct()
     {
-        $dir = getcwd() . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'stubs';
+        $dir = dirname(__FILE__)."/../../stubs/";;
         // Set up the classes
         $app = new Application($dir);
 
