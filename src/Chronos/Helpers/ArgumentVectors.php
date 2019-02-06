@@ -324,7 +324,7 @@ class ArgumentVectors
      */
     private function parseScheduledArguments()
     {
-        if ($this->file !== 'scheduled.php') {
+        if (!strstr($this->file, 'scheduled.php')) {
             throw new ArgumentVectorException('Dispatch argument vector mismatch. (' . $this->file . ') not recognized.', 422);
         }
 
@@ -337,7 +337,7 @@ class ArgumentVectors
      */
     private function parseRunningArguments()
     {
-        if ($this->file !== 'running.php') {
+        if (!strstr($this->file, 'running.php')) {
             throw new ArgumentVectorException('Dispatch argument vector mismatch. (' . $this->file . ') not recognized.', 422);
         }
 
@@ -349,7 +349,7 @@ class ArgumentVectors
      */
     private function parseRunningThreadArguments()
     {
-        if ($this->file !== 'thread.php') {
+        if (!strstr($this->file, 'thread.php')) {
             throw new ArgumentVectorException('Dispatch argument vector mismatch. (' . $this->file . ') not recognized.', 422);
         }
 
@@ -362,7 +362,7 @@ class ArgumentVectors
      */
     private function parseBatchArguments()
     {
-        if ($this->file !== 'batch.php') {
+        if (!strstr($this->file, 'batch.php')) {
             throw new ArgumentVectorException('Dispatch argument vector mismatch. (' . $this->file . ') not recognized.', 422);
         }
 
@@ -374,7 +374,7 @@ class ArgumentVectors
      */
     private function parseBatchThreadArguments()
     {
-        if ($this->file !== 'batchThread.php') {
+        if (!strstr($this->file, 'batchThread.php')) {
             throw new ArgumentVectorException('Dispatch argument vector mismatch. (' . $this->file . ') not recognized.', 422);
         }
 
