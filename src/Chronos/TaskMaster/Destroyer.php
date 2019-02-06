@@ -14,9 +14,13 @@ class Destroyer extends BaseTaskMaster implements TaskMasterContract
 {
     /**
      * Dispatch task to be processed
+     * @param array $options
      */
-    public function dispatch()
+    public function dispatch($options = [])
     {
+        // Pass through optional inputs for configuration
+        $this->configure($options);
+
         $this->log('////////////////////////////////////////////////////////////');
         $this->log(' Destroyer ' . CURRENT_TIME);
         $this->log('////////////////////////////////////////////////////////////');
@@ -29,7 +33,6 @@ class Destroyer extends BaseTaskMaster implements TaskMasterContract
 
             // If task is already operating on the system, skip
             if (!$processId = $this->isRunning($task)) {
-
                 continue;
             }
 
