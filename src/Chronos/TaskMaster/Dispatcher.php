@@ -14,9 +14,13 @@ class Dispatcher extends BaseTaskMaster implements TaskMasterContract
 {
     /**
      * Dispatch tasks to be processed
+     * @param array $options
      */
-    public function dispatch()
+    public function dispatch($options = [])
     {
+        // Pass through optional inputs for configuration
+        $this->configure($options);
+
         $this->log('////////////////////////////////////////////////////////////');
         $this->log(' Scheduled Tasks ' . CURRENT_TIME);
         $this->log('////////////////////////////////////////////////////////////');
