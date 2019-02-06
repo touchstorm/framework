@@ -6,19 +6,8 @@ use Chronos\Foundation\Application;
 use Chronos\Repositories\Contracts\QueueRepositoryContract;
 use Chronos\Services\Exceptions\ThreadedServiceException;
 
-abstract class ThreadedService
+abstract class ThreadedService extends Service
 {
-    /**
-     * Application container
-     * @var Application $app
-     */
-    protected $app;
-
-    public function __construct(Application $app)
-    {
-        $this->app = $app;
-        $this->bindQueueRepository();
-    }
 
     /**
      * Threaded services require a running() getMethod implementation
@@ -33,20 +22,6 @@ abstract class ThreadedService
      * bound in this getMethod.
      */
     abstract public function thread();
-
-    /**
-     * @return void
-     * @throws \Auryn\ConfigException
-     * @throws ThreadedServiceException
-     */
-    protected function bindQueueRepository()
-    {
-        if (!isset($this->repository)) {
-            throw new ThreadedServiceException('Repository not found. Please add a repository attribute to your thread getService.', 100);
-        }
-
-        $this->app = $this->app->alias(QueueRepositoryContract::class, $this->repository);
-    }
 
     /**
      * @param $id
@@ -68,42 +43,13 @@ abstract class ThreadedService
         $name = $this->parseClassName($queueItem->class);
 
         // Define a thread
-        $thread = '\\App\\Console\\Controllers\\Threads\\' . $name;
+        $thread = $this->namespace . $name;
         $this->app->define($thread, [
             ':queueItem' => $queueItem
         ]);
 
         // alias the polymorphic thread
         $this->app->alias('Thread', $thread);
-    }
-
-    /**
-     * @param $ids
-     * @throws \Auryn\ConfigException
-     * @throws \Auryn\InjectionException
-     */
-    protected function bindThreadBatch(Array $ids = [])
-    {
-        // Resolve Queue repository
-        $repository = $this->app->make(QueueRepositoryContract::class);
-
-        // Fetch the Queue Item from the database (row of data to be processed)
-        $queue = $repository->item($ids[0]);
-
-        // Share the queue item to be used in the thread
-        $this->app->share($batch);
-
-        // Extract the class name
-        $name = $this->parseClassName($queueItem->class);
-
-        // Define a thread
-        $thread = '\\App\\Console\\Controllers\\Threads\\' . $name;
-        $this->app->define($thread, [
-            ':queueItem' => $queueItem
-        ]);
-
-        // alias the polymorphic thread
-        $this->app->alias('Batch', $thread);
     }
 
     /**
@@ -133,32 +79,5 @@ abstract class ThreadedService
 
         // Return the container
         return $this->app;
-    }
-
-    /**
-     * Bind getMethod specific server providers
-     * @param $method
-     * @throws \Auryn\InjectionException
-     */
-    protected function bindProviders($method)
-    {
-        // Return, if there are no providers declared
-        if (!isset($this->providers[$method])) {
-            return;
-        }
-
-        // Load declared getService providers
-        foreach ($this->providers[$method] as $provider) {
-            $this->app->register($provider);
-        }
-    }
-
-    /**
-     * @param $class
-     * @return mixed
-     */
-    protected function parseClassName($class)
-    {
-        return str_replace('::class', '', $class);
     }
 }

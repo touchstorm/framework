@@ -8,6 +8,11 @@ class MockThreadController extends Controller
         MockServiceProvider::class
     ];
 
+    public function handle()
+    {
+        return 'handled';
+    }
+
     public function someMethod($runFoo = 'baz')
     {
         return $runFoo;

@@ -75,31 +75,4 @@ abstract class BatchThreadedService extends Service
         // Return the container
         return $this->app;
     }
-
-    /**
-     * Bind getMethod specific server providers
-     * @param $method
-     * @throws \Auryn\InjectionException
-     */
-    protected function bindProviders($method)
-    {
-        // Return, if there are no providers declared
-        if (!isset($this->providers[$method])) {
-            return;
-        }
-
-        // Load declared getService providers
-        foreach ($this->providers[$method] as $provider) {
-            $this->app->register($provider);
-        }
-    }
-
-    /**
-     * @param $class
-     * @return mixed
-     */
-    protected function parseClassName($class)
-    {
-        return str_replace('::class', '', $class);
-    }
 }

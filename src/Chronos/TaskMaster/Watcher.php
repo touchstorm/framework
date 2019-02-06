@@ -55,7 +55,7 @@ class Watcher extends BaseTaskMaster implements TaskMasterContract
      */
     protected function running()
     {
-        $this->log('RUNNING ');
+        $this->log('RUNNING');
 
         $table = new ConsoleTable();
         $table->addHeader('Tasks')->addHeader('type')->addHeader('Schedule')->addHeader('Command');

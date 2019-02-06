@@ -21,10 +21,12 @@ class ThreadedServiceTest extends TestCase
      */
     public function testThreadedServiceContainer()
     {
-        $dir = dirname(__FILE__)."/../../stubs/";;
+        $dir = dirname(__FILE__)."/../../stubs/";
+
+        $namespace = '\\';
 
         // Pass container into running and bind FooTest contract to BarTest Concretion
-        $container = (new MockRunningService(new \Chronos\Foundation\Application($dir)))->register('running');
+        $container = (new MockRunningService(new \Chronos\Foundation\Application($dir), $namespace))->register('running');
         $this->assertInstanceOf(MockClass::class, $container->make(MockContract::class));
         $this->assertSame('found', $container->execute([MockContract::class, 'find']));
 
@@ -32,7 +34,7 @@ class ThreadedServiceTest extends TestCase
         /**
          * @var Injector $container
          */
-        $service = new MockRunningService(new \Chronos\Foundation\Application($dir));
+        $service = new MockRunningService(new \Chronos\Foundation\Application($dir), $namespace);
 
         $container = $service->register('thread', 1);
         $this->assertInstanceOf(MockClass::class, $container->make(MockContract::class));
