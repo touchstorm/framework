@@ -15,7 +15,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class BatchQueueRepository extends QueueRepository
 {
-
     /**
      * @var int $batchSize
      * - Default value is 0 which disables this feature

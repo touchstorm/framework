@@ -18,10 +18,16 @@ class BaseTaskMaster
     protected $dispatched = [];
 
     /**
-     * @var array $dispatched
+     * @var array $running
      * - Container of tasks that are currently running
      */
     protected $running = [];
+
+    /**
+     * @var array $batch
+     * - Container of tasks that are currently running
+     */
+    protected $batch = [];
 
     /**
      * @var array $dormant
@@ -148,7 +154,7 @@ class BaseTaskMaster
     /**
      * Get specific dispatched task
      * @param Task $task
-     * @param string $type
+     * @param string $type command|before|after|running|batch
      * @return array
      */
     public function dispatchedTask(Task $task, $type = 'command')
@@ -170,6 +176,15 @@ class BaseTaskMaster
     public function runningTasks()
     {
         return $this->running;
+    }
+
+    /**
+     * Array of running batch tasks
+     * @return array
+     */
+    public function batchTasks()
+    {
+        return $this->batch;
     }
 
     /**
@@ -261,6 +276,15 @@ class BaseTaskMaster
     public function collectRunningTask(Task $task)
     {
         $this->running[$task->getName()] = $task;
+    }
+
+    /**
+     * Collect a running batch tasks into its array container
+     * @param Task $task
+     */
+    public function collectBatchTask(Task $task)
+    {
+        $this->batch[$task->getName()] = $task;
     }
 
     /**

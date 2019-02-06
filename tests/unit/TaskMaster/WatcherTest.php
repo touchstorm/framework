@@ -65,5 +65,7 @@ class WatcherTest extends TestCase
         $this->assertNotNull($dispatcher->dispatchedTasks());
         $this->assertNotNull($dispatcher->dispatchedTasks());
         $this->assertCount(2, $dispatcher->dispatchedTasks());
+        $this->assertCount(0, $dispatcher->batchTasks()); // should be empty since they dispatched and weren't found live
+        $this->assertCount(0, $dispatcher->runningTasks());// should be empty since they dispatched and weren't found live
     }
 }

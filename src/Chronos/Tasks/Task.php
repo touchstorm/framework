@@ -21,7 +21,6 @@ class Task
      */
     protected $service = '';
 
-
     /**
      * @var string $class
      * - The name of the class.
@@ -46,7 +45,7 @@ class Task
 
     /**
      * @var string $type
-     * - The type of task this is, running/scheduled
+     * - The type of task this is, running/scheduled/batch
      * - Set in ~/Task.php
      */
     protected $type;
