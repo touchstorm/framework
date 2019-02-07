@@ -48,6 +48,19 @@ class Application extends Injector
     }
 
     /**
+     * When bootstrapping the Application
+     * pass any specific global providers to be registered.
+     * @param array $providers
+     * @throws \Auryn\InjectionException
+     */
+    public function applicationProviders(array $providers = [])
+    {
+        foreach ($providers as $alias => $provider) {
+            $this->register($provider);
+        }
+    }
+
+    /**
      * Register Service Providers
      * Register and store the class name.
      * @param $provider

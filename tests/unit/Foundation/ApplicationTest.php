@@ -3,8 +3,9 @@
 use Chronos\Foundation\Application;
 use PHPUnit\Framework\TestCase;
 
-dirname(__FILE__)."/../../stubs/repositories/MockRunningRepository.php";
-dirname(__FILE__)."/../../stubs/services/MockRunningService.php";
+require_once dirname(__FILE__) . "/../../stubs/repositories/MockRunningRepository.php";
+require_once dirname(__FILE__) . "/../../stubs/services/MockRunningService.php";
+require_once dirname(__FILE__) . "/../../stubs/kernels/MockKernel.php";
 
 class ApplicationTest extends TestCase
 {
@@ -20,7 +21,7 @@ class ApplicationTest extends TestCase
 
     public function setUp()
     {
-        $this->dir = dirname(__FILE__)."/../../stubs/";;
+        $this->dir = dirname(__FILE__) . "/../../stubs/";;
         $this->app = new Application($this->dir);
     }
 
@@ -36,6 +37,34 @@ class ApplicationTest extends TestCase
 
         $this->assertNotEmpty($providers);
         $this->assertSame($coreProvider, $this->app->getRegisteredProvider($coreProvider));
+
+    }
+
+    /**
+     * @covers \Chronos\Foundation\Application::getRegisteredProviders
+     * @covers \Chronos\Foundation\Application::getRegisteredProvider
+     */
+    public function testRegisteredApplicationProviders()
+    {
+        $this->app->register(MockServiceProvider::class);
+
+        $kernel = $this->app->make(MockKernel::class);
+
+        $namespaces = [
+            'controllers' => '\\',
+            'services' => '\\',
+            'threads' => '\\',
+            'repositories' => '\\',
+            'providers' => '\\'
+        ];
+
+        foreach ($namespaces as $key => $namespace) {
+
+            $kernelNamespaces = $kernel->getNamespaces();
+
+            $this->assertArrayHasKey($key, $kernelNamespaces);
+            $this->assertSame($namespace, $kernelNamespaces[$key]);
+        }
 
     }
 

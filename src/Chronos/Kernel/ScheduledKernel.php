@@ -3,6 +3,8 @@
 namespace Chronos\Kernel;
 
 use Chronos\Exceptions\KernelException;
+use Chronos\Foundation\Application;
+use Chronos\Helpers\ArgumentVectors;
 use Exception;
 
 class ScheduledKernel extends Kernel
@@ -16,6 +18,17 @@ class ScheduledKernel extends Kernel
      * @var string $method
      */
     protected $method;
+    /**
+     * @var string
+     */
+    protected $controllersNamespace;
+
+    public function __construct(Application $app, ArgumentVectors $arguments, $CONTROLLERS = '')
+    {
+        parent::__construct($app, $arguments);
+
+        $this->controllersNamespace = $CONTROLLERS;
+    }
 
     /**
      * Parse Console Arguments
@@ -58,7 +71,7 @@ class ScheduledKernel extends Kernel
      */
     protected function dispatch()
     {
-        return $this->app->resolveAndExecute([$this->namespace . $this->controller, $this->method]);
+        return $this->app->resolveAndExecute([$this->controllersNamespace . $this->controller, $this->method]);
     }
 
     /**

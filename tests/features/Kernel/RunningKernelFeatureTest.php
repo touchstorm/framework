@@ -22,8 +22,10 @@ class RunningKernelFeatureTest extends TestCase
         // Set up the classes
         $app = new Application($dir);
 
+        $provider = require_once dirname(__FILE__)."/../../stubs/providers/MockServiceProvider.php";
+        $app->register($provider);
+
         // Set variables
-        $namespace = '\\';
         $service = 'MockRunningService';
 
         $argv = [
@@ -36,8 +38,6 @@ class RunningKernelFeatureTest extends TestCase
             ':arguments' => new ArgumentVectors($argv)
         ]);
 
-        // Configure the kernel
-        $kernel->setNamespace($namespace);
 
         $options = [
             'setDryRun' => true,

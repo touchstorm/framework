@@ -21,8 +21,10 @@ class RunningThreadFeatureTest extends TestCase
         // Set up the classes
         $app = new Application(dirname(__FILE__) . "/../../stubs/");
 
+        $provider = require_once dirname(__FILE__)."/../../stubs/providers/MockServiceProvider.php";
+        $app->register($provider);
+
         // Set variables
-        $namespace = '\\';
         $service = 'MockRunningService';
         $queueId = 1;
 
@@ -36,11 +38,6 @@ class RunningThreadFeatureTest extends TestCase
             ':app' => $app,
             ':arguments' => new ArgumentVectors($argv)
         ]);
-
-        $app->defineParam('namespace', $namespace);
-
-        // Configure the kernel
-        $kernel->setNamespace($namespace);
 
         // Mock the kernel handling a call
         $kernel->handle(false);

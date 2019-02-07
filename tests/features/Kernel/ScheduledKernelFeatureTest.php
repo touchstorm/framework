@@ -30,7 +30,6 @@ class ScheduledKernelFeatureTest extends TestCase
         $app->register(MockServiceProvider::class, true);
 
         // Set variables
-        $namespace = '\\';
         $controller = 'MockController';
         $method = 'someMethod';
         $argv = [
@@ -43,9 +42,6 @@ class ScheduledKernelFeatureTest extends TestCase
             ':arguments' => new ArgumentVectors($argv)
         ]);
 
-        // Configure the kernel
-        $kernel->setNamespace($namespace);
-
         // Mock the kernel handling a call
         $output = $kernel->handle(true);
 
@@ -53,7 +49,6 @@ class ScheduledKernelFeatureTest extends TestCase
         $this->assertSame('bar', $output); // value being supplied by a getService provider defineParam
         $this->assertSame($controller, $kernel->getController());
         $this->assertSame($method, $kernel->getMethod());
-        $this->assertSame($namespace, $kernel->getNamespace());
         $this->assertInstanceOf(\Auryn\Injector::class, $kernel->getContainer());
 
     }

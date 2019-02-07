@@ -21,14 +21,14 @@ class Service
     /**
      * Service constructor.
      * @param Application $app
-     * @param string $namespace
+     * @param string $THREADS
      * @throws \Auryn\ConfigException
      */
-    public function __construct(Application $app, string $namespace)
+    public function __construct(Application $app, $THREADS = '')
     {
         $this->app = $app;
         $this->bindQueueRepository();
-        $this->namespace = $namespace;
+        $this->namespace = $THREADS;
     }
 
     /**

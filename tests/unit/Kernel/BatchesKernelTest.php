@@ -20,9 +20,9 @@ class BatchesKernelTest extends TestCase
         $dir = dirname(__FILE__)."/../../stubs/";;
         // Set up the classes
         $app = new Application($dir);
+        $app->register(MockServiceProvider::class);
 
         // Set variables
-        $namespace = '\\';
         $service = 'MockBatchService';
 
         $argv = [
@@ -31,9 +31,6 @@ class BatchesKernelTest extends TestCase
         ];
 
         $kernel = new BatchKernel($app, new ArgumentVectors($argv));
-
-        // Configure the kernel
-        $kernel->setNamespace($namespace);
 
         // Override options when handling
         $options = [

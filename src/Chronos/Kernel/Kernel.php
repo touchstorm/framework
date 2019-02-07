@@ -18,11 +18,6 @@ abstract class Kernel
     public $timestamp;
 
     /**
-     * @var string $namespace
-     */
-    protected $namespace = "";
-
-    /**
      * @var ArgumentVectors $arguments
      */
     protected $arguments;
@@ -58,21 +53,9 @@ abstract class Kernel
     }
 
     /**
-     * Set a namespace
-     * @param string $namespace
+     * @return mixed handle
      */
-    public function setNamespace(string $namespace)
-    {
-        $this->namespace = $namespace;
-    }
-
-    /**
-     * @return string $namespace
-     */
-    public function getNamespace()
-    {
-        return $this->namespace;
-    }
+    abstract public function handle();
 
     /**
      * @return Application

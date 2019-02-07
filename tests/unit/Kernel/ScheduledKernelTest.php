@@ -23,9 +23,9 @@ class ScheduledKernelTest extends TestCase
         $dir = dirname(__FILE__)."/../../stubs/";;
         // Set up the classes
         $app = new \Chronos\Foundation\Application($dir);
+        $app->register(MockServiceProvider::class);
 
         // Set variables
-        $namespace = '\\';
         $controller = 'MockController';
         $method = 'food';
         $argv = [
@@ -37,9 +37,6 @@ class ScheduledKernelTest extends TestCase
             ':app' => $app,
             ':arguments' => new ArgumentVectors($argv)
         ]);
-
-        // Configure the kernel
-        $kernel->setNamespace($namespace);
 
         // Mock the kernel handling a call
         $output = $kernel->handle(true);

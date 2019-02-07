@@ -4,7 +4,6 @@ use Auryn\Injector;
 use Chronos\Foundation\Application;
 use Chronos\Helpers\ArgumentVectors;
 use Chronos\Kernel\BatchThreadKernel;
-use Illuminate\Database\Eloquent\Collection;
 use PHPUnit\Framework\TestCase;
 
 
@@ -21,9 +20,9 @@ class BatchThreadKernelTest extends TestCase
     {
         // Set up the classes
         $app = new Application(dirname(__FILE__)."/../../stubs/");
+        $app->register(MockServiceProvider::class, true);
 
         // Set variables
-        $namespace = '\\';
         $service = 'MockBatchService';
         $batchQueueIds = '1~2~3~4';
 
@@ -33,12 +32,7 @@ class BatchThreadKernelTest extends TestCase
             $service
         ];
 
-        $app->defineParam('namespace', $namespace);
-
         $kernel = new BatchThreadKernel($app, new ArgumentVectors($argv));
-
-        // Configure the kernel
-        $kernel->setNamespace($namespace);
 
         // Mock the kernel handling a call
         $kernel->handle(false);

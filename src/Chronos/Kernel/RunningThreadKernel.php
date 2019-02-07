@@ -2,6 +2,8 @@
 
 namespace Chronos\Kernel;
 
+use Chronos\Foundation\Application;
+use Chronos\Helpers\ArgumentVectors;
 use Exception;
 
 class RunningThreadKernel extends Kernel
@@ -23,6 +25,15 @@ class RunningThreadKernel extends Kernel
      * @var string $method
      */
     protected $method = 'thread';
+
+    protected $controllersNamespace;
+
+    public function __construct(Application $app, ArgumentVectors $arguments, $CONTROLLERS = '')
+    {
+        parent::__construct($app, $arguments);
+
+        $this->controllersNamespace = $CONTROLLERS;
+    }
 
     /**
      * Parse Console Arguments
@@ -50,7 +61,7 @@ class RunningThreadKernel extends Kernel
             /**
              * @var \MockRunningService $service
              */
-            $service = $this->app->make($this->getNamespace() . $this->getService(), [':app' => $this->app]);
+            $service = $this->app->make($this->controllersNamespace . '\\' . $this->getService(), [':app' => $this->app]);
 
             $service->register($this->getMethod(), $this->getid());
 

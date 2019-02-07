@@ -2,6 +2,8 @@
 
 namespace Chronos\Kernel;
 
+use Chronos\Foundation\Application;
+use Chronos\Helpers\ArgumentVectors;
 use Exception;
 
 class BatchThreadKernel extends Kernel
@@ -23,6 +25,24 @@ class BatchThreadKernel extends Kernel
      * @var string $method
      */
     protected $method = 'thread';
+
+    /**
+     * @var string $controllerNamespace
+     */
+    protected $controllersNamespace;
+
+    /**
+     * BatchThreadKernel constructor.
+     * @param Application $app
+     * @param ArgumentVectors $arguments
+     * @param string $CONTROLLERS
+     */
+    public function __construct(Application $app, ArgumentVectors $arguments, $CONTROLLERS = '')
+    {
+        parent::__construct($app, $arguments);
+
+        $this->controllersNamespace = $CONTROLLERS;
+    }
 
     /**
      * Parse Console Arguments
@@ -50,7 +70,7 @@ class BatchThreadKernel extends Kernel
             /**
              * @var \MockBatchService $service
              */
-            $service = $this->app->make($this->getNamespace() . $this->getService(), [':app' => $this->app]);
+            $service = $this->app->make($this->controllersNamespace . '\\' . $this->getService(), [':app' => $this->app]);
 
             $service->register($this->getMethod(), $this->getIds());
 
@@ -97,5 +117,4 @@ class BatchThreadKernel extends Kernel
     {
         return $this->method;
     }
-
 }

@@ -42,9 +42,6 @@ class BatchKernelFeatureTest extends TestCase
         // a live server would do
         $kernel = $app->make(BatchKernel::class);
 
-        // Configure the kernel
-        $kernel->setNamespace($namespace);
-
         $options = array(
             'setDryRun' => true,
             'runUntilEmpty' => true,
@@ -59,7 +56,6 @@ class BatchKernelFeatureTest extends TestCase
         $kernel->handle($options);
 
         $this->assertSame($service, $kernel->getService());
-        $this->assertSame($namespace, $kernel->getNamespace());
         $this->assertInstanceOf(\Auryn\Injector::class, $kernel->getContainer());
         $this->assertInstanceOf(\Auryn\Injector::class, $kernel->getContainer());
 

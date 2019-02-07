@@ -20,9 +20,9 @@ class RunningThreadKernelTest extends TestCase
     {
         // Set up the classes
         $app = new Application(dirname(__FILE__) . "/../../stubs/");
+        $app->register(MockServiceProvider::class);
 
         // Set variables
-        $namespace = '\\';
         $service = 'MockRunningService';
         $queueId = 1;
 
@@ -32,12 +32,7 @@ class RunningThreadKernelTest extends TestCase
             $service
         ];
 
-        $app->defineParam('namespace', $namespace);
-
         $kernel = new RunningThreadKernel($app, new ArgumentVectors($argv));
-
-        // Configure the kernel
-        $kernel->setNamespace($namespace);
 
         // Mock the kernel handling a call
         $kernel->handle(false);

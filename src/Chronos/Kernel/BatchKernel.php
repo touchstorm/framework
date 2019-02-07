@@ -3,6 +3,8 @@
 namespace Chronos\Kernel;
 
 use Chronos\Dispatchers\Batches;
+use Chronos\Foundation\Application;
+use Chronos\Helpers\ArgumentVectors;
 use Exception;
 
 class BatchKernel extends Kernel
@@ -16,6 +18,24 @@ class BatchKernel extends Kernel
      * @var null | Batches
      */
     protected $threader = null;
+
+    /**
+     * @var string
+     */
+    protected $servicesNamespace;
+
+    /**
+     * BatchKernel constructor
+     * @param Application $app
+     * @param ArgumentVectors $arguments
+     * @param string $SERVICES resolved from IoC
+     */
+    public function __construct(Application $app, ArgumentVectors $arguments, $SERVICES = '')
+    {
+        parent::__construct($app, $arguments);
+
+        $this->servicesNamespace = $SERVICES;
+    }
 
     /**
      * Parse Console Arguments
@@ -40,7 +60,7 @@ class BatchKernel extends Kernel
         try {
 
             // Create the getService
-            $service = $this->app->make($this->namespace . $this->service, [':app' => $this->app]);
+            $service = $this->app->make($this->serviceNamespace . '\\' . $this->service, [':app' => $this->app]);
 
             // Register the providers for the batch getService
             $this->app = $service->register('batch');
