@@ -5,6 +5,7 @@ namespace Chronos\Kernel;
 use Chronos\Dispatchers\Batches;
 use Chronos\Foundation\Application;
 use Chronos\Helpers\ArgumentVectors;
+use Chronos\Helpers\NamespaceManager;
 use Exception;
 
 class BatchKernel extends Kernel
@@ -28,13 +29,13 @@ class BatchKernel extends Kernel
      * BatchKernel constructor
      * @param Application $app
      * @param ArgumentVectors $arguments
-     * @param string $SERVICES resolved from IoC
+     * @param NamespaceManager $namespace
      */
-    public function __construct(Application $app, ArgumentVectors $arguments, $SERVICES = '')
+    public function __construct(Application $app, ArgumentVectors $arguments, NamespaceManager $namespace)
     {
         parent::__construct($app, $arguments);
 
-        $this->servicesNamespace = $SERVICES;
+        $this->servicesNamespace = $namespace->getServiceNamespace();
     }
 
     /**

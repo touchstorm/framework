@@ -3,6 +3,7 @@
 namespace Chronos\Services;
 
 use Chronos\Foundation\Application;
+use Chronos\Helpers\NamespaceManager;
 use Chronos\Repositories\Contracts\QueueRepositoryContract;
 
 class Service
@@ -16,19 +17,19 @@ class Service
     /**
      * @var string
      */
-    protected $namespace;
+    protected $threadNamthreadNamespace;
 
     /**
      * Service constructor.
      * @param Application $app
-     * @param string $THREADS
+     * @param NamespaceManager $namespace
      * @throws \Auryn\ConfigException
      */
-    public function __construct(Application $app, $THREADS = '')
+    public function __construct(Application $app, NamespaceManager $namespace)
     {
         $this->app = $app;
         $this->bindQueueRepository();
-        $this->namespace = $THREADS;
+        $this->threadNamthreadNamespace = $namespace->getThreadNamespace();
     }
 
     /**

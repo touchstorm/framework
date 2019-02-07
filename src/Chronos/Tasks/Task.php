@@ -296,6 +296,7 @@ class Task
     protected function makeCommand($command, $async = true)
     {
         return ($this->asynchronous && $async) ? 'nohup ' . $command . ' > /dev/null 2>&1 &' : $command;
+//        return ($this->asynchronous && $async) ? 'nohup ' . $command . ' &' : $command;
     }
 
     /**

@@ -32,7 +32,9 @@ class RunningThreadKernelTest extends TestCase
             $service
         ];
 
-        $kernel = new RunningThreadKernel($app, new ArgumentVectors($argv));
+        $namespace = $app->make(\Chronos\Helpers\NamespaceManager::class);
+
+        $kernel = new RunningThreadKernel($app, new ArgumentVectors($argv), $namespace);
 
         // Mock the kernel handling a call
         $kernel->handle(false);

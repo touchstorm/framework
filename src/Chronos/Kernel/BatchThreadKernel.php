@@ -4,6 +4,7 @@ namespace Chronos\Kernel;
 
 use Chronos\Foundation\Application;
 use Chronos\Helpers\ArgumentVectors;
+use Chronos\Helpers\NamespaceManager;
 use Exception;
 
 class BatchThreadKernel extends Kernel
@@ -35,13 +36,13 @@ class BatchThreadKernel extends Kernel
      * BatchThreadKernel constructor.
      * @param Application $app
      * @param ArgumentVectors $arguments
-     * @param string $CONTROLLERS
+     * @param NamespaceManager $namespace
      */
-    public function __construct(Application $app, ArgumentVectors $arguments, $CONTROLLERS = '')
+    public function __construct(Application $app, ArgumentVectors $arguments, NamespaceManager $namespace)
     {
         parent::__construct($app, $arguments);
 
-        $this->controllersNamespace = $CONTROLLERS;
+        $this->controllersNamespace = $namespace->getControllerNamespace();
     }
 
     /**

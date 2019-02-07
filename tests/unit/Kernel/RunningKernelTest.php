@@ -23,7 +23,6 @@ class RunningKernelTest extends TestCase
         $app = new Application($dir);
 
         // Set variables
-        $namespace = '\\';
         $service = 'MockRunningService';
 
         $argv = [
@@ -31,10 +30,10 @@ class RunningKernelTest extends TestCase
             $service
         ];
 
-        $kernel = new RunningKernel($app, new ArgumentVectors($argv));
+        $namespace = $app->make(\Chronos\Helpers\NamespaceManager::class);
 
-        // Configure the kernel
-        $kernel->setNamespace($namespace);
+        $kernel = new RunningKernel($app, new ArgumentVectors($argv), $namespace);
+
 
         // Override options when handling
         $options = array(

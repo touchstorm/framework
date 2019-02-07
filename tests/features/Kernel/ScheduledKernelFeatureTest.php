@@ -27,7 +27,7 @@ class ScheduledKernelFeatureTest extends TestCase
 
         // Set up the classes
         $app = new Application($dir);
-        $app->register(MockServiceProvider::class, true);
+        $app->register(MockServiceProvider::class);
 
         // Set variables
         $controller = 'MockController';

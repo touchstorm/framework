@@ -30,7 +30,9 @@ class BatchesKernelTest extends TestCase
             $service
         ];
 
-        $kernel = new BatchKernel($app, new ArgumentVectors($argv));
+        $namespace = $app->make(\Chronos\Helpers\NamespaceManager::class);
+
+        $kernel = new BatchKernel($app, new ArgumentVectors($argv), $namespace);
 
         // Override options when handling
         $options = [

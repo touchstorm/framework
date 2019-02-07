@@ -172,7 +172,6 @@ class DispatcherTest extends TestCase
     }
 
 
-
     /**
      * @covers Dispatcher::dispatch();
      * @covers Dispatcher::execute()

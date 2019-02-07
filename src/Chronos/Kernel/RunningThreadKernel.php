@@ -4,6 +4,7 @@ namespace Chronos\Kernel;
 
 use Chronos\Foundation\Application;
 use Chronos\Helpers\ArgumentVectors;
+use Chronos\Helpers\NamespaceManager;
 use Exception;
 
 class RunningThreadKernel extends Kernel
@@ -28,11 +29,11 @@ class RunningThreadKernel extends Kernel
 
     protected $controllersNamespace;
 
-    public function __construct(Application $app, ArgumentVectors $arguments, $CONTROLLERS = '')
+    public function __construct(Application $app, ArgumentVectors $arguments, NamespaceManager $namespace)
     {
         parent::__construct($app, $arguments);
 
-        $this->controllersNamespace = $CONTROLLERS;
+        $this->controllersNamespace = $namespace->getControllerNamespace();
     }
 
     /**

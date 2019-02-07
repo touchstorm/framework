@@ -43,7 +43,7 @@ abstract class ThreadedService extends Service
         $name = $this->parseClassName($queueItem->class);
 
         // Define a thread
-        $thread = $this->namespace . $name;
+        $thread = $this->threadNamthreadNamespace . $name;
         $this->app->define($thread, [
             ':queueItem' => $queueItem
         ]);

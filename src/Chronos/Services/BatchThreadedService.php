@@ -37,7 +37,7 @@ abstract class BatchThreadedService extends Service
         //$thread = '\\App\\Console\\Controllers\\Threads\\' . $name;
         $name = $this->parseClassName($repository->getClass());
 
-        $thread = $this->namespace . $name;
+        $thread = $this->threadNamthreadNamespace . $name;
 
         $this->app->define($thread, [
             ':batch' => $batch

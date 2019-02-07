@@ -6,6 +6,7 @@ use Auryn\InjectionException;
 use Chronos\Exceptions\KernelException;
 use Chronos\Foundation\Application;
 use Chronos\Helpers\ArgumentVectors;
+use Chronos\Helpers\NamespaceManager;
 use Exception;
 
 class ScheduledKernel extends Kernel
@@ -24,11 +25,17 @@ class ScheduledKernel extends Kernel
      */
     protected $controllersNamespace;
 
-    public function __construct(Application $app, ArgumentVectors $arguments, $CONTROLLERS = '')
+    /**
+     * ScheduledKernel constructor.
+     * @param Application $app
+     * @param ArgumentVectors $arguments
+     * @param NamespaceManager $namespace
+     */
+    public function __construct(Application $app, ArgumentVectors $arguments, NamespaceManager $namespace)
     {
         parent::__construct($app, $arguments);
 
-        $this->controllersNamespace = $CONTROLLERS;
+        $this->controllersNamespace = $namespace->getControllerNamespace();
     }
 
     /**
@@ -72,7 +79,7 @@ class ScheduledKernel extends Kernel
      */
     protected function dispatch()
     {
-        return $this->app->resolveAndExecute([$this->controllersNamespace . '\\' . $this->controller, $this->method]);
+        return $this->app->resolveAndExecute([$this->controllersNamespace . $this->controller, $this->method]);
     }
 
     /**

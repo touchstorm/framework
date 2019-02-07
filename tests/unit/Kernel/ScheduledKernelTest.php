@@ -14,13 +14,13 @@ class SomeUnitController
     }
 }
 
-dirname(__FILE__)."/../../stubs/controllers/MockController.php";
+dirname(__FILE__) . "/../../stubs/controllers/MockController.php";
 
 class ScheduledKernelTest extends TestCase
 {
     public function testKernelConstruct()
     {
-        $dir = dirname(__FILE__)."/../../stubs/";;
+        $dir = dirname(__FILE__) . "/../../stubs/";;
         // Set up the classes
         $app = new \Chronos\Foundation\Application($dir);
         $app->register(MockServiceProvider::class);
@@ -33,10 +33,9 @@ class ScheduledKernelTest extends TestCase
             $controller . '@' . $method
         ];
 
-        $kernel = $app->make(ScheduledKernel::class, [
-            ':app' => $app,
-            ':arguments' => new ArgumentVectors($argv)
-        ]);
+        $namespace = $app->make(\Chronos\Helpers\NamespaceManager::class);
+
+        $kernel = new ScheduledKernel($app, new ArgumentVectors($argv), $namespace);
 
         // Mock the kernel handling a call
         $output = $kernel->handle(true);

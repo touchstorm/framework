@@ -91,6 +91,12 @@ class BaseTaskMaster
             return;
         }
 
+        $descriptors = [
+            0 => ["pipe", "r"],
+            1 => ["pipe", "w"],
+            2 => ["pipe", "r"]
+        ];
+
         foreach ($commands as $command) {
 
             $this->collectDispatchedTask($task, $type, $command);
@@ -100,8 +106,19 @@ class BaseTaskMaster
             }
 
             $output = [];
+            //exec($command, $output);
 
-            exec($command, $output);
+            $process = proc_open($command, $descriptors, $pipes);
+
+            $stout = stream_get_contents($pipes[1]);
+
+            fclose($pipes[1]);
+
+            proc_close($process);
+
+            if (!empty($stout)) {
+                $output[] = trim($stout);
+            }
 
             $output = !empty($output) ? $output : ['asynchronous'];
 

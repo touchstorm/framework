@@ -5,9 +5,9 @@ use Chronos\Services\ThreadedService;
 use PHPUnit\Framework\TestCase;
 
 
-require_once dirname(__FILE__)."/../../stubs/MockContract.php";
-require_once dirname(__FILE__)."/../../stubs/MockClass.php";
-require_once dirname(__FILE__)."/../../stubs/services/MockRunningService.php";
+require_once dirname(__FILE__) . "/../../stubs/MockContract.php";
+require_once dirname(__FILE__) . "/../../stubs/MockClass.php";
+require_once dirname(__FILE__) . "/../../stubs/services/MockRunningService.php";
 
 class ThreadedServiceTest extends TestCase
 {
@@ -21,12 +21,14 @@ class ThreadedServiceTest extends TestCase
      */
     public function testThreadedServiceContainer()
     {
-        $dir = dirname(__FILE__)."/../../stubs/";
+        $dir = dirname(__FILE__) . "/../../stubs/";
 
-        $namespace = '\\';
+        $app = new \Chronos\Foundation\Application($dir);
+
+        $namespace = $app->make(\Chronos\Helpers\NamespaceManager::class);
 
         // Pass container into running and bind FooTest contract to BarTest Concretion
-        $container = (new MockRunningService(new \Chronos\Foundation\Application($dir), $namespace))->register('running');
+        $container = (new MockRunningService($app, $namespace))->register('running');
         $this->assertInstanceOf(MockClass::class, $container->make(MockContract::class));
         $this->assertSame('found', $container->execute([MockContract::class, 'find']));
 

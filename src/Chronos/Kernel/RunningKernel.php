@@ -5,6 +5,7 @@ namespace Chronos\Kernel;
 use Chronos\Dispatchers\Threads;
 use Chronos\Foundation\Application;
 use Chronos\Helpers\ArgumentVectors;
+use Chronos\Helpers\NamespaceManager;
 use Exception;
 
 class RunningKernel extends Kernel
@@ -19,11 +20,11 @@ class RunningKernel extends Kernel
      */
     protected $servicesNamespace;
 
-    public function __construct(Application $app, ArgumentVectors $arguments, $SERVICES = '')
+    public function __construct(Application $app, ArgumentVectors $arguments, NamespaceManager $namespace)
     {
         parent::__construct($app, $arguments);
 
-        $this->servicesNamespace = $SERVICES;
+        $this->servicesNamespace = $namespace->getServiceNamespace();
     }
 
     /**
@@ -74,22 +75,5 @@ class RunningKernel extends Kernel
     public function getService()
     {
         return $this->service;
-    }
-
-    /**
-     * Set a namespace
-     * @param string $namespace
-     */
-    public function setNamespace(string $namespace)
-    {
-        // TODO: Implement setNamespace() method.
-    }
-
-    /**
-     * @return string $namespace
-     */
-    public function getNamespace()
-    {
-        // TODO: Implement getNamespace() method.
     }
 }
