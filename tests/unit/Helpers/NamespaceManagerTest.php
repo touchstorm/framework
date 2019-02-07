@@ -63,4 +63,33 @@ class NamespaceManagerTest extends TestCase
         $this->assertSame(rtrim($namespaces['PROVIDERS'], '\\'), $namespaceHelper->getProviderNamespace());
 
     }
+
+    /**
+     * @covers \Chronos\Helpers\NamespaceManager::getControllerNamespace
+     * @covers \Chronos\Helpers\NamespaceManager::getThreadNamespace
+     * @covers \Chronos\Helpers\NamespaceManager::getRepositoryNamespace
+     * @covers \Chronos\Helpers\NamespaceManager::getServiceNamespace
+     * @covers \Chronos\Helpers\NamespaceManager::getProviderNamespace
+     */
+    public function testNamespacesMakeComponent()
+    {
+        $namespaces = [
+            'PROVIDERS' => '\\Chronos\\Providers\\',
+        ];
+
+        // Pull the class from the IoC
+        $namespaceHelper = new NamespaceManager(
+            $namespaces['CONTROLLERS'] ?? '\\',
+            $namespaces['SERVICES'] ?? '\\',
+            $namespaces['THREADS'] ?? '\\',
+            $namespaces['REPOSITORIES'] ?? '\\',
+            $namespaces['PROVIDERS'] ?? '\\'
+        );
+
+        $class = $namespaceHelper->getProviderNamespace() . '\\ServiceProvider';
+
+        $service = new $class();
+
+        $this->assertInstanceOf(\Chronos\Providers\ServiceProvider::class, $service);
+    }
 }
