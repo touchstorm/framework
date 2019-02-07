@@ -2,6 +2,7 @@
 
 namespace Chronos\Kernel;
 
+use Auryn\InjectionException;
 use Chronos\Exceptions\KernelException;
 use Chronos\Foundation\Application;
 use Chronos\Helpers\ArgumentVectors;
@@ -67,11 +68,11 @@ class ScheduledKernel extends Kernel
     /**
      * Dispatch the getController command
      * @return mixed
-     * @throws \Auryn\InjectionException
+     * @throws InjectionException
      */
     protected function dispatch()
     {
-        return $this->app->resolveAndExecute([$this->controllersNamespace . $this->controller, $this->method]);
+        return $this->app->resolveAndExecute([$this->controllersNamespace . '\\' . $this->controller, $this->method]);
     }
 
     /**
@@ -80,7 +81,7 @@ class ScheduledKernel extends Kernel
      */
     protected function details()
     {
-        return $this->controller . '@' . $this->method . " |\tfinished in " . round(microtime(true) - $this->timestamp, 4) . " secs" . PHP_EOL;
+        return $this->controllersNamespace . '@' . $this->method . " |\t finished in " . round(microtime(true) - $this->timestamp, 4) . " secs" . PHP_EOL;
     }
 
     /**

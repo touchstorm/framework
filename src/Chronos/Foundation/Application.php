@@ -56,6 +56,11 @@ class Application extends Injector
     public function applicationProviders(array $providers = [])
     {
         foreach ($providers as $alias => $provider) {
+
+            if (empty($provider)) {
+                continue;
+            }
+
             $this->register($provider);
         }
     }

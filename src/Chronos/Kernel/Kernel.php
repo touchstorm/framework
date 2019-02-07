@@ -44,11 +44,17 @@ abstract class Kernel
 
     /**
      * Console output
-     * @param string $msg
+     * @param mixed $msg
      * @return string
      */
-    protected function output(string $msg)
+    protected function output($msg)
     {
+        //TODO use the console tables package to format a kick ass resposne
+        //TODO inject that class into the construct
+        if (is_array($msg)) {
+            return print_r($msg, true);
+        }
+
         return $msg;
     }
 
