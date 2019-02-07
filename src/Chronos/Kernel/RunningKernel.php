@@ -49,7 +49,7 @@ class RunningKernel extends Kernel
         try {
 
             // Create the getService
-            $service = $this->app->make($this->namespace . $this->service, [':app' => $this->app]);
+            $service = $this->app->make($this->servicesNamespace . '\\' . $this->service, [':app' => $this->app]);
 
             // Register the providers for the running getService
             $this->app = $service->register('running');

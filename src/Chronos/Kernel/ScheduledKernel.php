@@ -79,7 +79,7 @@ class ScheduledKernel extends Kernel
      */
     protected function dispatch()
     {
-        return $this->app->resolveAndExecute([$this->controllersNamespace . $this->controller, $this->method]);
+        return $this->app->resolveAndExecute([$this->controllersNamespace . '\\' . $this->controller, $this->method]);
     }
 
     /**
