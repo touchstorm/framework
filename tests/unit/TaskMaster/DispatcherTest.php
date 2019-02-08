@@ -324,7 +324,9 @@ class DispatcherTest extends TestCase
 
         // Fire dispatcher
         // Script will echo scheduledTaskTest
-        $dispatcher->dispatch();
+        $dispatcher->dispatch([
+//            'setVerbose' => true
+        ]);
 
         // Before output
         $this->assertSame('before', $dispatcher->output($hw, 'before')[0][0]);

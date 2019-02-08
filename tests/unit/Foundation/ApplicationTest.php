@@ -69,15 +69,15 @@ class ApplicationTest extends TestCase
     }
 
     /**
-     * @covers \Chronos\Foundation\Application::basePath
+     * @covers \Chronos\Foundation\Application::getBasePath
      * @covers \Chronos\Foundation\Application::tasksPath
      * @covers \Chronos\Foundation\Application::testPath
      */
     public function testApplicationConstructAndPaths()
     {
-        $this->assertSame($this->dir, $this->app->basePath());
-        $this->assertSame($this->dir . DIRECTORY_SEPARATOR . 'tasks', $this->app->tasksPath());
-        $this->assertSame($this->dir . DIRECTORY_SEPARATOR . 'test', $this->app->testPath());
+        $this->assertSame($this->dir, $this->app->getBasePath());
+        $this->assertSame($this->dir . 'tasks/', $this->app->getTasksPath());
+        $this->assertSame($this->dir . 'test/', $this->app->getTestPath());
     }
 
     /**

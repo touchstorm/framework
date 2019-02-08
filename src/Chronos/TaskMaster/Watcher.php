@@ -28,11 +28,8 @@ class Watcher extends BaseTaskMaster implements TaskMasterContract
         // Pass through optional inputs for configuration
         $this->configure($options);
 
-        $this->log('////////////////////////////////////////////////////////////');
-        $this->log(' Watcher ' . CURRENT_TIME);
-        $this->log('////////////////////////////////////////////////////////////');
-
-        $this->log(' Configuring ' . CURRENT_TIME);
+        // Echo out info to the console
+        $this->preamble();
 
         // Dispatch running tasks
         $this->dispatchRunningTasks();
@@ -42,7 +39,9 @@ class Watcher extends BaseTaskMaster implements TaskMasterContract
 
         // Outputs to console
         $this->running();
+        $this->log('');
         $this->batch();
+        $this->log('');
         $this->dispatched();
     }
 
@@ -101,14 +100,29 @@ class Watcher extends BaseTaskMaster implements TaskMasterContract
     }
 
     /**
+     * Watcher information for the console
+     */
+    protected function preamble()
+    {
+        $this->log('+--------------------------------------------------+');
+        $this->log('| Chronos / Watcher /' . CURRENT_TIME) . ' | ';
+        $this->log('+--------------------------------------------------+');
+        $this->log('| The Watcher ensures your Running Tasks stay alive.');
+        $this->log('| If the task fails, is killed, the server reboots,');
+        $this->log('| the Watcher will dispatch the running task');
+        $this->log('| automatically on it\'s next cycle.');
+        $this->log('+--------------------------------------------------+');
+        $this->log('');
+    }
+
+    /**
      * Output all running tasks
      */
     protected function running()
     {
-        $this->log('RUNNING');
 
         $table = new ConsoleTable();
-        $table->addHeader('Tasks')->addHeader('type')->addHeader('Schedule')->addHeader('Command');
+        $table->addHeader('Running Tasks (running)')->addHeader('type')->addHeader('Schedule')->addHeader('Command');
 
         foreach ($this->runningTasks() as $task) {
             $arr = $task->toArray();
@@ -129,7 +143,6 @@ class Watcher extends BaseTaskMaster implements TaskMasterContract
             $table->display();
         }
 
-        $this->log('');
     }
 
     /**
@@ -137,10 +150,8 @@ class Watcher extends BaseTaskMaster implements TaskMasterContract
      */
     protected function batch()
     {
-        $this->log('RUNNING BATCHES');
-
         $table = new ConsoleTable();
-        $table->addHeader('Tasks')->addHeader('type')->addHeader('Schedule')->addHeader('Command');
+        $table->addHeader('Batched Tasks (running)')->addHeader('type')->addHeader('Schedule')->addHeader('Command');
 
         foreach ($this->batchTasks() as $task) {
             $arr = $task->toArray();
@@ -161,7 +172,6 @@ class Watcher extends BaseTaskMaster implements TaskMasterContract
             $table->display();
         }
 
-        $this->log('');
     }
 
     /**
@@ -169,10 +179,8 @@ class Watcher extends BaseTaskMaster implements TaskMasterContract
      */
     protected function dispatched()
     {
-        $this->log('DISPATCHED TASKS');
-
         $table = new ConsoleTable();
-        $table->addHeader('Tasks')->addHeader('type')->addHeader('Schedule')->addHeader('Command');
+        $table->addHeader('Dispatched Tasks')->addHeader('type')->addHeader('Schedule')->addHeader('Command');
 
         // Display before
         foreach ($this->dispatchedTasks() as $name => $dispatches) {
@@ -199,7 +207,6 @@ class Watcher extends BaseTaskMaster implements TaskMasterContract
             $table->display();
         }
 
-        $this->log('');
     }
 
 }

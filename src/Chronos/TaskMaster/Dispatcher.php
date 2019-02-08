@@ -21,10 +21,8 @@ class Dispatcher extends BaseTaskMaster implements TaskMasterContract
         // Pass through optional inputs for configuration
         $this->configure($options);
 
-        $this->log('////////////////////////////////////////////////////////////');
-        $this->log(' Scheduled Tasks ' . CURRENT_TIME);
-        $this->log('////////////////////////////////////////////////////////////');
-        $this->log('');
+        // Echo out information to the console
+        $this->preamble();
 
         /**
          * @var string $name
@@ -61,7 +59,23 @@ class Dispatcher extends BaseTaskMaster implements TaskMasterContract
 
         // Output reports
         $this->dormant();
+        $this->log('');
         $this->dispatched();
+    }
+
+    /**
+     * Watcher information for the console
+     */
+    protected function preamble()
+    {
+        $this->log('+--------------------------------------------------+');
+        $this->log('| Chronos / Scheduled Tasks ' . CURRENT_TIME . ' |');
+        $this->log('+--------------------------------------------------+');
+        $this->log('| Scheduled task dispatcher.');
+        $this->log('| If a Task schedule is found to match the server\s time');
+        $this->log('| it will be dispatched to run or be registered as dormant.');
+        $this->log('+--------------------------------------------------+');
+        $this->log('');
     }
 
     /**
@@ -69,10 +83,9 @@ class Dispatcher extends BaseTaskMaster implements TaskMasterContract
      */
     protected function dormant()
     {
-        $this->log('DORMANT Tasks');
 
         $table = new ConsoleTable();
-        $table->addHeader('Tasks')->addHeader('type')->addHeader('Schedule')->addHeader('Command');
+        $table->addHeader('Dormant Tasks (waiting)')->addHeader('type')->addHeader('Schedule')->addHeader('Command');
 
         foreach ($this->dormantTasks() as $task) {
             $arr = $task->toArray();
@@ -93,8 +106,6 @@ class Dispatcher extends BaseTaskMaster implements TaskMasterContract
 
             $table->display();
         }
-
-        $this->log('');
     }
 
     /**
@@ -102,10 +113,8 @@ class Dispatcher extends BaseTaskMaster implements TaskMasterContract
      */
     protected function dispatched()
     {
-        $this->log('DISPATCHED Tasks');
-
         $table = new ConsoleTable();
-        $table->addHeader('Tasks')->addHeader('type')->addHeader('Schedule')->addHeader('Command');
+        $table->addHeader('Dispatched Tasks (executed)')->addHeader('type')->addHeader('Schedule')->addHeader('Command');
 
         // Display before
         foreach ($this->dispatchedTasks() as $name => $dispatches) {
@@ -131,7 +140,5 @@ class Dispatcher extends BaseTaskMaster implements TaskMasterContract
         if ($this->verbose && !empty($this->dispatchedTasks())) {
             $table->display();
         }
-
-        $this->log('');
     }
 }

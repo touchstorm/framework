@@ -79,7 +79,30 @@ class ScheduledKernel extends Kernel
      */
     protected function dispatch()
     {
-        return $this->app->resolveAndExecute([$this->controllersNamespace . '\\' . $this->controller, $this->method]);
+        $controller = $this->controllersNamespace . '\\' . $this->controller;
+
+        return $this->app->prepare($controller, function ($controller, Application $app) {
+
+            // Register providers
+            // pre-booted!
+            if (!isset($controller->providers) || empty($controller->providers)) {
+                return;
+            }
+
+            // Register the controller's service providers
+            $app->register($controller->providers);
+
+        })->prepare($controller, function ($controller, Application $app) {
+
+            // Register post booted providers
+            // booted
+            if (!isset($controller->booted) || empty($controller->booted)) {
+                return;
+            }
+
+            $app->register($controller->booted);
+
+        })->execute([$controller, $this->method]);
     }
 
     /**

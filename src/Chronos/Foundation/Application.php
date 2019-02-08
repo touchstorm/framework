@@ -21,9 +21,9 @@ class Application extends Injector
 
     /**
      * Base path of the running application
-     * @var null|string
+     * @var string
      */
-    protected $basePath = '';
+    protected $basePath;
 
     /**
      * The getService providers loaded in the system
@@ -35,7 +35,7 @@ class Application extends Injector
     {
         parent::__construct();
 
-        $this->basePath = $basePath;
+        $this->setBasePath($basePath);
 
         // Define the various paths
         $this->definePaths();
@@ -168,7 +168,7 @@ class Application extends Injector
      */
     protected function getTaskFiles()
     {
-        return array_diff(scandir($this->tasksPath()), ['..', '.']);
+        return array_diff(scandir($this->getTasksPath()), ['..', '.']);
     }
 
     /**
@@ -178,7 +178,7 @@ class Application extends Injector
      */
     protected function getTaskFile($file = '')
     {
-        return ($this->tasksPath() . DIRECTORY_SEPARATOR . $file) ?: null;
+        return ($this->getTasksPath() . DIRECTORY_SEPARATOR . $file) ?: null;
     }
 
     /**
@@ -186,44 +186,55 @@ class Application extends Injector
      */
     protected function definePaths()
     {
-        $this->defineParam('basePath', $this->basePath);
-        $this->defineParam('taskPath', $this->tasksPath());
-        $this->defineParam('testPath', $this->testPath());
-        $this->defineParam('configPath', $this->configPath());
+        $this->defineParam('basePath', $this->getBasePath());
+        $this->defineParam('taskPath', $this->getTasksPath());
+        $this->defineParam('testPath', $this->getTestPath());
+        $this->defineParam('configPath', $this->getConfigPath());
+    }
+
+    /*
+     * Set the base path
+     */
+    protected function setBasePath($path)
+    {
+        // Remove any trailing slashes
+        // and add the only trailing slash needed
+        // prevents a double // trailing slash
+        $this->basePath = rtrim($path, '/') . DIRECTORY_SEPARATOR;
     }
 
     /**
      * Task path directory
      * @return string
      */
-    public function tasksPath()
+    public function getTasksPath()
     {
-        return $this->basePath() . DIRECTORY_SEPARATOR . 'tasks';
+        return $this->getBasePath() . 'tasks' . DIRECTORY_SEPARATOR;
     }
 
     /**
      * Task path directory
      * @return string
      */
-    public function testPath()
+    public function getTestPath()
     {
-        return $this->basePath() . DIRECTORY_SEPARATOR . 'test';
+        return $this->getBasePath() . 'test' . DIRECTORY_SEPARATOR;
     }
 
     /**
      * Task path directory
      * @return string
      */
-    public function configPath()
+    public function getConfigPath()
     {
-        return $this->basePath() . DIRECTORY_SEPARATOR . 'config';
+        return $this->getBasePath() . 'config' . DIRECTORY_SEPARATOR;
     }
 
     /**
      * Application base path
      * @return string
      */
-    public function basePath()
+    public function getBasePath()
     {
         return $this->basePath;
     }

@@ -53,7 +53,8 @@ class WatcherTest extends TestCase
         $this->assertFalse($dispatcher->getDryRun());
 
         $dispatcher->dispatch([
-            'setDryRun' => true
+            'setDryRun' => true,
+//            'setVerbose' => true
         ]);
 
         $runningTask = $dispatcher->getTask('runFoo');

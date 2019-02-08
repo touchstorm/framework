@@ -9,14 +9,16 @@ namespace Chronos\Controllers;
 class Controller
 {
     /**
-     * Channel specific getService provider register
+     * Register the controller's service providers
+     * (pre-boot)
      * @var array
      */
-    public $register = [];
+    public $providers = [];
 
     /**
-     * Channel Specific getService providers
+     * Register the controller's service providers
      * after registered providers are loaded.
+     * (booted)
      * @var array
      */
     public $booted = [];
