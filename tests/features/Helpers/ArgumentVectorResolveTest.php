@@ -11,7 +11,7 @@ class ArgumentVectorResolveFromIoCTest extends TestCase
      * is resolved from the IoC that it uses the $_SERVER['argv']
      * variables as needed.
      *
-     * We'll override the defaults and when the core getService provider
+     * We'll override the defaults and when the core service provider
      * shares ArgumentVectors to the IoC it will use the fake globals.
      *
      * @covers \Chronos\Helpers\ArgumentVectors::getArguments

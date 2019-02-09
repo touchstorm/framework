@@ -49,7 +49,7 @@ class BatchThreadKernel extends Kernel
      * Parse Console Arguments
      * Break down the argument vectors passed
      * through to the kernel and extract the
-     * getController and getMethod
+     * queueIds and service
      */
     protected function parseConsoleArguments()
     {
@@ -96,7 +96,7 @@ class BatchThreadKernel extends Kernel
     }
 
     /**
-     * @return string $getController
+     * @return string
      */
     public function getService()
     {
@@ -104,7 +104,7 @@ class BatchThreadKernel extends Kernel
     }
 
     /**
-     * @return string $getController
+     * @return string
      */
     public function getIds()
     {
@@ -112,7 +112,7 @@ class BatchThreadKernel extends Kernel
     }
 
     /**
-     * @return string $getMethod
+     * @return string
      */
     public function getMethod()
     {

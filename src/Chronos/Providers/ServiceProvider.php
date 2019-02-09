@@ -13,7 +13,7 @@ class ServiceProvider
     protected $app;
 
     /**
-     * Loads the getService providers
+     * Loads the service providers
      * @param Application $app
      * @return mixed
      */
@@ -21,7 +21,7 @@ class ServiceProvider
     {
         $this->app = $app;
 
-        // Call the specified getMethod running | thread
+        // Call the specified method running | thread
         call_user_func([$this, 'register']);
 
         // Return the container

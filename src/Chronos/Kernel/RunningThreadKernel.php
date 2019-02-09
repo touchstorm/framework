@@ -40,7 +40,7 @@ class RunningThreadKernel extends Kernel
      * Parse Console Arguments
      * Break down the argument vectors passed
      * through to the kernel and extract the
-     * getController and getMethod
+     * controller and method
      */
     protected function parseConsoleArguments()
     {
@@ -87,7 +87,7 @@ class RunningThreadKernel extends Kernel
     }
 
     /**
-     * @return string $getController
+     * @return string
      */
     public function getService()
     {
@@ -95,7 +95,7 @@ class RunningThreadKernel extends Kernel
     }
 
     /**
-     * @return string $getController
+     * @return string
      */
     public function getId()
     {
@@ -103,7 +103,7 @@ class RunningThreadKernel extends Kernel
     }
 
     /**
-     * @return string $getMethod
+     * @return string
      */
     public function getMethod()
     {

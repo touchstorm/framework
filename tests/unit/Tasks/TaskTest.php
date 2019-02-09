@@ -110,7 +110,7 @@ class TaskTest extends TestCase
 
             $name = 'sampleTask';
             $arguments = [
-                'uses' => 'testController@getMethod',
+                'uses' => 'testController@method',
                 'type' => 'scheduled'
             ];
 
@@ -166,7 +166,7 @@ class TaskTest extends TestCase
 
             $name = 'sampleTask';
             $arguments = [
-                'uses' => 'testController@getMethod',
+                'uses' => 'testController@method',
                 'type' => 'scheduled'
             ];
 
@@ -181,7 +181,7 @@ class TaskTest extends TestCase
         for ($day = 0; $day < 7; $day++) {
             $name = 'sampleTask';
             $arguments = [
-                'uses' => 'testController@getMethod',
+                'uses' => 'testController@method',
                 'type' => 'scheduled'
             ];
 
@@ -206,7 +206,7 @@ class TaskTest extends TestCase
 
                 $name = 'sampleTask';
                 $arguments = [
-                    'uses' => 'testController@getMethod',
+                    'uses' => 'testController@method',
                     'type' => 'scheduled'
                 ];
 
@@ -229,7 +229,7 @@ class TaskTest extends TestCase
 
             $name = 'sampleTask';
             $arguments = [
-                'uses' => 'testController@getMethod',
+                'uses' => 'testController@method',
                 'type' => 'scheduled'
             ];
 
@@ -266,7 +266,7 @@ class TaskTest extends TestCase
 
             $name = 'sampleTask';
             $arguments = [
-                'uses' => 'testController@getMethod',
+                'uses' => 'testController@method',
                 'type' => 'scheduled'
             ];
 

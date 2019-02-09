@@ -46,7 +46,7 @@ class ScheduledKernelFeatureTest extends TestCase
         $output = $kernel->handle(true);
 
         // Assert
-        $this->assertSame('bar', $output); // value being supplied by a getService provider defineParam
+        $this->assertSame('bar', $output); // value being supplied by a service provider defineParam
         $this->assertSame($controller, $kernel->getController());
         $this->assertSame($method, $kernel->getMethod());
         $this->assertInstanceOf(\Auryn\Injector::class, $kernel->getContainer());

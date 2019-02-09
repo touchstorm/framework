@@ -60,7 +60,7 @@ class ArgumentVectors
     protected $controller = null;
 
     /**
-     * Method on getController
+     * Method on controller
      * @var null
      */
     protected $method = null;
@@ -189,7 +189,7 @@ class ArgumentVectors
     }
 
     /**
-     * Get getController
+     * Get controller
      * @return void
      */
     public function getController()
@@ -207,7 +207,7 @@ class ArgumentVectors
     }
 
     /**
-     * Get getController
+     * Get service
      * @return void
      */
     public function getService()
@@ -275,7 +275,7 @@ class ArgumentVectors
     }
 
     /**
-     * Set the getController
+     * Set the controller
      * @return string
      */
     protected function setController()
@@ -284,7 +284,7 @@ class ArgumentVectors
     }
 
     /**
-     * Set the getMethod
+     * Set the method
      * @return string
      */
     protected function setMethod()
@@ -293,7 +293,7 @@ class ArgumentVectors
     }
 
     /**
-     * Set the getController
+     * Set the queueId
      * @return string
      */
     protected function setQueueId()
@@ -302,7 +302,7 @@ class ArgumentVectors
     }
 
     /**
-     * Set the getController
+     * Set the batchedQueueId
      * @return string
      */
     protected function setBatchedQueueId()
@@ -311,12 +311,13 @@ class ArgumentVectors
     }
 
     /**
-     * Set the getMethod
+     * Set the service
+     * @param string $service
      * @return string
      */
-    protected function setService()
+    protected function setService(string $service)
     {
-        return $this->method;
+        $this->service =  $service;
     }
 
     /**

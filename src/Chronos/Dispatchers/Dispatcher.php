@@ -139,7 +139,7 @@ abstract class Dispatcher
                 continue;
             }
 
-            // if it is a setter getMethod set and continue
+            // if it is a setter method set and continue
             if (method_exists($this, $setter)) {
                 call_user_func([$this, $setter], $value);
                 continue;

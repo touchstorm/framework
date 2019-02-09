@@ -79,7 +79,7 @@ class BaseTaskMaster
     /**
      * Detect which type of command
      * - bash/command line
-     * - getController/getMethod
+     * - controller@method
      * and execute
      * @param $commands
      * @param Task $task
@@ -382,7 +382,7 @@ class BaseTaskMaster
                 continue;
             }
 
-            // if it is a setter getMethod set and continue
+            // if it is a setter method set and continue
             if (method_exists($this, $setter)) {
                 call_user_func([$this, $setter], $value);
                 continue;

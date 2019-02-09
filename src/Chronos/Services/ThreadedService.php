@@ -9,14 +9,14 @@ abstract class ThreadedService extends Service
     /**
      * Threaded services require a running() method implementation
      * All dependency needed to execute a the thread dispatcher will be
-     * bound in this getMethod.
+     * bound in this method.
      */
     abstract public function running();
 
     /**
      * Threaded services require a thread() method implementation
      * All dependency needed to execute a thread will be
-     * bound in this getMethod.
+     * bound in this method.
      */
     abstract public function thread();
 
@@ -63,7 +63,7 @@ abstract class ThreadedService extends Service
             return $this->app;
         }
 
-        // Bind getService providers
+        // Bind service providers
         $this->bindProviders($method);
 
         // Make queue -> thread bindings
@@ -71,7 +71,7 @@ abstract class ThreadedService extends Service
             $this->bindThread($id);
         }
 
-        // Call the specified getMethod running | thread
+        // Call the specified method running | thread
         call_user_func([$this, $method], $id);
 
         // Return the container

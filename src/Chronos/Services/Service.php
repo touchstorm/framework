@@ -46,14 +46,14 @@ abstract class Service
     protected function bindQueueRepository()
     {
         if (!isset($this->repository)) {
-            throw new ThreadedServiceException('Repository not found. Please add a repository attribute to your thread getService.', 100);
+            throw new ThreadedServiceException('Repository not found. Please add a repository attribute to your thread service.', 100);
         }
 
         $this->app->alias(QueueRepositoryContract::class, $this->repository);
     }
 
     /**
-     * Bind getMethod specific server providers
+     * Bind method specific server providers
      * @param $method
      * @throws \Auryn\InjectionException
      */
@@ -64,7 +64,7 @@ abstract class Service
             return;
         }
 
-        // Load declared getService providers
+        // Load declared service providers
         foreach ($this->providers[$method] as $provider) {
             $this->app->register($provider);
         }

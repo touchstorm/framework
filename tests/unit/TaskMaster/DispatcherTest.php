@@ -142,7 +142,7 @@ class DispatcherTest extends TestCase
 
         $collection->scheduled('scheduledControllerMethodTest', [
 
-            'uses' => "scheduledControllerMethodTest@getMethod",
+            'uses' => "scheduledControllerMethodTest@method",
             'at' => function (Scheduled $task) {
                 return $task->everyMinute();
             },
@@ -207,7 +207,7 @@ class DispatcherTest extends TestCase
         putenv('APP_SERVER=server1');
 
         $collection->scheduled('testScheduledBeforeAndAfter', [
-            'uses' => "testScheduledBeforeAndAfter@getMethod",
+            'uses' => "testScheduledBeforeAndAfter@method",
             'at' => function (Scheduled $task) {
                 return $task->everyMinute();
             },

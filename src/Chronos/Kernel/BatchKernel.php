@@ -42,7 +42,7 @@ class BatchKernel extends Kernel
      * Parse Console Arguments
      * Break down the argument vectors passed
      * through to the kernel and extract the
-     * getController and getMethod
+     * service.
      */
     protected function parseConsoleArguments()
     {
@@ -60,10 +60,10 @@ class BatchKernel extends Kernel
     {
         try {
 
-            // Create the getService
+            // Create the service
             $service = $this->app->make($this->serviceNamespace . '\\' . $this->service, [':app' => $this->app]);
 
-            // Register the providers for the batch getService
+            // Register the providers for the batch service
             $this->app = $service->register('batch');
 
             // Now that our dependencies are bound into the

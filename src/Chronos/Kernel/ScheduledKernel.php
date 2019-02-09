@@ -42,7 +42,7 @@ class ScheduledKernel extends Kernel
      * Parse Console Arguments
      * Break down the argument vectors passed
      * through to the kernel and extract the
-     * getController and getMethod
+     * controller and method
      */
     protected function parseConsoleArguments()
     {
@@ -73,7 +73,7 @@ class ScheduledKernel extends Kernel
     }
 
     /**
-     * Dispatch the getController command
+     * Dispatch the controller command
      * @return mixed
      * @throws InjectionException
      */
@@ -115,7 +115,7 @@ class ScheduledKernel extends Kernel
     }
 
     /**
-     * @return string $getController
+     * @return string
      */
     public function getController()
     {
@@ -123,7 +123,7 @@ class ScheduledKernel extends Kernel
     }
 
     /**
-     * @return string $getMethod
+     * @return string
      */
     public function getMethod()
     {

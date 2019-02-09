@@ -26,7 +26,7 @@ class Application extends Injector
     protected $basePath;
 
     /**
-     * The getService providers loaded in the system
+     * The service providers loaded in the system
      * @var array $loadedServiceProviders
      */
     protected $loadedServiceProviders = [];
@@ -40,7 +40,7 @@ class Application extends Injector
         // Define the various paths
         $this->definePaths();
 
-        // Register the core application getService providers
+        // Register the core application service providers
         $this->registerCoreProviders();
 
         // Register the tasks
@@ -86,7 +86,7 @@ class Application extends Injector
             $provider = $this->make($provider);
         }
 
-        // If registrar getMethod exists on the class
+        // If registrar method exists on the class
         // pass it the container and register it
         if (method_exists($provider, 'registrar')) {
             $provider->registrar($this);
@@ -108,7 +108,7 @@ class Application extends Injector
     }
 
     /**
-     * Get loaded getService and resolve it out of the container
+     * Get loaded service and resolve it out of the container
      * @param $provider
      * @return bool|mixed
      */
@@ -124,7 +124,7 @@ class Application extends Injector
     }
 
     /**
-     * Register all the needed getService providers
+     * Register all the needed service providers
      * @throws \Auryn\InjectionException
      */
     protected function registerCoreProviders()
@@ -154,7 +154,7 @@ class Application extends Injector
     }
 
     /**
-     * Get the registered getService providers
+     * Get the registered service providers
      * @return array
      */
     public function getRegisteredProviders()
@@ -174,7 +174,7 @@ class Application extends Injector
     /**
      * Get a single task file
      * @param string $file
-     * @return null
+     * @return string|null
      */
     protected function getTaskFile($file = '')
     {
@@ -241,9 +241,9 @@ class Application extends Injector
 
     /**
      * Resolve (hook make)
-     * This wraps the make getMethod and checks for
+     * This wraps the make method and checks for
      * class types. Depending if it is a sub class
-     * of a parent we can resolve getService providers or
+     * of a parent we can resolve service providers or
      * do other class specific work before we make()
      * and return.
      * @param $name
@@ -258,12 +258,20 @@ class Application extends Injector
         // make and return an instance
         if (is_subclass_of($name, Controller::class)) {
 
-            // Prepare our sample getController by resolving it's internal getService providers
+            // Prepare our controller by resolving it's internal service providers
+            // then resolve its booted providers
             $this->prepare($name, function ($controller, Application $app) {
-                // Register the getController's providers
-                foreach ($controller->providers as $provider) {
+
+                // Register the controller's providers
+                foreach ($controller->providers ?? [] as $provider) {
                     $app->register($provider);
                 }
+
+                // Register the controller's booted providers
+                foreach ($controller->booted ?? [] as $booted) {
+                    $app->register($booted);
+                }
+
             });
         }
 
@@ -283,7 +291,7 @@ class Application extends Injector
      * @return mixed
      * @throws \Auryn\InjectionException
      */
-    public function resolveAndMake($name, array $args = array(), $callback = null)
+    public function resolveAndMake($name, array $args = [], $callback = null)
     {
         $name = $this->resolve($name, $callback);
 
@@ -299,7 +307,7 @@ class Application extends Injector
      * @return mixed
      * @throws \Auryn\InjectionException
      */
-    public function resolveAndExecute($callableOrMethodStr, array $args = array(), $callback = null)
+    public function resolveAndExecute($callableOrMethodStr, array $args = [], $callback = null)
     {
         if (is_array($callableOrMethodStr)) {
 

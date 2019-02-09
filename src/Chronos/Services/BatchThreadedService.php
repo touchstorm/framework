@@ -10,14 +10,14 @@ abstract class BatchThreadedService extends Service
     /**
      * Threaded services require a batch() method implementation
      * All dependency needed to execute a the thread dispatcher will be
-     * bound in this getMethod.
+     * bound in this method.
      */
     abstract public function batch();
 
     /**
      * Threaded services require a thread() method implementation
      * All dependency needed to execute a thread will be
-     * bound in this getMethod.
+     * bound in this method.
      */
     abstract public function thread();
 
@@ -68,7 +68,7 @@ abstract class BatchThreadedService extends Service
             $this->bindThreadBatch($ids);
         }
 
-        // Call the specified getMethod running | thread
+        // Call the specified method running | thread
         call_user_func([$this, $method], $ids);
 
         // Return the container
