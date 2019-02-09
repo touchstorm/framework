@@ -2,22 +2,19 @@
 
 namespace Chronos\Services;
 
-use Chronos\Foundation\Application;
 use Chronos\Repositories\Contracts\QueueRepositoryContract;
-use Chronos\Services\Exceptions\ThreadedServiceException;
 
 abstract class ThreadedService extends Service
 {
-
     /**
-     * Threaded services require a running() getMethod implementation
+     * Threaded services require a running() method implementation
      * All dependency needed to execute a the thread dispatcher will be
      * bound in this getMethod.
      */
     abstract public function running();
 
     /**
-     * Threaded services require a thread() getMethod implementation
+     * Threaded services require a thread() method implementation
      * All dependency needed to execute a thread will be
      * bound in this getMethod.
      */
@@ -43,7 +40,7 @@ abstract class ThreadedService extends Service
         $name = $this->parseClassName($queueItem->class);
 
         // Define a thread
-        $thread = $this->threadNamthreadNamespace . $name;
+        $thread = $this->threadNamespace . $name;
         $this->app->define($thread, [
             ':queueItem' => $queueItem
         ]);
@@ -53,7 +50,7 @@ abstract class ThreadedService extends Service
     }
 
     /**
-     * Loads the getService providers
+     * Loads the service providers
      * @param $method
      * @param null $id
      * @return mixed

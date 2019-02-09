@@ -1,11 +1,12 @@
 <?php
 
 use Chronos\Queues\Contracts\QueueContract;
-use Chronos\Queues\Queue;
+use Chronos\Queues\EloquentQueue;
 
-class MockRunningQueue extends Queue implements QueueContract
+class MockRunningQueue extends EloquentQueue implements QueueContract
 {
     protected $connection = 'sqlite';
+
     public $class = MockThreadController::class;
 
     /**

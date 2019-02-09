@@ -8,14 +8,14 @@ use Chronos\Services\Exceptions\ThreadedServiceException;
 abstract class BatchThreadedService extends Service
 {
     /**
-     * Threaded services require a running() getMethod implementation
+     * Threaded services require a batch() method implementation
      * All dependency needed to execute a the thread dispatcher will be
      * bound in this getMethod.
      */
     abstract public function batch();
 
     /**
-     * Threaded services require a thread() getMethod implementation
+     * Threaded services require a thread() method implementation
      * All dependency needed to execute a thread will be
      * bound in this getMethod.
      */
@@ -34,10 +34,9 @@ abstract class BatchThreadedService extends Service
         $batch = $repository->items(explode('~', $ids));
 
         // Extract the class name
-        //$thread = '\\App\\Console\\Controllers\\Threads\\' . $name;
         $name = $this->parseClassName($repository->getClass());
 
-        $thread = $this->threadNamthreadNamespace . $name;
+        $thread = $this->threadNamespace . $name;
 
         $this->app->define($thread, [
             ':batch' => $batch
@@ -75,4 +74,5 @@ abstract class BatchThreadedService extends Service
         // Return the container
         return $this->app;
     }
+
 }

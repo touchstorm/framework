@@ -6,7 +6,7 @@ use Chronos\Foundation\Application;
 use Chronos\Helpers\NamespaceManager;
 use Chronos\Repositories\Contracts\QueueRepositoryContract;
 
-class Service
+abstract class Service
 {
     /**
      * Application container
@@ -17,7 +17,7 @@ class Service
     /**
      * @var string
      */
-    protected $threadNamthreadNamespace;
+    protected $threadNamespace;
 
     /**
      * Service constructor.
@@ -29,8 +29,14 @@ class Service
     {
         $this->app = $app;
         $this->bindQueueRepository();
-        $this->threadNamthreadNamespace = $namespace->getThreadNamespace();
+        $this->threadNamespace = $namespace->getThreadNamespace();
     }
+
+    /**
+     * Register the service providers & define thread params
+     * @param $method
+     */
+    abstract public function register($method);
 
     /**
      * @return void
@@ -72,4 +78,5 @@ class Service
     {
         return str_replace('::class', '', $class);
     }
+
 }

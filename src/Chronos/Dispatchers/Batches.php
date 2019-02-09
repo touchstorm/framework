@@ -3,8 +3,10 @@
 namespace Chronos\Dispatchers;
 
 use Chronos\Dispatchers\Contracts\DispatcherContract;
+use Chronos\Queues\Contracts\QueueContract;
 use Chronos\Repositories\Contracts\QueueRepositoryContract;
 use Chronos\Queues\Queue;
+use Chronos\Repositories\QueueBatchRepository;
 use Illuminate\Database\Eloquent\Collection;
 
 /**
@@ -22,9 +24,9 @@ class Batches extends Dispatcher implements DispatcherContract
 
     /**
      * Threads constructor.
-     * @param QueueRepositoryContract $repository
+     * @param QueueBatchRepository $repository
      */
-    public function __construct(QueueRepositoryContract $repository)
+    public function __construct(QueueBatchRepository $repository)
     {
         parent::__construct($repository);
 
@@ -57,7 +59,7 @@ class Batches extends Dispatcher implements DispatcherContract
             /**
              * Pop next Queue item out of
              * the repository's batch and execute
-             * @var Queue $queue
+             * @var QueueContract $queue
              */
             while ($batch = $this->repository->next()) {
 

@@ -16,7 +16,7 @@ class RunningThreadFeatureTest extends TestCase
     /**
      * @covers \Chronos\Kernel\BatchThreadKernel::handle
      */
-    public function testRunningKernelConstruct()
+    public function testRunningThreadKernelConstruct()
     {
         // Set up the classes
         $app = new Application(dirname(__FILE__) . "/../../stubs/");

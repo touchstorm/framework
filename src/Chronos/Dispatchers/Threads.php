@@ -49,7 +49,7 @@ class Threads extends Dispatcher implements DispatcherContract
             /**
              * Pop next Queue item out of
              * the repository's batch and execute
-             * @var Queue $queue
+             * @var QueueContract $queue
              */
             while ($queue = $this->repository->next()) {
 

@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * Class QueueRepository
  * @package Chronos\Repositories
  */
-class BatchQueueRepository extends QueueRepository
+class QueueBatchRepository extends QueueRepository
 {
     /**
      * @var int $batchSize
@@ -28,6 +28,10 @@ class BatchQueueRepository extends QueueRepository
     public $queue;
 
     /**
+     * Controllers for batches cannot be polymorphic.
+     * Batched threads are only capable of parsing similar types of
+     * data through a common controller.
+     *
      * Class controller for the thread batch
      * @var string $class
      */
@@ -40,7 +44,6 @@ class BatchQueueRepository extends QueueRepository
     public function __construct(QueueContract $queue)
     {
         parent::__construct($queue);
-
         $this->batch = new Collection();
     }
 
@@ -93,23 +96,8 @@ class BatchQueueRepository extends QueueRepository
         // excess requests to the database
         $limit = $this->batchSize * $this->maxThreads;
 
-        // Fill the batch from the queue
-        $batch = $this->queue
-            ->where('in_use', 0)
-            ->where(function ($query) {
-                $query->where('available_at', '<', new DateTime('now'))
-                    ->orWhereNull('available_at');
-            })
-            ->orderBy('available_at', 'DESC')
-            ->limit($limit);
-
-        // Resolve any closure options
-        if ($options instanceof Closure) {
-            $batch = $options($batch);
-        }
-
-        // Get & set batch
-        $this->batch = $batch->get();
+        // Fetch a batch off the Queue
+        $this->batch = $this->queue->fetch($limit, $options);
 
         // Set batch of rows in use
         $this->setBatchInUse();
@@ -138,8 +126,8 @@ class BatchQueueRepository extends QueueRepository
         // Get ids of batch queue items
         $ids = $this->batch->pluck('id')->toArray();
 
-        // Update the batch's items to be in use
-        $this->queue->whereIn('id', $ids)->update(['in_use' => 1]);
+        // Have the queue set these in use
+        $this->queue->setInUse($ids);
     }
 
     /**

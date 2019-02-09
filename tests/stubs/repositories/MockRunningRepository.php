@@ -1,9 +1,9 @@
 <?php
 
-use Chronos\Repositories\BatchQueueRepository;
+use Chronos\Repositories\QueueBatchRepository;
 use Chronos\Repositories\Contracts\QueueBatch;
 
-class MockRunningRepository extends BatchQueueRepository implements QueueBatch
+class MockRunningRepository extends QueueBatchRepository implements QueueBatch
 {
     protected $connection = 'sqlite';
     protected $table = 'queue';

@@ -32,7 +32,7 @@ class QueueRepository
     protected $pause = 0;
 
     /**
-     * @var Model $queue
+     * @var Queue | QueueContract $queue
      * - The queue is an instance of Laravel's Model class
      */
     public $queue;
@@ -57,6 +57,20 @@ class QueueRepository
     {
         $this->queue = $queue;
 
+        // Configure the queue
+        $this->configureQueue();
+    }
+
+    /**
+     * TODO 1. Refactor this, repositories shouldn't be coupled to any one type of Queue nor should it have exceptions internally to handle them.
+     * Configure any queue connections
+     */
+    protected function configureQueue()
+    {
+        if (!$this->queue instanceof Model) {
+            return;
+        }
+
         // Configure Queue
         $this->queue->setConnection($this->connection);
         $this->queue->setTable($this->table);
@@ -78,8 +92,8 @@ class QueueRepository
 
     /**
      * Next
-     * - Pop the next item out of the
-     * batch for threading.
+     * - Shift the next item out of the
+     * batch to be dispatched in a thread.
      * @return Queue
      */
     public function next()
@@ -97,7 +111,7 @@ class QueueRepository
      */
     public function fill($options = null)
     {
-        // All you to pass a batch to the fill
+        // Allows you to pass a batch to the fill
         if ($options instanceof Collection) {
             $this->batch = $options;
             return;
@@ -108,23 +122,8 @@ class QueueRepository
         // excess requests to the database
         $limit = $this->maxThreads * 4;
 
-        // Fill the batch from the queue
-        $batch = $this->queue
-            ->where('in_use', 0)
-            ->where(function ($query) {
-                $query->where('available_at', '<', new DateTime('now'))
-                    ->orWhereNull('available_at');
-            })
-            ->orderBy('available_at', 'DESC')
-            ->limit($limit);
-
-        // Resolve any closure options
-        if ($options instanceof Closure) {
-            $batch = $options($batch);
-        }
-
-        // Get & set batch
-        $this->batch = $batch->get();
+        // Fetch a batch off the Queue
+        $this->batch = $this->queue->fetch($limit, $options);
 
         // Set batch of rows in use
         $this->setBatchInUse();
@@ -139,7 +138,6 @@ class QueueRepository
      */
     public function setBatchInUse()
     {
-        // Guard
         // Make sure that the batch has been set
         if (!$this->batch instanceof Collection) {
             return;
@@ -153,12 +151,12 @@ class QueueRepository
         // Get ids of batch queue items
         $ids = $this->batch->pluck('id')->toArray();
 
-        // Update the batch's items to be in use
-        $this->queue->whereIn('id', $ids)->update(['in_use' => 1]);
+        // Have the queue set these in use
+        $this->queue->setInUse($ids);
     }
 
     /**
-     * reset
+     * Reset
      * - Reset the queue based on input
      * - Default resets any queue items in use
      * @param mixed $options
@@ -166,41 +164,7 @@ class QueueRepository
      */
     public function reset($options = null, $fields = [])
     {
-        /**
-         * @var Queue $queue
-         */
-        $queue = $this->queue;
-
-        // Default reset
-        // Deactivate any activated queue items
-        if (!$options) {
-            $queue = $queue->where('in_use', 1);
-        }
-
-        // Int assumes you are toggling
-        // on or off the queue items
-        if (is_int($options)) {
-            $queue = $queue->where('in_use', $options);
-        }
-
-        // If a string is used '*'
-        // We'll assume they want both
-        if (is_string($options)) {
-            $queue = $queue->whereIn('in_use', [0, 1]);
-        }
-
-        // If options are a closure
-        // process the query
-        if ($options instanceof Closure) {
-            $queue = $options($queue);
-        }
-
-        // Merge any extra field updates
-        // with default field update
-        $params = array_merge(['in_use' => 0], $fields);
-
-        // Run the query on the queue item
-        $queue->update($params);
+        $this->queue->reset($options, $fields);
     }
 
     /**

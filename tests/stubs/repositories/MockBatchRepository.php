@@ -1,10 +1,10 @@
 <?php
 
-use Chronos\Repositories\BatchQueueRepository;
-use Chronos\Repositories\Contracts\QueueRepositoryContract;
+use Chronos\Repositories\Contracts\QueueBatch;
+use Chronos\Repositories\QueueBatchRepository;
 use Illuminate\Database\Eloquent\Collection;
 
-class MockBatchRepository extends BatchQueueRepository implements QueueRepositoryContract
+class MockBatchRepository extends QueueBatchRepository implements QueueBatch
 {
     protected $connection = 'sqlite';
     protected $table = 'queue';
