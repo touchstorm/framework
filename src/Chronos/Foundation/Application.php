@@ -7,6 +7,7 @@ use Chronos\Controllers\Controller;
 use Chronos\Providers\ServiceProvider;
 use Chronos\Tasks\TaskCollector;
 use Closure;
+use Traversable;
 
 class Application extends Injector
 {
@@ -263,13 +264,17 @@ class Application extends Injector
             $this->prepare($name, function ($controller, Application $app) {
 
                 // Register the controller's providers
-                foreach ($controller->providers ?? [] as $provider) {
-                    $app->register($provider);
+                if (is_array($controller->providers)) {
+                    foreach ($controller->providers ?? [] as $provider) {
+                        $app->register($provider);
+                    }
                 }
 
                 // Register the controller's booted providers
-                foreach ($controller->booted ?? [] as $booted) {
-                    $app->register($booted);
+                if (is_array($controller->booted)) {
+                    foreach ($controller->booted ?? [] as $booted) {
+                        $app->register($booted);
+                    }
                 }
 
             });

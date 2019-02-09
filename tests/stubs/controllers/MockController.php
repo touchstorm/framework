@@ -8,6 +8,7 @@ class MockController extends Controller
         MockServiceProvider::class
     ];
 
+
     public function someMethod($runFoo = 'baz')
     {
         return $runFoo;
