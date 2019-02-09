@@ -13,5 +13,5 @@ interface QueueBatch extends QueueRepositoryContract
      * @param $ids
      * @return mixed
      */
-    function items(array $ids);
+    public function items(array $ids);
 }

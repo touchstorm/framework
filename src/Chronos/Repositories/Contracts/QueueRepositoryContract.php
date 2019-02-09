@@ -12,46 +12,46 @@ interface QueueRepositoryContract
      * @param $id
      * @return \Chronos\Queues\Queue
      */
-    function item($id);
+    public function item($id);
 
     /**
      * Get next Queue
      * @return \Chronos\Queues\Queue
      */
-    function next();
+    public function next();
 
     /**
      * @param mixed $options
      * @param array $fields
      * @return mixed
      */
-    function reset($options, $fields);
+    public function reset($options, $fields);
 
     /**
      * @param $options
      * @return mixed
      */
-    function fill($options);
+    public function fill($options);
 
     /**
      * @return mixed
      */
-    function setBatchInUse();
+    public function setBatchInUse();
 
     /**
      * @return mixed
      */
-    function isSleeping();
+    public function isSleeping();
 
     /**
      * @return mixed required for threads
      * to work.
      */
-    function getMaxThreads();
+    public function getMaxThreads();
 
     /**
      * @return mixed required for treads
      * to work.
      */
-    function getBatchSize();
+    public function getBatchSize();
 }

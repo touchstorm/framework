@@ -35,7 +35,7 @@ class QueueBatchRepository extends QueueRepository
      * Class controller for the thread batch
      * @var string $class
      */
-    protected $class = '';
+    protected $class;
 
     /**
      * QueueRepository constructor.

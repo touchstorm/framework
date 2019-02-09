@@ -4,5 +4,5 @@ namespace Chronos\TaskMaster\Contracts;
 
 interface TaskMasterContract
 {
-    function dispatch();
+    public function dispatch(array $options);
 }

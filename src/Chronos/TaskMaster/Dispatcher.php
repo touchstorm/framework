@@ -16,7 +16,7 @@ class Dispatcher extends BaseTaskMaster implements TaskMasterContract
      * Dispatch tasks to be processed
      * @param array $options
      */
-    public function dispatch($options = [])
+    public function dispatch(array $options = [])
     {
         // Pass through optional inputs for configuration
         $this->configure($options);
